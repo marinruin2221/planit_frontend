@@ -4,6 +4,7 @@ import { Provider } from './components/ui/provider';
 
 import MainPage from "@pages/MainPage.jsx";
 import MyPage from "@pages/MyPage.jsx";
+import EventPage from "@pages/EventPage.jsx";
 
 import "@css/common/common.css";
 import "@css/tailwind/tailwind.css";
@@ -17,6 +18,7 @@ export default function App()
 					<Route path="/" element={<MainPage/>}></Route>
 					<Route path="/main" element={<MainPage/>}></Route>
 					<Route path="/mypage" element={<MyPage/>}></Route>
+					<Route path="/event" element={<EventPage/>}></Route>
 				</Routes>
 			</BrowserRouter>
 		</Provider>
