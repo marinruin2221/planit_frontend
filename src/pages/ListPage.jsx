@@ -88,10 +88,10 @@ const ListPage = () => {
   ];
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 font-sans flex flex-col">
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50 w-full flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center">
             <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>
           </div>
@@ -240,7 +240,7 @@ const ListPage = () => {
 
       {/* Search Section */}
       <div className="w-full px-4 relative z-20 -mt-16 mb-16 flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto bg-white p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center border border-gray-100">
+        <div className="w-[70%] mx-auto bg-white p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center border border-gray-100">
           <div className="flex-1 w-full">
             <label className="block text-base font-bold text-gray-900 mb-1">여행지</label>
             <input type="text" placeholder="어디로 떠나시나요?" className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 p-2 border text-gray-900" style={{ focusRingColor: brandColor }} />
@@ -268,7 +268,7 @@ const ListPage = () => {
 
       {/* Main Content Area (Sidebar + List) */}
       <div className="w-full flex justify-center py-8">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
 
           {/* Left Sidebar - Filters */}
           <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8">
@@ -469,7 +469,7 @@ const ListPage = () => {
 
       {/* Banner Section */}
       <section className="w-full py-16 flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg">
             <img
               src="/images/jeju.png"
@@ -492,7 +492,7 @@ const ListPage = () => {
 
       {/* Footer */}
       <footer className="w-full bg-gray-900 text-white py-12 mt-auto flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>

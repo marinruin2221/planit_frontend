@@ -146,10 +146,10 @@ const DetailPage = () => {
   }
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 font-sans flex flex-col">
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50 w-full flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/list')}>
             <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>
           </div>
@@ -218,7 +218,7 @@ const DetailPage = () => {
 
       {/* Main Content & Sidebar Wrapper */}
       <div className="w-full flex justify-center py-8">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8">
 
           {/* Left Content (70%) */}
           <div className="w-full lg:w-[70%]">
@@ -440,7 +440,7 @@ const DetailPage = () => {
 
       {/* Footer */}
       <footer className="w-full bg-gray-900 text-white py-12 mt-auto flex justify-center">
-        <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>
