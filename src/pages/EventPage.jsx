@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { Box, SimpleGrid, Image, Text, Container, Input, Button, HStack } from "@chakra-ui/react";
-import { LuSearch } from "react-icons/lu";
+import { LuSearch, LuRotateCcw } from "react-icons/lu";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
@@ -108,15 +108,32 @@ export default function EventPage()
     const [activeCategory, setActiveCategory] = useState("전체");
     const [currentPage, setCurrentPage] = useState(1);
     const perPage = 9;
+
+    const [searchText, setSearchText] = useState("");
+    const [appliedSearchText, setAppliedSearchText] = useState("");
+
+    const applySearch = () => {
+        setAppliedSearchText(searchText.trim());
+    };
     
-    const filteredEvents =
-        activeCategory === "전체"
-          ? events
-          : events.filter((e) => e.category === activeCategory);
+    // const filteredEvents =
+    //     activeCategory === "전체"
+    //       ? events
+    //       : events.filter((e) => e.category === activeCategory);
+
+    const filteredEvents = useMemo(() => {
+        const q = appliedSearchText.trim().toLowerCase();
+    
+        return events.filter((e) => {
+            const matchCategory = activeCategory === "전체" || e.category === activeCategory;
+            const matchTitle = q === "" || e.title.toLowerCase().includes(q);
+            return matchCategory && matchTitle;
+        });
+    }, [events, activeCategory, appliedSearchText]);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [activeCategory]);
+    }, [activeCategory, appliedSearchText]);
 
     const totalPages = Math.ceil(filteredEvents.length / perPage) || 1;
     const startIndex = (currentPage - 1) * perPage;
@@ -126,6 +143,11 @@ export default function EventPage()
     const handlePageChange = (page) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
+    };
+
+    const resetSearch = () => {
+        setSearchText("");
+        setAppliedSearchText("");
     };
 
     return (
@@ -144,6 +166,11 @@ export default function EventPage()
                             height="45px"
                             fontSize="md"
                             borderRadius="md"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") applySearch();
+                            }}
                         />
                         <Button
                             height="45px"
@@ -153,8 +180,19 @@ export default function EventPage()
                             bgColor={"#dd6b20"}
                             fontSize="lg"
                             fontWeight="bold"
+                            onClick={applySearch}
                         >
                             <LuSearch size={20} />
+                        </Button>
+                        <Button
+                            height="45px"
+                            px={6}
+                            variant="outline"
+                            borderRadius="md"
+                            fontSize="md"
+                            onClick={resetSearch}
+                        >
+                            <LuRotateCcw size={20} />
                         </Button>
                     </HStack>
 
