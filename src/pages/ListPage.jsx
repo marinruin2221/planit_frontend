@@ -327,7 +327,7 @@ const ListPage = () => {
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
 
           {/* Left Sidebar - Filters */}
-          <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8">
+          <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
             {/* Map Button */}
             <div className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
               <img src="/images/city.png" alt="Map" className="w-full h-full object-cover" />
