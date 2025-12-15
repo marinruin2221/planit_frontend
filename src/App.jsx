@@ -11,6 +11,7 @@ import CustomerServicePage from "@pages/CustomerservicePage.jsx";
 
 import "@css/common/common.css";
 import "@css/tailwind/tailwind.css";
+import "@css/font/font.css";
 
 export default function App() {
 	return <React.Fragment>

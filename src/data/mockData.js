@@ -1,6 +1,6 @@
 export const accommodations = Array.from({ length: 100 }, (_, index) => {
   const types = ['호텔', '모텔', '펜션', '리조트', '캠핑', '게하·한옥'];
-  const locations = ['서울', '부산', '제주', '강릉', '인천', '속초', '여수', '경주'];
+  const locations = ['서울', '부산', '제주', '강원 강릉', '인천', '강원 속초', '전라 여수', '경상 경주'];
   const images = ['/images/jeju.png', '/images/city.png', '/images/beach.png', '/images/mountain.png'];
 
   const type = types[Math.floor(Math.random() * types.length)];
