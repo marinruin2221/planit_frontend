@@ -1,3 +1,4 @@
+/******************** SCoreDream Font Style ********************/
 @font-face
 {
 	font-family:"SCoreDream1";
@@ -44,9 +45,54 @@
 	src:url("@css/font/SCoreDream9.otf")format("woff");
 }
 
+/******************** html, head, body Common Style ********************/
 html,
 head,
 body
 {
 	font-family:"SCoreDream4";
+}
+
+/******************** React Day Picker Common Style ********************/
+.rdp-root
+{
+	font-size:14px;
+}
+.rdp-month_caption
+{
+	color:#DD6B20;
+	font-size:unset;
+	font-weight:unset;
+}
+.rdp-chevron
+{
+	fill:#DD6B20;
+}
+.rdp-weekday
+{
+	opacity:unset;
+	font-size:unset;
+	font-weight:unset;
+}
+.rdp-day
+{
+	opacity:unset;
+	font-size:unset;
+	font-weight:unset;
+}
+.rdp-day.rdp-today
+{
+	color:#DD6B20;
+}
+.rdp-day:first-child
+{
+	color:#FF0000;
+}
+.rdp-day:last-child
+{
+	color:#FF0000;
+}
+.rdp-day_button:hover
+{
+	border:1px solid #DD6B20;
 }
