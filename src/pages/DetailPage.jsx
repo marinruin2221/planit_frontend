@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import { accommodations } from '../data/mockData';
+
 const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -8,133 +10,7 @@ const DetailPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [destination, setDestination] = useState(null);
 
-  // Accommodation Data (Yeogi Style) - duplicated from ListPage
-  const accommodations = [
-    {
-      id: 1,
-      type: '블랙 · 5성급 · 호텔',
-      name: '인스파이어 엔터테인먼트 리조트',
-      location: '중구 · 왕산해수욕장 차량 7분',
-      rating: '9.5',
-      reviewCount: '1,506',
-      price: '378,510원',
-      originalPrice: '497,000원',
-      image: '/images/jeju.png',
-      badges: [],
-      description: '영종도의 새로운 랜드마크, 인스파이어 엔터테인먼트 리조트에서 잊지 못할 경험을 만드세요.',
-      details: '최고급 시설과 서비스, 다양한 엔터테인먼트 시설을 갖춘 복합 리조트입니다. 워터파크, 쇼핑몰, 카지노 등 다양한 즐길 거리가 가득합니다.',
-      rooms: [
-        { id: 101, name: '디럭스 킹', image: '/images/jeju.png', dayUse: null, stay: { checkIn: '15:00', checkOut: '11:00', price: '378,510원', originalPrice: '497,000원' } },
-        { id: 102, name: '디럭스 트윈', image: '/images/jeju.png', dayUse: null, stay: { checkIn: '15:00', checkOut: '11:00', price: '378,510원', originalPrice: '497,000원' } }
-      ],
-      reviews: [
-        {
-          id: 1,
-          user: { name: 'movincat', level: '베스트리뷰', stats: '리뷰 98 · 사진 166 · 장소 53' },
-          rating: 5,
-          date: '26일 전',
-          roomType: '더 글램 - 오픈특가',
-          images: ['/images/jeju.png', '/images/city.png', '/images/beach.png'],
-          content: '구월 더 글램 호텔: 만족스러운 숙박 경험!\n인천 구월동에 위치한 더 글램 호텔은 기대 이상의 만족감을 선사했습니다.\n우선, 객실이 매우 깨끗하고 쾌적해서 기분 좋게 머물 수 있었습니다. 최신 시설과 깔끔하게 정돈된 침구 덕분에 편안한 휴식을 취할 수 있었고, 특히 넉넉한...'
-        },
-        {
-          id: 2,
-          user: { name: '내박잡사리', level: '베스트리뷰', stats: '리뷰 40 · 사진 76 · 장소 27' },
-          rating: 4.5,
-          date: '1개월 전',
-          roomType: '스탠다드',
-          images: ['/images/city.png', '/images/beach.png', '/images/jeju.png'],
-          content: '편안하게 잘 쉬다 갑니다. 위치도 좋고 시설도 깔끔해요.'
-        }
-      ]
-    },
-    {
-      id: 2,
-      type: '모텔',
-      name: '구월 호텔반월',
-      location: '인천터미널역 도보 14분',
-      rating: '9.4',
-      reviewCount: '14,023',
-      price: '22,500원',
-      originalPrice: '25,000원',
-      image: '/images/city.png',
-      badges: ['대실 특가'],
-      description: '도심 속 편안한 휴식처, 구월 호텔반월입니다.',
-      details: '깔끔하고 모던한 인테리어와 최신 시설을 갖춘 객실에서 편안한 휴식을 즐기세요. 넷플릭스 등 다양한 OTT 서비스를 이용할 수 있습니다.',
-      rooms: [
-        { id: 201, name: '스탠다드', image: '/images/city.png', dayUse: { time: '5시간', close: '21:00', price: '22,500원', original: '30,000원' }, stay: { checkIn: '18:00', checkOut: '12:00', price: '60,500원', original: '65,000원' } },
-        { id: 202, name: '디럭스', image: '/images/city.png', dayUse: { time: '5시간', close: '21:00', price: '27,500원', original: '35,000원' }, stay: { checkIn: '18:00', checkOut: '12:00', price: '70,500원', original: '80,000원' } }
-      ]
-    },
-    {
-      id: 3,
-      type: '모텔',
-      name: '구월동 구월호텔 九',
-      location: '인천터미널역 도보 14분',
-      rating: '9.4',
-      reviewCount: '13,971',
-      price: '25,000원',
-      originalPrice: '30,000원',
-      image: '/images/beach.png',
-      badges: [],
-      description: '감각적인 디자인과 최고의 서비스, 구월호텔 九입니다.',
-      details: '넓고 쾌적한 객실과 친절한 서비스로 고객님을 모십니다. 주변에 맛집과 편의시설이 많아 이용이 편리합니다.',
-      rooms: [
-        { id: 301, name: '일반실', image: '/images/beach.png', dayUse: { time: '4시간', close: '22:00', price: '25,000원', original: '30,000원' }, stay: { checkIn: '20:00', checkOut: '12:00', price: '55,000원', original: '60,000원' } }
-      ]
-    },
-    {
-      id: 4,
-      type: '호텔',
-      name: '오크우드 프리미어 인천',
-      location: '연수구 · 인천대입구역 도보 10분',
-      rating: '9.7',
-      reviewCount: '3,210',
-      price: '250,000원',
-      originalPrice: '320,000원',
-      image: '/images/city.png',
-      badges: ['쿠폰할인'],
-      description: '송도 국제도시의 랜드마크, 오크우드 프리미어 인천입니다.',
-      details: '국내 최고층 빌딩인 포스코타워에 위치하여 탁 트인 전망을 자랑합니다. 레지던스 호텔로 주방 시설이 완비되어 있어 장기 투숙에도 적합합니다.',
-      rooms: [
-        { id: 401, name: '스튜디오 슈페리어', image: '/images/city.png', dayUse: null, stay: { checkIn: '15:00', checkOut: '11:00', price: '250,000원', original: '320,000원' } }
-      ]
-    },
-    {
-      id: 5,
-      type: '펜션',
-      name: '강화도 힐링 펜션',
-      location: '강화군 · 동막해수욕장 차량 5분',
-      rating: '9.2',
-      reviewCount: '540',
-      price: '120,000원',
-      originalPrice: '150,000원',
-      image: '/images/jeju.png',
-      badges: [],
-      description: '자연 속에서 즐기는 진정한 힐링, 강화도 힐링 펜션입니다.',
-      details: '아름다운 정원과 바비큐 시설을 갖춘 펜션입니다. 가족, 연인과 함께 소중한 추억을 만들어보세요.',
-      rooms: [
-        { id: 501, name: '커플룸', image: '/images/jeju.png', dayUse: null, stay: { checkIn: '15:00', checkOut: '11:00', price: '120,000원', original: '150,000원' } }
-      ]
-    },
-    {
-      id: 6,
-      type: '리조트',
-      name: '네스트 호텔',
-      location: '중구 · 인천공항 차량 10분',
-      rating: '9.6',
-      reviewCount: '5,100',
-      price: '180,000원',
-      originalPrice: '220,000원',
-      image: '/images/beach.png',
-      badges: ['조식포함'],
-      description: '디자인 호텔스 멤버, 네스트 호텔입니다.',
-      details: '독창적인 건축 디자인과 자연 친화적인 인테리어가 돋보이는 호텔입니다. 서해 바다를 조망하며 여유로운 휴식을 즐길 수 있습니다.',
-      rooms: [
-        { id: 601, name: '스탠다드 더블', image: '/images/beach.png', dayUse: null, stay: { checkIn: '15:00', checkOut: '11:00', price: '180,000원', original: '220,000원' } }
-      ]
-    }
-  ];
+  // Accommodation Data (Yeogi Style) - imported from mockData
 
   useEffect(() => {
     const found = accommodations.find(d => d.id === parseInt(id));

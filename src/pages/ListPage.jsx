@@ -5,87 +5,42 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { accommodations as mockAccommodations } from '../data/mockData';
 
 const ListPage = () => {
   const brandColor = 'rgba(177,78,33,1)';
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredAccommodations, setFilteredAccommodations] = useState(mockAccommodations);
 
-  // Accommodation Data (Yeogi Style)
-  const accommodations = [
-    {
-      id: 1,
-      type: '블랙 · 5성급 · 호텔',
-      name: '인스파이어 엔터테인먼트 리조트',
-      location: '중구 · 왕산해수욕장 차량 7분',
-      rating: '9.5',
-      reviewCount: '1,506',
-      price: '378,510원',
-      originalPrice: '497,000원',
-      image: '/images/jeju.png',
-      badges: []
-    },
-    {
-      id: 2,
-      type: '모텔',
-      name: '구월 호텔반월',
-      location: '인천터미널역 도보 14분',
-      rating: '9.4',
-      reviewCount: '14,023',
-      price: '22,500원',
-      originalPrice: '25,000원',
-      image: '/images/city.png',
-      badges: ['대실 특가']
-    },
-    {
-      id: 3,
-      type: '모텔',
-      name: '구월동 구월호텔 九',
-      location: '인천터미널역 도보 14분',
-      rating: '9.4',
-      reviewCount: '13,971',
-      price: '25,000원',
-      originalPrice: '30,000원',
-      image: '/images/beach.png',
-      badges: []
-    },
-    {
-      id: 4,
-      type: '호텔',
-      name: '오크우드 프리미어 인천',
-      location: '연수구 · 인천대입구역 도보 10분',
-      rating: '9.7',
-      reviewCount: '3,210',
-      price: '250,000원',
-      originalPrice: '320,000원',
-      image: '/images/city.png',
-      badges: ['쿠폰할인']
-    },
-    {
-      id: 5,
-      type: '펜션',
-      name: '강화도 힐링 펜션',
-      location: '강화군 · 동막해수욕장 차량 5분',
-      rating: '9.2',
-      reviewCount: '540',
-      price: '120,000원',
-      originalPrice: '150,000원',
-      image: '/images/jeju.png',
-      badges: []
-    },
-    {
-      id: 6,
-      type: '리조트',
-      name: '네스트 호텔',
-      location: '중구 · 인천공항 차량 10분',
-      rating: '9.6',
-      reviewCount: '5,100',
-      price: '180,000원',
-      originalPrice: '220,000원',
-      image: '/images/beach.png',
-      badges: ['조식포함']
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
+
+  const handleSearch = () => {
+    const filtered = mockAccommodations.filter(acc =>
+      acc.name.includes(searchTerm) || acc.location.includes(searchTerm)
+    );
+    setFilteredAccommodations(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
-  ];
+  };
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredAccommodations.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredAccommodations.length / itemsPerPage);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
@@ -243,7 +198,15 @@ const ListPage = () => {
         <div className="w-[70%] mx-auto bg-white p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center border border-gray-100">
           <div className="flex-1 w-full">
             <label className="block text-base font-bold text-gray-900 mb-1">여행지</label>
-            <input type="text" placeholder="어디로 떠나시나요?" className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 p-2 border text-gray-900" style={{ focusRingColor: brandColor }} />
+            <input
+              type="text"
+              placeholder="어디로 떠나시나요?"
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 p-2 border text-gray-900"
+              style={{ focusRingColor: brandColor }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
           <div className="flex-1 w-full">
             <label className="block text-base font-bold text-gray-900 mb-1">날짜</label>
@@ -260,6 +223,7 @@ const ListPage = () => {
           <button
             className="w-full md:w-auto text-white px-8 py-3 rounded-md font-medium mt-6 md:mt-0 transition-colors whitespace-nowrap"
             style={{ backgroundColor: brandColor }}
+            onClick={handleSearch}
           >
             검색
           </button>
@@ -403,7 +367,7 @@ const ListPage = () => {
           {/* Right Content - List */}
           <section className="flex-1">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">'인천' 검색 결과 {accommodations.length.toLocaleString()}개</h2>
+              <h2 className="text-xl font-bold text-gray-900">검색 결과 {filteredAccommodations.length.toLocaleString()}개</h2>
               <div className="relative">
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium">
                   <span>추천순</span>
@@ -412,8 +376,8 @@ const ListPage = () => {
               </div>
             </div>
 
-            <div className="space-y-6">
-              {accommodations.map((acc) => (
+            <div className="space-y-12">
+              {currentItems.map((acc) => (
                 <div
                   key={acc.id}
                   className="bg-white rounded-lg border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[220px]"
@@ -463,6 +427,35 @@ const ListPage = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8 space-x-2">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-black font-bold border-gray-400 hover:bg-gray-100'}`}
+                >
+                  이전
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`px-4 py-2 rounded-md border text-lg ${currentPage === i + 1 ? 'bg-red-500 text-white border-red-500 font-bold' : 'bg-white text-black font-bold border-gray-400 hover:bg-gray-100'}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-black font-bold border-gray-400 hover:bg-gray-100'}`}
+                >
+                  다음
+                </button>
+              </div>
+            )}
           </section>
         </div>
       </div>
