@@ -519,54 +519,57 @@ const ListPage = () => {
 
             <div className="flex flex-col">
               {currentItems.map((acc, index) => (
-                <div
-                  key={acc.id}
-                  className={`group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-[#dd6b20] hover:shadow-lg ${index !== currentItems.length - 1 ? 'border-b border-gray-200' : ''
-                    }`}
-                  onClick={() => navigate(`/detail/${acc.id}`)}
-                >
-                  {/* Image */}
-                  <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
-                    <img
-                      src={acc.image}
-                      alt={acc.name}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <button className="absolute top-3 right-3 text-white hover:text-red-500 transition-colors">
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                    </button>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-4 sm:px-8 sm:py-2 flex flex-col flex-grow justify-between">
-                    <div>
-                      <div className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">{acc.type}</div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-white transition-colors">{acc.name}</h3>
-                      <div className="text-sm text-gray-500 mb-2 group-hover:text-white/80 transition-colors">{acc.location}</div>
-                      <div className="flex items-center space-x-1 mb-2">
-                        <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
-                          {acc.rating}
-                        </span>
-                        <span className="text-sm text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}명 평가)</span>
-                      </div>
+                <React.Fragment key={acc.id}>
+                  <div
+                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-[#dd6b20] hover:shadow-lg"
+                    onClick={() => navigate(`/detail/${acc.id}`)}
+                  >
+                    {/* Image */}
+                    <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
+                      <img
+                        src={acc.image}
+                        alt={acc.name}
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <button className="absolute top-3 right-3 text-white hover:text-red-500 transition-colors">
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                      </button>
                     </div>
 
-                    <div className="flex flex-col items-end mt-4 sm:mt-0">
-                      {acc.originalPrice && (
-                        <span className="text-sm text-gray-400 line-through mb-1 group-hover:text-white/60 transition-colors">{acc.originalPrice}</span>
-                      )}
-                      <div className="flex flex-col items-end">
-                        <span className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">쿠폰 적용시</span>
-                        <span className="text-2xl font-bold text-gray-900 group-hover:text-white transition-colors">{acc.price}</span>
-                      </div>
-                      {acc.badges.length > 0 && (
-                        <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">
-                          {acc.badges[0]}
+                    {/* Content */}
+                    <div className="p-4 sm:px-8 sm:py-2 flex flex-col flex-grow justify-between">
+                      <div>
+                        <div className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">{acc.type}</div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-white transition-colors">{acc.name}</h3>
+                        <div className="text-sm text-gray-500 mb-2 group-hover:text-white/80 transition-colors">{acc.location}</div>
+                        <div className="flex items-center space-x-1 mb-2">
+                          <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                            {acc.rating}
+                          </span>
+                          <span className="text-sm text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}명 평가)</span>
                         </div>
-                      )}
+                      </div>
+
+                      <div className="flex flex-col items-end mt-4 sm:mt-0">
+                        {acc.originalPrice && (
+                          <span className="text-sm text-gray-400 line-through mb-1 group-hover:text-white/60 transition-colors">{acc.originalPrice}</span>
+                        )}
+                        <div className="flex flex-col items-end">
+                          <span className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">쿠폰 적용시</span>
+                          <span className="text-2xl font-bold text-gray-900 group-hover:text-white transition-colors">{acc.price}</span>
+                        </div>
+                        {acc.badges.length > 0 && (
+                          <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">
+                            {acc.badges[0]}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                  {index !== currentItems.length - 1 && (
+                    <div className="h-px bg-gray-200 my-0 w-full" />
+                  )}
+                </React.Fragment>
               ))}
             </div>
 

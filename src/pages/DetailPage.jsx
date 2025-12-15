@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Accordion } from "@chakra-ui/react";
 
 import { accommodations } from '../data/mockData';
 
@@ -22,7 +23,7 @@ const DetailPage = () => {
   }
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50 w-full flex justify-center">
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -137,30 +138,30 @@ const DetailPage = () => {
             <div className="space-y-6 mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">객실 선택</h2>
               {destination.rooms && destination.rooms.map((room) => (
-                <div key={room.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+                <div key={room.id} className="group bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col md:flex-row transition-all duration-200 hover:bg-[#dd6b20] hover:shadow-lg">
                   {/* Room Image */}
                   <div className="w-full md:w-[300px] h-48 md:h-auto relative flex-shrink-0">
-                    <img src={room.image} alt={room.name} className="w-full h-full object-cover" />
+                    <img src={room.image} alt={room.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" />
                     <button className="absolute bottom-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-xs">상세정보 &gt;</button>
                   </div>
 
                   {/* Room Options */}
                   <div className="flex-1 p-5">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">{room.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 group-hover:text-white transition-colors">{room.name}</h3>
 
                     <div className="space-y-4">
                       {/* Day Use Option */}
                       {room.dayUse && (
-                        <div className="flex justify-between items-center border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                        <div className="flex justify-between items-center border-b border-gray-100 pb-4 last:border-0 last:pb-0 group-hover:border-white/20 transition-colors">
                           <div>
-                            <div className="font-bold text-gray-800 mb-1">대실</div>
-                            <div className="text-sm text-gray-500">최대 {room.dayUse.time} 이용</div>
-                            <div className="text-xs text-gray-400">마감 {room.dayUse.close}</div>
+                            <div className="font-bold text-gray-800 mb-1 group-hover:text-white transition-colors">대실</div>
+                            <div className="text-sm text-gray-500 group-hover:text-white/80 transition-colors">최대 {room.dayUse.time} 이용</div>
+                            <div className="text-xs text-gray-400 group-hover:text-white/60 transition-colors">마감 {room.dayUse.close}</div>
                           </div>
                           <div className="text-right">
-                            {room.dayUse.original && <div className="text-xs text-gray-400 line-through">{room.dayUse.original}</div>}
-                            <div className="text-lg font-bold text-gray-900">{room.dayUse.price}</div>
-                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 transition-colors">대실 예약</button>
+                            {room.dayUse.original && <div className="text-xs text-gray-400 line-through group-hover:text-white/60 transition-colors">{room.dayUse.original}</div>}
+                            <div className="text-lg font-bold text-gray-900 group-hover:text-white transition-colors">{room.dayUse.price}</div>
+                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">대실 예약</button>
                           </div>
                         </div>
                       )}
@@ -169,15 +170,15 @@ const DetailPage = () => {
                       {room.stay && (
                         <div className="flex justify-between items-center">
                           <div>
-                            <div className="font-bold text-gray-800 mb-1">숙박</div>
-                            <div className="text-sm text-gray-500">입실 {room.stay.checkIn}</div>
-                            <div className="text-xs text-gray-400">퇴실 {room.stay.checkOut}</div>
+                            <div className="font-bold text-gray-800 mb-1 group-hover:text-white transition-colors">숙박</div>
+                            <div className="text-sm text-gray-500 group-hover:text-white/80 transition-colors">입실 {room.stay.checkIn}</div>
+                            <div className="text-xs text-gray-400 group-hover:text-white/60 transition-colors">퇴실 {room.stay.checkOut}</div>
                           </div>
                           <div className="text-right">
-                            <div className="bg-red-100 text-red-500 text-xs px-1 rounded inline-block mb-1">선착순 특가</div>
-                            {room.stay.originalPrice && <div className="text-xs text-gray-400 line-through">{room.stay.originalPrice}</div>}
-                            <div className="text-lg font-bold text-red-500">{room.stay.price}</div>
-                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 transition-colors">숙박 예약</button>
+                            <div className="bg-red-100 text-red-500 text-xs px-1 rounded inline-block mb-1 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">선착순 특가</div>
+                            {room.stay.originalPrice && <div className="text-xs text-gray-400 line-through group-hover:text-white/60 transition-colors">{room.stay.originalPrice}</div>}
+                            <div className="text-lg font-bold text-red-500 group-hover:text-white transition-colors">{room.stay.price}</div>
+                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">숙박 예약</button>
                           </div>
                         </div>
                       )}
@@ -262,7 +263,18 @@ const DetailPage = () => {
                     <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                       {review.content}
                     </p>
-                    <div className="mt-2 text-sm text-gray-500 cursor-pointer hover:underline">더보기 ∨</div>
+                    <Accordion.Root collapsible>
+                      <Accordion.Item value={`review-${review.id}`} border="none">
+                        <Accordion.ItemContent p={0}>
+                          <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line mt-2">
+                            (더보기 내용 예시) 이곳에 추가적인 리뷰 내용이 들어갑니다. 숙소의 위생 상태, 서비스, 주변 편의시설 등에 대한 자세한 후기를 확인하실 수 있습니다.
+                          </p>
+                        </Accordion.ItemContent>
+                        <Accordion.ItemTrigger className="text-sm text-gray-500 cursor-pointer hover:underline justify-start p-0 mt-2">
+                          더보기 ∨
+                        </Accordion.ItemTrigger>
+                      </Accordion.Item>
+                    </Accordion.Root>
                   </div>
                 ))}
                 {!destination.reviews && <div className="text-center text-gray-500 py-8">등록된 리뷰가 없습니다.</div>}
