@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, HStack, RadioGroup, Stack, Box, Text, Accordion } from '@chakra-ui/react';
+import { Button, HStack, Stack, Box, Text, Accordion, Checkbox } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+
 import { accommodations as mockAccommodations } from '../data/mockData';
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
+import SearchForm from "@components/main/SearchForm.jsx";
 
 const ListPage = () => {
   const brandColor = 'rgba(177,78,33,1)';
@@ -18,8 +15,8 @@ const ListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchDate, setSearchDate] = useState('');
   const [searchPersonnel, setSearchPersonnel] = useState('성인 2명');
-  const [selectedType, setSelectedType] = useState('전체');
-  const [selectedRegion, setSelectedRegion] = useState('전체');
+  const [selectedType, setSelectedType] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState([]);
   const [filteredAccommodations, setFilteredAccommodations] = useState(mockAccommodations);
 
   const listRef = useRef(null);
@@ -54,19 +51,23 @@ const ListPage = () => {
     let result = mockAccommodations;
 
     // Filter by Type
-    if (selectedType !== '전체') {
-      if (selectedType === '호텔·리조트') {
-        result = result.filter(acc => acc.type === '호텔' || acc.type === '리조트');
-      } else if (selectedType === '게하·한옥') {
-        result = result.filter(acc => acc.type === '게하·한옥' || acc.type === '게스트하우스' || acc.type === '한옥');
-      } else {
-        result = result.filter(acc => acc.type === selectedType);
-      }
+    if (selectedType.length > 0 && !selectedType.includes('전체')) {
+      result = result.filter(acc => {
+        return selectedType.some(type => {
+          if (type === '호텔·리조트') {
+            return acc.type === '호텔' || acc.type === '리조트';
+          } else if (type === '게하·한옥') {
+            return acc.type === '게하·한옥' || acc.type === '게스트하우스' || acc.type === '한옥';
+          } else {
+            return acc.type === type;
+          }
+        });
+      });
     }
 
     // Filter by Region
-    if (selectedRegion !== '전체') {
-      result = result.filter(acc => acc.location.includes(selectedRegion));
+    if (selectedRegion.length > 0 && !selectedRegion.includes('전체')) {
+      result = result.filter(acc => selectedRegion.some(region => acc.location.includes(region)));
     }
 
     // Filter by Search Term (if any)
@@ -108,6 +109,40 @@ const ListPage = () => {
     scrollToList();
   };
 
+  const handleRegionChange = (value, isChecked) => {
+    if (value === '전체') {
+      setSelectedRegion(isChecked ? [] : []); // '전체' clicking clears others or just resets
+      // Actually, if '전체' is clicked, we usually clear others.
+      // But if we want '전체' to be a state, let's say empty array means '전체'.
+      // If user clicks '전체', we clear the array.
+      setSelectedRegion([]);
+    } else {
+      let newRegions = [...selectedRegion];
+      if (isChecked) {
+        newRegions.push(value);
+      } else {
+        newRegions = newRegions.filter(r => r !== value);
+      }
+      setSelectedRegion(newRegions);
+    }
+    scrollToList();
+  };
+
+  const handleTypeChange = (value, isChecked) => {
+    if (value === '전체') {
+      setSelectedType([]);
+    } else {
+      let newTypes = [...selectedType];
+      if (isChecked) {
+        newTypes.push(value);
+      } else {
+        newTypes = newTypes.filter(t => t !== value);
+      }
+      setSelectedType(newTypes);
+    }
+    scrollToList();
+  };
+
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -128,134 +163,10 @@ const ListPage = () => {
       {/* Header */}
       <Header />
 
-      {/* Hero Swiper - Full Width */}
-      <section className="relative w-full h-[400px] md:h-[600px]">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={0}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          loop={true}
-          className="h-full w-full"
-          style={{
-            '--swiper-theme-color': brandColor,
-            '--swiper-navigation-color': '#fff',
-            '--swiper-pagination-color': brandColor,
-          }}
-        >
-          <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
-                src="/images/beach.png"
-                alt="Beach"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black opacity-30"></div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 pb-20">
-                <h1 className="text-3xl md:text-6xl font-bold mb-4">꿈꾸던 여행을 떠나보세요</h1>
-                <p className="text-lg md:text-2xl mb-8">당신을 위한 특별한 여행지가 기다리고 있습니다.</p>
-                <button
-                  className="px-6 py-2 md:px-8 md:py-3 rounded-full text-base md:text-lg font-semibold transition-transform transform hover:scale-105 whitespace-nowrap"
-                  style={{ backgroundColor: brandColor }}
-                >
-                  여행지 찾아보기
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
-                src="/images/mountain.png"
-                alt="Mountains"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black opacity-30"></div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 pb-20">
-                <h1 className="text-3xl md:text-6xl font-bold mb-4">자연 속으로의 초대</h1>
-                <p className="text-lg md:text-2xl mb-8">일상에서 벗어나 진정한 휴식을 경험하세요.</p>
-                <button
-                  className="px-6 py-2 md:px-8 md:py-3 rounded-full text-base md:text-lg font-semibold transition-transform transform hover:scale-105 whitespace-nowrap"
-                  style={{ backgroundColor: brandColor }}
-                >
-                  힐링 여행 예약
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
-                src="/images/city.png"
-                alt="City"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black opacity-30"></div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 pb-20">
-                <h1 className="text-3xl md:text-6xl font-bold mb-4">도시의 낭만</h1>
-                <p className="text-lg md:text-2xl mb-8">새로운 문화와 만나는 설레는 순간.</p>
-                <button
-                  className="px-6 py-2 md:px-8 md:py-3 rounded-full text-base md:text-lg font-semibold transition-transform transform hover:scale-105 whitespace-nowrap"
-                  style={{ backgroundColor: brandColor }}
-                >
-                  도시 여행 가이드
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </section>
-
-      {/* Search Section */}
-      <div className="w-full px-4 relative z-20 -mt-16 mb-16 flex justify-center">
-        <div className="w-[70%] mx-auto bg-white p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center border border-gray-100">
-          <div className="flex-1 w-full border border-gray-200 rounded-lg px-4 py-2 flex flex-col justify-center h-full">
-            <label className="block text-xs font-bold text-gray-500 mb-0.5">여행지</label>
-            <input
-              type="text"
-              placeholder="어디로 떠나시나요?"
-              className="w-full border-none p-0 text-gray-900 focus:ring-0 text-sm font-medium placeholder-gray-400"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-          <div className="flex-1 w-full border border-gray-200 rounded-lg px-4 py-2 flex flex-col justify-center h-full">
-            <label className="block text-xs font-bold text-gray-500 mb-0.5">날짜</label>
-            <input
-              type="date"
-              className="w-full border-none p-0 text-gray-900 focus:ring-0 text-sm font-medium"
-              value={searchDate}
-              onChange={(e) => setSearchDate(e.target.value)}
-            />
-          </div>
-          <div className="flex-1 w-full border border-gray-200 rounded-lg px-4 py-2 flex flex-col justify-center h-full">
-            <label className="block text-xs font-bold text-gray-500 mb-0.5">인원</label>
-            <select
-              className="w-full border-none p-0 text-gray-900 focus:ring-0 text-sm font-medium"
-              value={searchPersonnel}
-              onChange={(e) => setSearchPersonnel(e.target.value)}
-            >
-              <option>성인 2명</option>
-              <option>성인 1명</option>
-              <option>가족 (성인 2, 아동 1)</option>
-            </select>
-          </div>
-          <Button
-            onClick={handleSearch}
-            size="lg"
-            borderRadius="full"
-            bg="#dd6b20"
-            color="white"
-            _hover={{ bg: "#c05621" }}
-            px={8}
-            mt={{ base: 6, md: 0 }}
-            w={{ base: "full", md: "auto" }}
-          >
-            검색
-          </Button>
+      {/* Search Form */}
+      <div className="w-full flex justify-center mt-8 mb-8">
+        <div className="w-[70%]">
+          <SearchForm />
         </div>
       </div>
 
@@ -287,33 +198,77 @@ const ListPage = () => {
             {/* Filter: Region */}
             <div className="border-b border-gray-100 pb-6 mb-6">
               <h3 className="font-bold text-gray-900 mb-4">지역</h3>
-              <RadioGroup.Root value={selectedRegion} onValueChange={(e) => { setSelectedRegion(e.value); handleFilterClick(); }} colorPalette="orange">
-                <Stack direction="column" gap={2}>
-                  {['전체', '서울', '경기', '인천', '강원', '제주', '부산', '경상', '전라', '충청'].map((region) => (
-                    <RadioGroup.Item key={region} value={region} className="flex items-center gap-2 cursor-pointer">
-                      <RadioGroup.ItemHiddenInput />
-                      <RadioGroup.ItemControl className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded-full border flex items-center justify-center transition-colors" />
-                      <RadioGroup.ItemText className="text-sm text-gray-600">{region}</RadioGroup.ItemText>
-                    </RadioGroup.Item>
-                  ))}
-                </Stack>
-              </RadioGroup.Root>
+              <Stack direction="column" gap={2}>
+                <Checkbox.Root
+                  checked={selectedRegion.length === 0}
+                  onCheckedChange={(e) => handleRegionChange('전체', !!e.checked)}
+                  colorPalette="orange"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox.HiddenInput />
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Indicator className="text-white">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    </Checkbox.Indicator>
+                  </Checkbox.Control>
+                  <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
+                </Checkbox.Root>
+                {['서울', '경기', '인천', '강원', '제주', '부산', '경상', '전라', '충청'].map((region) => (
+                  <Checkbox.Root
+                    key={region}
+                    checked={selectedRegion.includes(region)}
+                    onCheckedChange={(e) => handleRegionChange(region, !!e.checked)}
+                    colorPalette="orange"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Checkbox.HiddenInput />
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                      <Checkbox.Indicator className="text-white">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                      </Checkbox.Indicator>
+                    </Checkbox.Control>
+                    <Checkbox.Label className="text-sm text-gray-600">{region}</Checkbox.Label>
+                  </Checkbox.Root>
+                ))}
+              </Stack>
             </div>
 
-            {/* Filter: Accommodation Type */}
+            {/* Filter: Check Box Type */}
             <div className="border-b border-gray-100 pb-6">
               <h3 className="font-bold text-gray-900 mb-4">숙소유형</h3>
-              <RadioGroup.Root value={selectedType} onValueChange={(e) => { setSelectedType(e.value); handleFilterClick(); }} colorPalette="orange">
-                <Stack direction="column" gap={2}>
-                  {['전체', '모텔', '호텔·리조트', '펜션', '홈&빌라', '캠핑', '게하·한옥'].map((type) => (
-                    <RadioGroup.Item key={type} value={type} className="flex items-center gap-2 cursor-pointer">
-                      <RadioGroup.ItemHiddenInput />
-                      <RadioGroup.ItemControl className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded-full border flex items-center justify-center transition-colors" />
-                      <RadioGroup.ItemText className="text-sm text-gray-600">{type}</RadioGroup.ItemText>
-                    </RadioGroup.Item>
-                  ))}
-                </Stack>
-              </RadioGroup.Root>
+              <Stack direction="column" gap={2}>
+                <Checkbox.Root
+                  checked={selectedType.length === 0}
+                  onCheckedChange={(e) => handleTypeChange('전체', !!e.checked)}
+                  colorPalette="orange"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox.HiddenInput />
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Indicator className="text-white">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    </Checkbox.Indicator>
+                  </Checkbox.Control>
+                  <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
+                </Checkbox.Root>
+                {['모텔', '호텔·리조트', '펜션', '홈&빌라', '캠핑', '게하·한옥'].map((type) => (
+                  <Checkbox.Root
+                    key={type}
+                    checked={selectedType.includes(type)}
+                    onCheckedChange={(e) => handleTypeChange(type, !!e.checked)}
+                    colorPalette="orange"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Checkbox.HiddenInput />
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                      <Checkbox.Indicator className="text-white">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                      </Checkbox.Indicator>
+                    </Checkbox.Control>
+                    <Checkbox.Label className="text-sm text-gray-600">{type}</Checkbox.Label>
+                  </Checkbox.Root>
+                ))}
+              </Stack>
             </div>
 
             {/* Filter: Price */}
@@ -454,7 +409,7 @@ const ListPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-[10px]">
               {currentItems.map((acc, index) => (
                 <React.Fragment key={acc.id}>
                   <div
@@ -503,9 +458,7 @@ const ListPage = () => {
                       </div>
                     </div>
                   </div>
-                  {index !== currentItems.length - 1 && (
-                    <div className="h-px bg-gray-200 my-0 w-full" />
-                  )}
+
                 </React.Fragment>
               ))}
             </div>

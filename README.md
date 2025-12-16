@@ -10,3 +10,4 @@ Fronend workspace for planit project
 
 12/16/2025
 손종현 - 푸터 제작
+김관범 - 리스트페이지 ui개편(스와이퍼 화면제거, 필터기능 체크박스로 교체, 리스트항목 gap 10px로 개선 )
