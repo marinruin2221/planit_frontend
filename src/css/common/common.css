@@ -27,6 +27,7 @@
 :root
 {
 	--brand_color:#DD6B20;
+	--brand_hover_color:#C05621;
 	--white_color:#FCFCFC;
 	--black_color:#333333;
 }
@@ -43,15 +44,9 @@ body
 }
 
 /******************** React Day Picker Common Style ********************/
-.rdp-root
-{
-	font-size:14px;
-}
-.rdp-month_caption
+.rdp-caption_label
 {
 	color:#DD6B20;
-	font-size:unset;
-	font-weight:unset;
 }
 .rdp-chevron
 {
@@ -59,15 +54,7 @@ body
 }
 .rdp-weekday
 {
-	opacity:unset;
 	font-size:unset;
-	font-weight:unset;
-}
-.rdp-day
-{
-	opacity:unset;
-	font-size:unset;
-	font-weight:unset;
 }
 .rdp-day.rdp-today
 {
@@ -83,5 +70,5 @@ body
 }
 .rdp-day_button:hover
 {
-	border:1px solid #DD6B20;
+	color:#DD6B20;
 }
