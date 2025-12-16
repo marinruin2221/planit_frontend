@@ -1,9 +1,13 @@
+// React
 import React , { useState } from "react";
+
+// chakra UI
 import { Popover , Portal , Box , Flex , Text , Button , IconButton , Icon } from "@chakra-ui/react"
 import { LuSearch , LuCalendarArrowUp , LuCalendarArrowDown , LuUser , LuPlus , LuMinus } from "react-icons/lu";
+
+// Day Picker
 import { DayPicker } from "react-day-picker";
 import { ko } from "date-fns/locale";
-
 import "react-day-picker/style.css";
 
 export default function SearchForm()
@@ -57,7 +61,7 @@ export default function SearchForm()
 		<Flex gap="4">
 			<Popover.Root positioning={{placement:"top-start"}}>
 				<Popover.Trigger asChild>
-					<Flex align="center" flex="1" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
+					<Flex align="center" flex="6" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuSearch}/>
 						<Text truncate>여행지, 숙소 검색</Text>
 					</Flex>
@@ -74,7 +78,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root positioning={{placement:"top-start"}}>
 				<Popover.Trigger asChild>
-					<Flex align="center" flex="1" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
+					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuCalendarArrowUp}/>
 						<Text truncate>{dateF}</Text>
 					</Flex>
@@ -91,7 +95,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root positioning={{placement:"top-start"}}>
 				<Popover.Trigger asChild>
-					<Flex align="center" flex="1" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
+					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuCalendarArrowDown}/>
 						<Text truncate>{dateT}</Text>
 					</Flex>
@@ -108,7 +112,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root positioning={{placement:"top-start"}}>
 				<Popover.Trigger asChild>
-					<Flex align="center" flex="1" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
+					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuUser}/>
 						<Text truncate>인원 {adult + child}명</Text>
 					</Flex>
@@ -123,9 +127,9 @@ export default function SearchForm()
 										<Text fontSize="xs" color="#9E9E9E">만 18세 이상</Text>
 									</Box>
 									<Flex>
-										<IconButton size="sm" variant="outline" onClick={()=>{ guest_update("adult",-1); }}><Icon size="sm" as={LuMinus}/></IconButton>
-										<Button size="sm" variant="plain">{adult}</Button>
-										<IconButton size="sm" variant="outline" onClick={()=>{ guest_update("adult",+1); }}><Icon size="sm" as={LuPlus}/></IconButton>
+										<IconButton variant="outline" onClick={()=>{ guest_update("adult",-1); }}><Icon size="sm" as={LuMinus}/></IconButton>
+										<Button variant="plain">{adult}</Button>
+										<IconButton variant="outline" onClick={()=>{ guest_update("adult",+1); }}><Icon size="sm" as={LuPlus}/></IconButton>
 									</Flex>
 								</Flex>
 								<Flex justify="space-between" align="center">
@@ -134,9 +138,9 @@ export default function SearchForm()
 										<Text fontSize="xs" color="#9E9E9E">만 17세 이하</Text>
 									</Box>
 									<Flex>
-										<IconButton size="sm" variant="outline" onClick={()=>{ guest_update("child",-1); }}><Icon size="sm" as={LuMinus}/></IconButton>
-										<Button size="sm" variant="plain">{child}</Button>
-										<IconButton size="sm" variant="outline" onClick={()=>{ guest_update("child",+1); }}><Icon size="sm" as={LuPlus}/></IconButton>
+										<IconButton variant="outline" onClick={()=>{ guest_update("child",-1); }}><Icon size="sm" as={LuMinus}/></IconButton>
+										<Button variant="plain">{child}</Button>
+										<IconButton variant="outline" onClick={()=>{ guest_update("child",+1); }}><Icon size="sm" as={LuPlus}/></IconButton>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -144,7 +148,7 @@ export default function SearchForm()
 					</Popover.Positioner>
 				</Portal>
 			</Popover.Root>
-			<Button flex="1" h="auto" p="4" border="none" rounded="sm" fontSize="sm" color="#FFFFFF" bg="#DD6B20" _hover={{bg:"#C05621"}}>검색하기</Button>
+			<Button flex="2" w="auto" h="auto" p="4" border="none" color="#FFFFFF" bg="#DD6B20" _hover={{bg:"#C05621"}}>검색하기</Button>
 		</Flex>
 	</React.Fragment>
 }
