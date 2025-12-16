@@ -1,47 +1,34 @@
 // React
 import React from "react";
 
-// chakra UI
-import { Container , Box , Text , Image } from "@chakra-ui/react"
-
-// Swiper
-import { Swiper , SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
+// Chakra UI
+import { Container , Box } from "@chakra-ui/react"
 
 // Components
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
-import SearchForm from "@components/main/SearchForm";
+import BannerForm from "@components/main/BannerForm.jsx";
+import SearchForm from "@components/main/SearchForm.jsx";
 
 export default function MainPage()
 {
 	return <React.Fragment>
 		<Header/>
-		
+
 		<Container maxW="1300px">
-			<Swiper navigation={true} modules={[Navigation]}>
-				<SwiperSlide>
-					<Box position="relative">
-						<Image w="100%" h="500px"/>
-						<Box position="absolute" top="10" left="10">
-							<Text>planit 여행 사이트에 어서오세요.</Text>
-							<Text>국내 부터 해외 까지 여행을 즐겨요.</Text>
-						</Box>
-					</Box>
-				</SwiperSlide>
-				<SwiperSlide>
-					<Box position="relative">
-						<Image w="100%" h="500px"/>
-						<Box position="absolute" top="10" left="10">
-							<Text>planit 여행 사이트에 어서오세요. 2</Text>
-							<Text>국내 부터 해외 까지 여행을 즐겨요. 2</Text>
-						</Box>
-					</Box>
-				</SwiperSlide>
-			</Swiper>
-			<SearchForm/>
+			<Box mt="10">
+				<BannerForm/>
+			</Box>
+		</Container>
+		<Container maxW="1300px">
+			<Box mt="10" p="4" rounded="md" boxShadow="md">
+				<SearchForm/>
+			</Box>
+		</Container>
+		<Container maxW="1300px">
+			<Box mt="10">
+				TO-DO
+			</Box>
 		</Container>
 
 		<Footer/>

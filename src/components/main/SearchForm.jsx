@@ -1,7 +1,7 @@
 // React
 import React , { useState } from "react";
 
-// chakra UI
+// Chakra UI
 import { Popover , Portal , Box , Flex , Stack , Text , Input , Button , IconButton , Icon } from "@chakra-ui/react"
 import { LuSearch , LuCalendarArrowUp , LuCalendarArrowDown , LuUser , LuPlus , LuMinus } from "react-icons/lu";
 
@@ -81,10 +81,10 @@ export default function SearchForm()
 	}
 	
 	return <React.Fragment>
-		<Flex gap="4">
+		<Flex direction={{base:"column",md:"row"}} gap={{base:"3",md:"4"}}>
 			<Popover.Root>
 				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" w="auto" h="auto" p="4" flex="auto" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
+					<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="auto" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
 						<Icon as={LuSearch}/>
 						<Text truncate>여행지, 숙소 검색</Text>
 					</Button>
@@ -92,7 +92,7 @@ export default function SearchForm()
 				<Portal>
 					<Popover.Positioner>
 						<Popover.Content>
-							<Box p="4">
+							<Box p={{base:"3",md:"4"}}>
 								<Input/>
 							</Box>
 						</Popover.Content>
@@ -101,7 +101,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root>
 				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" w="auto" h="auto" p="4" flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
+					<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
 						<Icon as={LuCalendarArrowUp}/>
 						<Text truncate>{dateF}</Text>
 					</Button>
@@ -109,7 +109,7 @@ export default function SearchForm()
 				<Portal>
 					<Popover.Positioner>
 						<Popover.Content w="auto" h="auto">
-							<Box p="4">
+							<Box p={{base:"3",md:"4"}}>
 								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateF(mmdd_format(date,"ymd")); }}/>
 							</Box>
 						</Popover.Content>
@@ -118,7 +118,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root>
 				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" w="auto" h="auto" p="4" flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
+					<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
 						<Icon as={LuCalendarArrowDown}/>
 						<Text truncate>{dateT}</Text>
 					</Button>
@@ -126,7 +126,7 @@ export default function SearchForm()
 				<Portal>
 					<Popover.Positioner>
 						<Popover.Content w="auto" h="auto">
-							<Box p="4">
+							<Box p={{base:"3",md:"4"}}>
 								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateT(mmdd_format(date,"ymd")); }}/>
 							</Box>
 						</Popover.Content>
@@ -135,7 +135,7 @@ export default function SearchForm()
 			</Popover.Root>
 			<Popover.Root>
 				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" w="auto" h="auto" p="4" flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
+					<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
 						<Icon as={LuUser}/>
 						<Text truncate>성인 {adult}명, 어린이 {child}명</Text>
 					</Button>
@@ -143,7 +143,7 @@ export default function SearchForm()
 				<Portal>
 					<Popover.Positioner>
 						<Popover.Content>
-							<Stack p="4" gap="4">
+							<Stack p={{base:"3",md:"4"}} gap={{base:"3",md:"4"}}>
 								<Flex justify="space-between" align="normal">
 									<Box>
 										<Text fontSize="md" fontWeight="bold" color="var(--brand_color)">성인</Text>
@@ -171,107 +171,7 @@ export default function SearchForm()
 					</Popover.Positioner>
 				</Portal>
 			</Popover.Root>
-			<Button variant="subtle" size="xl" w="auto" h="auto" p="4" flex="1" color="var(--white_color)" bg="var(--brand_color)" _hover={{bg:"var(--brand_hover_color)"}}>검색하기</Button>
+			<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="1" color="var(--white_color)" bg="var(--brand_color)" _hover={{bg:"var(--brand_hover_color)"}}>검색하기</Button>
 		</Flex>
-
-		
-
-		{/* <Flex gap="4">
-
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" flex="6" color="gray.400" truncate>
-						<Icon as={LuSearch}/>
-						<Text truncate>여행지, 숙소 검색</Text>
-					</Button>
-				</Popover.Trigger>
-				<Portal>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Flex p="4">
-								<Input/>
-							</Flex>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Portal>
-			</Popover.Root>
-
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" flex="3" color="gray.400" truncate>
-						<Icon as={LuCalendarArrowUp}/>
-						<Text truncate>{dateF}</Text>
-					</Button>
-				</Popover.Trigger>
-				<Portal>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Flex p="4">
-								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateF(mmdd_format(date,"ymd")); }}/>
-							</Flex>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Portal>
-			</Popover.Root>
-
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" flex="3" color="gray.400" truncate>
-						<Icon as={LuCalendarArrowDown}/>
-						<Text truncate>{dateT}</Text>
-					</Button>
-				</Popover.Trigger>
-				<Portal>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Flex p="4">
-								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateT(mmdd_format(date,"ymd")); }}/>
-							</Flex>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Portal>
-			</Popover.Root>
-
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" flex="3" color="gray.400" truncate>
-						<Icon as={LuCalendarArrowDown}/>
-						<Text truncate>성인 {adult}명, 어린이 {child}명</Text>
-					</Button>
-				</Popover.Trigger>
-				<Portal>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Flex direction="column" gap="4" p="4">
-								<Flex justify="space-between" align="center">
-									<Box>
-										<Text fontSize="md">성인</Text>
-										<Text fontSize="sm" color="#9E9E9E">만 18세 이상</Text>
-									</Box>
-									<Flex>
-										<IconButton variant="outline" size="md" onClick={()=>{ guest_update("adult",-1); }}><Icon as={LuMinus}/></IconButton>
-										<Button variant="plain" size="md">{adult}</Button>
-										<IconButton variant="outline" size="md" onClick={()=>{ guest_update("adult",+1); }}><Icon as={LuPlus}/></IconButton>
-									</Flex>
-								</Flex>
-								<Flex justify="space-between" align="center">
-									<Box>
-										<Text fontSize="md">어린이</Text>
-										<Text fontSize="sm" color="#9E9E9E">만 17세 이하</Text>
-									</Box>
-									<Flex>
-										<IconButton variant="outline" size="md" onClick={()=>{ guest_update("child",-1); }}><Icon as={LuMinus}/></IconButton>
-										<Button variant="plain" size="md">{child}</Button>
-										<IconButton variant="outline" size="md" onClick={()=>{ guest_update("child",+1); }}><Icon as={LuPlus}/></IconButton>
-									</Flex>
-								</Flex>
-							</Flex>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Portal>
-			</Popover.Root>
-			
-			<Button variant="subtle" size="xl" flex="3" color="#FFFFFF" bg="#DD6B20" _hover={{bg:"#C05621"}}>검색하기</Button>
-		</Flex> */}
 	</React.Fragment>
 }
