@@ -2,7 +2,7 @@
 import React , { useState } from "react";
 
 // chakra UI
-import { Popover , Portal , Box , Flex , Text , Button , IconButton , Icon } from "@chakra-ui/react"
+import { Popover , Portal , Box , Flex , Text , Input , Button , IconButton , Icon } from "@chakra-ui/react"
 import { LuSearch , LuCalendarArrowUp , LuCalendarArrowDown , LuUser , LuPlus , LuMinus } from "react-icons/lu";
 
 // Day Picker
@@ -12,12 +12,12 @@ import "react-day-picker/style.css";
 
 export default function SearchForm()
 {
-	const [dateF,setDateF] = useState(date_format(new Date,"ymd"));
-	const [dateT,setDateT] = useState(date_format(new Date,"ymd"));
+	const [dateF,setDateF] = useState(mmdd_format(new Date,"ymd"));
+	const [dateT,setDateT] = useState(mmdd_format(new Date,"ymd"));
 	const [adult,setAdult] = useState(0);
 	const [child,setChild] = useState(0);
 
-	function date_format(date,type)
+	function yymmdd_format(date,type)
 	{
 		const yy = date.getFullYear();
 		const mm = String(date.getMonth() + 1).padStart(2,"0");
@@ -41,6 +41,29 @@ export default function SearchForm()
 		}
 	}
 
+	function mmdd_format(date,type)
+	{
+		const mm = String(date.getMonth() + 1).padStart(2,"0");
+		const dd = String(date.getDate()).padStart(2,"0");
+		
+		if(type == ".")
+		{
+			return mm + "." + dd;
+		}
+		if(type == "-")
+		{
+			return mm + "-" + dd;
+		}
+		if(type == "/")
+		{
+			return mm + "/" + dd;
+		}
+		if(type == "ymd")
+		{
+			return mm + "월 " + dd + "일";
+		}
+	}
+
 	function guest_update(type,nums)
 	{
 		if(type == "adult")
@@ -59,7 +82,7 @@ export default function SearchForm()
 
 	return <React.Fragment>
 		<Flex gap="4">
-			<Popover.Root positioning={{placement:"top-start"}}>
+			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Flex align="center" flex="6" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuSearch}/>
@@ -70,13 +93,13 @@ export default function SearchForm()
 					<Popover.Positioner>
 						<Popover.Content>
 							<Flex p="4">
-								검색 TO-DO
+								<Input/>
 							</Flex>
 						</Popover.Content>
 					</Popover.Positioner>
 				</Portal>
 			</Popover.Root>
-			<Popover.Root positioning={{placement:"top-start"}}>
+			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuCalendarArrowUp}/>
@@ -87,13 +110,13 @@ export default function SearchForm()
 					<Popover.Positioner>
 						<Popover.Content>
 							<Flex p="4">
-								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateF(date_format(date,"ymd")); }}/>
+								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateF(mmdd_format(date,"ymd")); }}/>
 							</Flex>
 						</Popover.Content>
 					</Popover.Positioner>
 				</Portal>
 			</Popover.Root>
-			<Popover.Root positioning={{placement:"top-start"}}>
+			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuCalendarArrowDown}/>
@@ -104,17 +127,17 @@ export default function SearchForm()
 					<Popover.Positioner>
 						<Popover.Content>
 							<Flex p="4">
-								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateT(date_format(date,"ymd")); }}/>
+								<DayPicker mode="single" locale={ko} disabled={{before:new Date()}} onSelect={(date)=>{ setDateT(mmdd_format(date,"ymd")); }}/>
 							</Flex>
 						</Popover.Content>
 					</Popover.Positioner>
 				</Portal>
 			</Popover.Root>
-			<Popover.Root positioning={{placement:"top-start"}}>
+			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Flex align="center" flex="2" gap="2" p="4" rounded="sm" fontSize="sm" color="#9E9E9E" bg="#F5F5F5" cursor="pointer" _hover={{bg:"#EBEBEB"}} truncate>
 						<Icon size="sm" as={LuUser}/>
-						<Text truncate>인원 {adult + child}명</Text>
+						<Text truncate>성인 {adult}명, 어린이 {child}명</Text>
 					</Flex>
 				</Popover.Trigger>
 				<Portal>

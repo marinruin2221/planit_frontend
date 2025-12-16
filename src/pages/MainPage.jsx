@@ -13,6 +13,7 @@ import "swiper/css/navigation";
 // Components
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
+import SearchForm from "@components/main/SearchForm";
 
 export default function MainPage()
 {
@@ -38,6 +39,8 @@ export default function MainPage()
 				</Box>
 			</SwiperSlide>
 		</Swiper>
+		
+		<SearchForm/>
 
 		<Footer/>
 	</React.Fragment>
