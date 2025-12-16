@@ -7,6 +7,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { accommodations as mockAccommodations } from '../data/mockData';
+import Header from "@components/common/Header.jsx";
+import Footer from "@components/common/Footer.jsx";
 
 const ListPage = () => {
   const brandColor = 'rgba(177,78,33,1)';
@@ -123,73 +125,8 @@ const ListPage = () => {
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50 w-full flex justify-center">
-        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none"
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">홈</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">여행지</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">특가</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">커뮤니티</a>
-          </nav>
-
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-500 hover:text-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-            <button
-              className="text-white px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 whitespace-nowrap"
-              style={{ backgroundColor: brandColor }}
-            >
-              로그인
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Nav */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#" className="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium">홈</a>
-              <a href="#" className="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium">여행지</a>
-              <a href="#" className="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium">특가</a>
-              <a href="#" className="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium">커뮤니티</a>
-            </div>
-            <div className="pt-4 pb-4 border-t border-gray-100">
-              <div className="flex items-center px-5">
-                <button
-                  className="w-full text-white px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200"
-                  style={{ backgroundColor: brandColor }}
-                >
-                  로그인
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* Header */}
+      <Header />
 
       {/* Hero Swiper - Full Width */}
       <section className="relative w-full h-[400px] md:h-[600px]">
@@ -655,45 +592,8 @@ const ListPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-gray-900 text-white py-12 mt-auto flex justify-center">
-        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <span className="text-2xl font-bold" style={{ color: brandColor }}>PlanIt</span>
-              <p className="mt-4 text-gray-400">
-                당신의 모든 여행을 함께합니다.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">여행지</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">국내 여행</a></li>
-                <li><a href="#" className="hover:text-white">해외 여행</a></li>
-                <li><a href="#" className="hover:text-white">테마 여행</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">고객 지원</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">공지사항</a></li>
-                <li><a href="#" className="hover:text-white">자주 묻는 질문</a></li>
-                <li><a href="#" className="hover:text-white">1:1 문의</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">SNS</h4>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white">Instagram</a>
-                <a href="#" className="text-gray-400 hover:text-white">Facebook</a>
-                <a href="#" className="text-gray-400 hover:text-white">Youtube</a>
-              </div>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
-            <p>&copy; 2025 PlanIt. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
