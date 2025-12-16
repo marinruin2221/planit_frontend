@@ -20,27 +20,29 @@ export default function MainPage()
 	return <React.Fragment>
 		<Header/>
 		
-		<Swiper navigation={true} modules={[Navigation]}>
-			<SwiperSlide>
-				<Box position="relative">
-					<Image w="100vw" h="66vh"/>
-					<Box position="absolute" top="10" left="10">
-						<Text>planit 여행 사이트에 어서오세요.</Text>
-						<Text>국내 부터 해외 까지 여행을 즐겨요</Text>
+		<Container maxW="1300px">
+			<Swiper navigation={true} modules={[Navigation]}>
+				<SwiperSlide>
+					<Box position="relative">
+						<Image w="100%" h="500px"/>
+						<Box position="absolute" top="10" left="10">
+							<Text>planit 여행 사이트에 어서오세요.</Text>
+							<Text>국내 부터 해외 까지 여행을 즐겨요.</Text>
+						</Box>
 					</Box>
-				</Box>
-			</SwiperSlide>
-			<SwiperSlide>
-				<Box position="relative">
-					<Image w="100vw" h="66vh"/>
-					<Box position="absolute" top="10" left="10">
-						<Text>planit 여행 사이트에 어서오세요. 1</Text>
+				</SwiperSlide>
+				<SwiperSlide>
+					<Box position="relative">
+						<Image w="100%" h="500px"/>
+						<Box position="absolute" top="10" left="10">
+							<Text>planit 여행 사이트에 어서오세요. 2</Text>
+							<Text>국내 부터 해외 까지 여행을 즐겨요. 2</Text>
+						</Box>
 					</Box>
-				</Box>
-			</SwiperSlide>
-		</Swiper>
-		
-		<SearchForm/>
+				</SwiperSlide>
+			</Swiper>
+			<SearchForm/>
+		</Container>
 
 		<Footer/>
 	</React.Fragment>
