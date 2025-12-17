@@ -8,6 +8,7 @@ import EventPage from "@pages/EventPage.jsx";
 import ListPage from "@pages/ListPage.jsx";
 import DetailPage from "@pages/DetailPage.jsx";
 import CustomerServicePage from "@pages/CustomerservicePage.jsx";
+import AIFloatingButton from "@components/ai/AIFloatingButton.jsx";
 
 import "@css/common/common.css";
 import "@css/tailwind/tailwind.css";
@@ -25,6 +26,8 @@ export default function App() {
 					<Route path="/detail/:id" element={<DetailPage />}></Route>
 					<Route path="/customerservice" element={<CustomerServicePage />}></Route>
 				</Routes>
+				{/* Global AI Floating Button */}
+				<AIFloatingButton />
 			</BrowserRouter>
 		</Provider>
 	</React.Fragment>

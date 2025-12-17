@@ -4,14 +4,17 @@ import { Accordion } from "@chakra-ui/react";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
+import AIRecommendationWindow from "@components/ai/AIRecommendationWindow.jsx";
+import ImageGalleryModal from "@components/common/ImageGalleryModal.jsx";
 
 import { accommodations } from '../data/mockData';
 
 const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const brandColor = 'rgba(177,78,33,1)';
   const [destination, setDestination] = useState(null);
+  const [isAIWindowOpen, setIsAIWindowOpen] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   // Accommodation Data (Yeogi Style) - imported from mockData
 
@@ -25,7 +28,7 @@ const DetailPage = () => {
   }
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 flex flex-col" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
       {/* Header */}
       <Header />
 
@@ -40,7 +43,10 @@ const DetailPage = () => {
             <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] mb-8 rounded-xl overflow-hidden">
               <div className="col-span-2 row-span-2 relative">
                 <img src={destination.image} alt="Main" className="w-full h-full object-cover" />
-                <button className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm flex items-center">
+                <button
+                  onClick={() => setIsGalleryOpen(true)}
+                  className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm flex items-center hover:bg-black/70 transition-colors"
+                >
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   사진 더보기
                 </button>
@@ -74,7 +80,7 @@ const DetailPage = () => {
             <div className="space-y-6 mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">객실 선택</h2>
               {destination.rooms && destination.rooms.map((room) => (
-                <div key={room.id} className="group bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col md:flex-row transition-all duration-200 hover:bg-[#dd6b20] hover:shadow-lg">
+                <div key={room.id} className="group bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col md:flex-row transition-all duration-200 hover:bg-[var(--brand_color)] hover:shadow-lg">
                   {/* Room Image */}
                   <div className="w-full md:w-[300px] h-48 md:h-auto relative flex-shrink-0">
                     <img src={room.image} alt={room.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" />
@@ -97,7 +103,7 @@ const DetailPage = () => {
                           <div className="text-right">
                             {room.dayUse.original && <div className="text-xs text-gray-400 line-through group-hover:text-white/60 transition-colors">{room.dayUse.original}</div>}
                             <div className="text-lg font-bold text-gray-900 group-hover:text-white transition-colors">{room.dayUse.price}</div>
-                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">대실 예약</button>
+                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[var(--brand_color)] transition-colors">대실 예약</button>
                           </div>
                         </div>
                       )}
@@ -111,10 +117,10 @@ const DetailPage = () => {
                             <div className="text-xs text-gray-400 group-hover:text-white/60 transition-colors">퇴실 {room.stay.checkOut}</div>
                           </div>
                           <div className="text-right">
-                            <div className="bg-red-100 text-red-500 text-xs px-1 rounded inline-block mb-1 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">선착순 특가</div>
+                            <div className="bg-red-100 text-red-500 text-xs px-1 rounded inline-block mb-1 group-hover:bg-white group-hover:text-[var(--brand_color)] transition-colors">선착순 특가</div>
                             {room.stay.originalPrice && <div className="text-xs text-gray-400 line-through group-hover:text-white/60 transition-colors">{room.stay.originalPrice}</div>}
                             <div className="text-lg font-bold text-red-500 group-hover:text-white transition-colors">{room.stay.price}</div>
-                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">숙박 예약</button>
+                            <button className="mt-1 bg-red-500 text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-600 group-hover:bg-white group-hover:text-[var(--brand_color)] transition-colors">숙박 예약</button>
                           </div>
                         </div>
                       )}
@@ -222,6 +228,10 @@ const DetailPage = () => {
           {/* Right Sticky Sidebar (30%) */}
           <div className="hidden lg:block w-[30%]">
             <div className="sticky top-24 space-y-4">
+
+              {/* AI Recommendation Button */}
+
+
               {/* Coupon Box */}
               <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
                 <div className="flex justify-between items-center mb-2">
@@ -264,6 +274,27 @@ const DetailPage = () => {
 
       {/* Footer */}
       <Footer />
+
+      {/* AI Recommendation Window */}
+      <AIRecommendationWindow
+        isOpen={isAIWindowOpen}
+        onClose={() => setIsAIWindowOpen(false)}
+        reviews={destination.reviews || []}
+        accommodationName={destination.name}
+      />
+
+      {/* Image Gallery Modal */}
+      <ImageGalleryModal
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        images={[
+          destination.image,
+          "/images/city.png",
+          "/images/beach.png",
+          "/images/jeju.png",
+          "/images/city.png"
+        ]}
+      />
     </div>
   );
 };
