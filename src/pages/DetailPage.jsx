@@ -207,7 +207,7 @@ const DetailPage = () => {
                           </p>
                         </Accordion.ItemContent>
                         <Accordion.ItemTrigger className="text-sm text-gray-500 cursor-pointer hover:underline justify-start p-0 mt-2">
-                          더보기 ∨
+                          ...
                         </Accordion.ItemTrigger>
                       </Accordion.Item>
                     </Accordion.Root>

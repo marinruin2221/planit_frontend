@@ -166,7 +166,7 @@ const ListPage = () => {
       {/* Search Form */}
       <div className="w-full flex justify-center mt-8 mb-8">
         <div className="w-[70%]">
-          <SearchForm />
+          <SearchForm /> <br />
         </div>
       </div>
 
@@ -514,7 +514,7 @@ const ListPage = () => {
                   _hover={{ bg: "gray.100" }}
                 >
                   다음
-                </Button>
+                </Button> <br /> <br /> <br />
               </HStack>
             )}
           </section>
