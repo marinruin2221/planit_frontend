@@ -30,7 +30,7 @@ export default function EventPage()
             title: "멤버십 데이",
             image: "https://image.goodchoice.kr/exhibition/cms/dnpqqosj_1200x480_flsbdjf_20251203100902.png",
             period: "25.12.08 - 25.12.14",
-            category: "펜션캠핑게하"
+            category: "펜션·캠핑·게하"
         },
         {
             id: 4,
@@ -72,7 +72,7 @@ export default function EventPage()
             title: "멤버십 데이",
             image: "https://image.goodchoice.kr/exhibition/cms/dnpqqosj_1200x480_flsbdjf_20251203100902.png",
             period: "25.12.08 - 25.12.14",
-            category: "펜션캠핑게하"
+            category: "펜션·캠핑·게하"
         },
         {
             id: 10,
@@ -101,7 +101,7 @@ export default function EventPage()
         "전체",
         "모텔",
         "호텔리조트",
-        "펜션캠핑게하",
+        "펜션·캠핑·게하",
         "공간대여",
     ];
     
@@ -153,7 +153,7 @@ export default function EventPage()
     return (
         <React.Fragment>
             <Header />
-                <Container maxW="70%" py={10}>
+                <Container maxW="1300px" py={10}>
                     {/* 페이지 제목 */}
                     <Text fontSize="3xl" fontWeight="bold" mb={6}>
                         이벤트
