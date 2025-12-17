@@ -191,7 +191,7 @@ const ListPage = () => {
               <h3 className="font-bold text-gray-900 mb-4">필터</h3>
               <label className="flex items-center space-x-2 cursor-pointer">
                 <input type="checkbox" className="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500" onChange={handleFilterClick} />
-                <span className="text-gray-600">매진 숙소 제외</span>
+                <span className="text-gray-600">&nbsp;매진 숙소 제외</span>
               </label>
             </div>
 
@@ -303,7 +303,7 @@ const ListPage = () => {
                     </div>
                   </Accordion.ItemContent>
                   <Accordion.ItemTrigger className="text-xs text-blue-500 font-medium mt-1 p-0 hover:no-underline justify-start">
-                    더 보기 ⌄
+                    ...
                   </Accordion.ItemTrigger>
                 </Accordion.Item>
               </Accordion.Root>
@@ -389,7 +389,7 @@ const ListPage = () => {
                       </div>
                     </Accordion.ItemContent>
                     <Accordion.ItemTrigger className="text-xs text-blue-500 font-medium mt-2 p-0 hover:no-underline justify-start">
-                      더 보기 ⌄
+                      ...
                     </Accordion.ItemTrigger>
                   </Accordion.Item>
                 </Accordion.Root>
