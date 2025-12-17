@@ -2,7 +2,7 @@
 import React , { useState } from "react";
 
 // Chakra UI
-import { Popover , Portal , Box , Flex , Stack , Text , Input , Button , IconButton , Icon } from "@chakra-ui/react"
+import { Popover , Portal , Box , Flex , Stack , Text , Input , Button , IconButton , Icon } from "@chakra-ui/react";
 import { LuSearch , LuCalendarArrowUp , LuCalendarArrowDown , LuUser , LuPlus , LuMinus } from "react-icons/lu";
 
 // Day Picker
@@ -12,34 +12,10 @@ import "react-day-picker/style.css";
 
 export default function SearchForm()
 {
-	const [dateF,setDateF] = useState(mmdd_format(new Date,"ymd"));
-	const [dateT,setDateT] = useState(mmdd_format(new Date,"ymd"));
+	const [dateF,setDateF] = useState(mmdd_format(new Date(),"k"));
+	const [dateT,setDateT] = useState(mmdd_format(new Date(),"k"));
 	const [adult,setAdult] = useState(0);
 	const [child,setChild] = useState(0);
-
-	function yymmdd_format(date,type)
-	{
-		const yy = date.getFullYear();
-		const mm = String(date.getMonth() + 1).padStart(2,"0");
-		const dd = String(date.getDate()).padStart(2,"0");
-		
-		if(type == ".")
-		{
-			return yy + "." + mm + "." + dd;
-		}
-		if(type == "-")
-		{
-			return yy + "-" + mm + "-" + dd;
-		}
-		if(type == "/")
-		{
-			return yy + "/" + mm + "/" + dd;
-		}
-		if(type == "ymd")
-		{
-			return yy + "년 " + mm + "월 " + dd + "일";
-		}
-	}
 
 	function mmdd_format(date,type)
 	{
@@ -58,7 +34,7 @@ export default function SearchForm()
 		{
 			return mm + "/" + dd;
 		}
-		if(type == "ymd")
+		if(type == "k")
 		{
 			return mm + "월 " + dd + "일";
 		}
@@ -81,7 +57,11 @@ export default function SearchForm()
 	}
 	
 	return <React.Fragment>
-		<Flex direction={{base:"column",md:"row"}} gap={{base:"3",md:"4"}}>
+		<Flex>
+			1
+		</Flex>
+
+		{/* <Flex direction={{base:"column",md:"row"}} gap={{base:"3",md:"4"}}>
 			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="auto" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
@@ -172,6 +152,6 @@ export default function SearchForm()
 				</Portal>
 			</Popover.Root>
 			<Button variant="subtle" size="xl" w="auto" h="auto" p={{base:"3",md:"4"}} flex="1" color="var(--white_color)" bg="var(--brand_color)" _hover={{bg:"var(--brand_hover_color)"}}>검색하기</Button>
-		</Flex>
+		</Flex> */}
 	</React.Fragment>
 }
