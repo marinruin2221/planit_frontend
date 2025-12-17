@@ -1,74 +1,107 @@
 /******************** GMarketSans Font Common Style ********************/
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff")format("woff");
-	font-weight:300;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff")format("woff");
+	font-weight: 300;
+	font-display: swap;
 }
 
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")format("woff");
-	font-weight:500;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")format("woff");
+	font-weight: 500;
+	font-display: swap;
 }
 
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff")format("woff");
-	font-weight:700;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff")format("woff");
+	font-weight: 700;
+	font-display: swap;
 }
 
 /******************** Brand Color Common Style ********************/
-:root
-{
-	--brand_color:#DD6B20;
-	--brand_hover_color:#C05621;
-	--white_color:#FCFCFC;
-	--black_color:#333333;
+:root {
+	--brand_color: #DD6B20;
+	--brand_hover_color: #C05621;
+	--white_color: #FCFCFC;
+	--black_color: #333333;
+
+	/* New Variables */
+	--heart_color: #FF1493;
+	--star_color: #FACC15;
+	--text_gray: #666666;
+	--text_light_gray: #999999;
 }
 
 /******************** html, head, body Common Style ********************/
 html,
 head,
-body
-{
-	color:#333333;
-	font-size:14px;
-	font-weight:normal;
-	font-family:"GMarketSans";
+body {
+	color: #333333;
+	font-size: 14px;
+	font-weight: normal;
+	font-family: "GMarketSans";
 }
 
 /******************** React Day Picker Common Style ********************/
-.rdp-caption_label
-{
-	color:#DD6B20;
+.rdp-caption_label {
+	color: #DD6B20;
 }
-.rdp-chevron
-{
-	fill:#DD6B20;
+
+.rdp-chevron {
+	fill: #DD6B20;
 }
-.rdp-weekday
-{
-	font-size:unset;
+
+.rdp-weekday {
+	font-size: unset;
 }
-.rdp-day.rdp-today
-{
-	color:#DD6B20;
+
+.rdp-day.rdp-today {
+	color: #DD6B20;
 }
-.rdp-day:first-child
-{
-	color:#FF0000;
+
+.rdp-day:first-child {
+	color: #FF0000;
 }
-.rdp-day:last-child
-{
-	color:#FF0000;
+
+.rdp-day:last-child {
+	color: #FF0000;
 }
-.rdp-day_button:hover
-{
-	color:#DD6B20;
+
+.rdp-day_button:hover {
+	color: #DD6B20;
+}
+
+/******************** Utility Classes ********************/
+.text-brand {
+	color: var(--brand_color);
+}
+
+.bg-brand {
+	background-color: var(--brand_color);
+}
+
+.text-heart {
+	color: var(--heart_color);
+}
+
+.text-star {
+	color: var(--star_color);
+}
+
+.bg-star {
+	background-color: var(--star_color);
+}
+
+.text-title-xl {
+	font-size: 32px;
+}
+
+.text-title-lg {
+	font-size: 24px;
+}
+
+.text-title-md {
+	font-size: 22px;
 }

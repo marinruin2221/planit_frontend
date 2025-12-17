@@ -422,8 +422,8 @@ const ListPage = () => {
                         alt={acc.name}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                       />
-                      <button className="absolute top-3 right-3 transition-colors" style={{ color: '#FF1493' }}>
-                        <svg className="w-6 h-6" fill="#FF1493" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                      <button className="absolute top-3 right-3 transition-colors text-heart">
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                       </button>
                     </div>
 
@@ -431,12 +431,12 @@ const ListPage = () => {
                     <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
                       <div>
                         <div className="text-xs text-gray-500 mb-1 font-medium group-hover:text-white/80 transition-colors">{acc.type}</div>
-                        <h3 className="font-bold text-gray-900 mb-2 group-hover:text-white transition-colors leading-tight" style={{ fontSize: '24px' }}>{acc.name}</h3>
+                        <h3 className="font-bold text-gray-900 mb-2 group-hover:text-white transition-colors leading-tight text-title-lg">{acc.name}</h3>
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                          <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
                             {acc.rating}
                           </span>
-                          <span className="text-yellow-400 text-xs font-bold group-hover:text-white transition-colors">추천해요</span>
+                          <span className="text-star text-xs font-bold group-hover:text-white transition-colors">추천해요</span>
                           <span className="text-xs text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}개 리뷰)</span>
                         </div>
                         <div className="text-sm text-gray-500 mb-1 group-hover:text-white/80 transition-colors flex items-center">

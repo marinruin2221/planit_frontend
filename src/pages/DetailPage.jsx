@@ -45,7 +45,7 @@ const DetailPage = () => {
                 <img src={destination.image} alt="Main" className="w-full h-full object-cover" />
                 <button
                   onClick={() => setIsGalleryOpen(true)}
-                  className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm flex items-center hover:bg-black/70 transition-colors"
+                  className="absolute bottom-4 right-4 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-bold flex items-center shadow-lg hover:bg-gray-50 transition-all transform hover:scale-105 z-10 cursor-pointer"
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   사진 더보기
@@ -60,9 +60,9 @@ const DetailPage = () => {
             {/* Header Info */}
             <div className="mb-8 border-b border-gray-100 pb-8">
               <div className="text-sm text-gray-500 mb-2">{destination.type}</div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-3">{destination.name}</h1>
+              <h1 className="font-bold text-gray-900 mb-3 leading-tight text-title-xl">{destination.name}</h1>
               <div className="flex items-center space-x-2 mb-4">
-                <span className="bg-yellow-400 text-white text-sm font-bold px-1.5 py-0.5 rounded">{destination.rating}</span>
+                <span className="bg-star text-white text-sm font-bold px-1.5 py-0.5 rounded">{destination.rating}</span>
                 <span className="text-gray-500 text-sm">{destination.reviewCount}명 평가</span>
               </div>
               <div className="text-gray-600 mb-4 flex items-center">
