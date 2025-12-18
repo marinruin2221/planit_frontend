@@ -153,7 +153,7 @@ export default function EventPage()
     return (
         <React.Fragment>
             <Header />
-                <Container maxW="1300px" py={10}>
+                <Container  maxW="1300px" py={10}>
                     {/* 페이지 제목 */}
                     <Text fontSize="3xl" fontWeight="bold" mb={6}>
                         이벤트
