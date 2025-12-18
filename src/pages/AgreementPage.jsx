@@ -14,6 +14,7 @@ export default function MyPage() {
         <Container maxW="55%" py={10}>
 		    <Text fontSize="3xl" fontWeight="bold" mb={1}>이용약관</Text>
             <Text fontSize="md">
+            <br/><br/>
             제1장 총 칙
             <br/><br/>
             제1조 (명칭)<br/>

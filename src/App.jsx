@@ -9,6 +9,7 @@ import ListPage from "@pages/ListPage.jsx";
 import DetailPage from "@pages/DetailPage.jsx";
 import CustomerServicePage from "@pages/CustomerservicePage.jsx";
 import Agreement from "@pages/AgreementPage.jsx"
+import Privacy from "@pages/privacyPage.jsx"
 import AIFloatingButton from "@components/ai/AIFloatingButton.jsx";
 
 import "@css/common/common.css";
@@ -27,6 +28,7 @@ export default function App() {
 					<Route path="/detail/:id" element={<DetailPage />}></Route>
 					<Route path="/customerservice" element={<CustomerServicePage />}></Route>
 					<Route path="/agreement" element={<Agreement />}></Route>
+					<Route path="/privacy" element={<Privacy />}></Route>
 				</Routes>
 				{/* Global AI Floating Button */}
 				<AIFloatingButton />
