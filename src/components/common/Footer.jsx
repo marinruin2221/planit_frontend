@@ -13,7 +13,7 @@ export default function Footer() {
           {/* Brand */}
           <Box>
             <Text fontSize="md" fontWeight="bold" color="gray.700">
-              플랜잇
+              플랜잇.
             </Text>
             <Text mt={3} fontSize="xs" color="gray.500" lineHeight="tall">
               숙소 예약과 여행 계획을 더 간편하게.
