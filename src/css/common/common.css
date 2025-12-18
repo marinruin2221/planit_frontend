@@ -1,74 +1,68 @@
 /******************** GMarketSans Font Common Style ********************/
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff")format("woff");
-	font-weight:300;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff")format("woff");
+	font-weight: 300;
+	font-display: swap;
 }
 
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")format("woff");
-	font-weight:500;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")format("woff");
+	font-weight: 500;
+	font-display: swap;
 }
 
-@font-face
-{
-	font-family:"GMarketSans";
-	src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff")format("woff");
-	font-weight:700;
-	font-display:swap;
+@font-face {
+	font-family: "GMarketSans";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff")format("woff");
+	font-weight: 700;
+	font-display: swap;
 }
 
 /******************** Brand Color Common Style ********************/
-:root
-{
-	--brand_color:#DD6B20;
-	--brand_hover_color:#C05621;
-	--white_color:#FCFCFC;
-	--black_color:#333333;
+:root {
+	--brand_color: #DD6B20;
+	--brand_hover_color: #C05621;
+	--white_color: #FCFCFC;
+	--black_color: #333333;
 }
 
 /******************** html, head, body Common Style ********************/
 html,
 head,
-body
-{
-	color:#333333;
-	font-size:14px;
-	font-weight:normal;
-	font-family:"GMarketSans";
+body {
+	color: #333333;
+	font-size: 14px;
+	font-weight: normal;
+	font-family: "GMarketSans";
 }
 
 /******************** React Day Picker Common Style ********************/
-.rdp-caption_label
-{
-	color:#DD6B20;
+.rdp-caption_label {
+	color: #DD6B20;
 }
-.rdp-chevron
-{
-	fill:#DD6B20;
+
+.rdp-chevron {
+	fill: #DD6B20;
 }
-.rdp-weekday
-{
-	font-size:unset;
+
+.rdp-weekday {
+	font-size: unset;
 }
-.rdp-day.rdp-today
-{
-	color:#DD6B20;
+
+.rdp-day.rdp-today {
+	color: #DD6B20;
 }
-.rdp-day:first-child
-{
-	color:#FF0000;
+
+.rdp-day:first-child {
+	color: #FF0000;
 }
-.rdp-day:last-child
-{
-	color:#FF0000;
+
+.rdp-day:last-child {
+	color: #FF0000;
 }
-.rdp-day_button:hover
-{
-	color:#DD6B20;
+
+.rdp-day_button:hover {
+	color: #DD6B20;
 }
