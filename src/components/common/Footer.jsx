@@ -34,7 +34,7 @@ export default function Footer() {
 				<Link href="/customerservice" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
 					고객센터
 				</Link>
-				<Link href="/terms" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
+				<Link href="/agreement" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
 					이용약관
 				</Link>
 				<Link href="/privacy" color="gray.500" _hover={{ color: "#dd6b20" }} display="block">

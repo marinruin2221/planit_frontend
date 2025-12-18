@@ -8,7 +8,6 @@ import Footer from "@components/common/Footer.jsx";
 import SearchForm from "@components/main/SearchForm.jsx";
 
 const ListPage = () => {
-  const brandColor = 'rgba(177,78,33,1)';
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -158,13 +157,13 @@ const ListPage = () => {
   };
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 flex flex-col" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
       {/* Header */}
       {/* Header */}
       <Header />
 
       {/* Search Form */}
-      <div className="w-full flex justify-center mt-8 mb-8">
+      <div className="w-full flex justify-center mt-8 mb-16">
         <div className="w-[70%]">
           <SearchForm /> <br />
         </div>
@@ -175,7 +174,7 @@ const ListPage = () => {
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
 
           {/* Left Sidebar - Filters */}
-          <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8" style={{ fontFamily: 'SCoreDream4, sans-serif' }}>
+          <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8">
             {/* Map Button */}
             <div className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
               <img src="/images/city.png" alt="Map" className="w-full h-full object-cover" />
@@ -206,7 +205,7 @@ const ListPage = () => {
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <Checkbox.HiddenInput />
-                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
                     <Checkbox.Indicator className="text-white">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
                     </Checkbox.Indicator>
@@ -222,7 +221,7 @@ const ListPage = () => {
                     className="flex items-center gap-2 cursor-pointer"
                   >
                     <Checkbox.HiddenInput />
-                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
                       <Checkbox.Indicator className="text-white">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
                       </Checkbox.Indicator>
@@ -244,7 +243,7 @@ const ListPage = () => {
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <Checkbox.HiddenInput />
-                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
                     <Checkbox.Indicator className="text-white">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
                     </Checkbox.Indicator>
@@ -260,7 +259,7 @@ const ListPage = () => {
                     className="flex items-center gap-2 cursor-pointer"
                   >
                     <Checkbox.HiddenInput />
-                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-orange-500 data-[checked]:border-orange-500 w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
                       <Checkbox.Indicator className="text-white">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
                       </Checkbox.Indicator>
@@ -413,7 +412,7 @@ const ListPage = () => {
               {currentItems.map((acc, index) => (
                 <React.Fragment key={acc.id}>
                   <div
-                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-[#dd6b20] hover:shadow-lg"
+                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-[var(--brand_color)] hover:shadow-lg"
                     onClick={() => navigate(`/detail/${acc.id}`)}
                   >
                     {/* Image */}
@@ -423,22 +422,25 @@ const ListPage = () => {
                         alt={acc.name}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                       />
-                      <button className="absolute top-3 right-3 text-white hover:text-red-500 transition-colors">
+                      <button className="absolute top-3 right-3 transition-colors text-heart">
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                       </button>
                     </div>
 
                     {/* Content */}
-                    <div className="p-4 sm:px-8 sm:py-2 flex flex-col flex-grow justify-between">
+                    <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
                       <div>
-                        <div className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">{acc.type}</div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-white transition-colors">{acc.name}</h3>
-                        <div className="text-sm text-gray-500 mb-2 group-hover:text-white/80 transition-colors">{acc.location}</div>
-                        <div className="flex items-center space-x-1 mb-2">
-                          <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                        <div className="text-xs text-gray-500 mb-1 font-medium group-hover:text-white/80 transition-colors">{acc.type}</div>
+                        <h3 className="font-bold text-gray-900 mb-2 group-hover:text-white transition-colors leading-tight text-title-lg">{acc.name}</h3>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
                             {acc.rating}
                           </span>
-                          <span className="text-sm text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}명 평가)</span>
+                          <span className="text-star text-xs font-bold group-hover:text-white transition-colors">추천해요</span>
+                          <span className="text-xs text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}개 리뷰)</span>
+                        </div>
+                        <div className="text-sm text-gray-500 mb-1 group-hover:text-white/80 transition-colors flex items-center">
+                          {acc.location}
                         </div>
                       </div>
 
@@ -447,12 +449,19 @@ const ListPage = () => {
                           <span className="text-sm text-gray-400 line-through mb-1 group-hover:text-white/60 transition-colors">{acc.originalPrice}</span>
                         )}
                         <div className="flex flex-col items-end">
-                          <span className="text-xs text-gray-500 mb-1 group-hover:text-white/80 transition-colors">쿠폰 적용시</span>
+                          <div className="flex items-center gap-1 mb-1">
+                            <span className="text-xs text-gray-500 group-hover:text-white/80 transition-colors">숙박</span>
+                            <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded group-hover:bg-white/20 group-hover:text-white transition-colors">쿠폰적용가</span>
+                          </div>
                           <span className="text-2xl font-bold text-gray-900 group-hover:text-white transition-colors">{acc.price}</span>
                         </div>
                         {acc.badges.length > 0 && (
-                          <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded group-hover:bg-white group-hover:text-[#dd6b20] transition-colors">
-                            {acc.badges[0]}
+                          <div className="mt-3 flex gap-1">
+                            {acc.badges.map((badge, idx) => (
+                              <span key={idx} className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded group-hover:bg-white group-hover:text-[var(--brand_color)] transition-colors font-medium">
+                                {badge}
+                              </span>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -489,11 +498,11 @@ const ListPage = () => {
                       size="sm"
                       borderRadius="full"
                       variant={isActive ? "solid" : "outline"}
-                      bg={isActive ? "#dd6b20" : "transparent"}
+                      bg={isActive ? "var(--brand_color)" : "transparent"}
                       color={isActive ? "white" : "gray.700"}
-                      borderColor={isActive ? "#dd6b20" : "gray.300"}
+                      borderColor={isActive ? "var(--brand_color)" : "gray.300"}
                       _hover={{
-                        bg: isActive ? "#dd6b20" : "gray.100",
+                        bg: isActive ? "var(--brand_color)" : "gray.100",
                       }}
                       onClick={() => paginate(page)}
                     >

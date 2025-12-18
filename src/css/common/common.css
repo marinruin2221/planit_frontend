@@ -26,6 +26,15 @@
 	--brand_hover_color: #C05621;
 	--white_color: #FCFCFC;
 	--black_color: #333333;
+<<<<<<< HEAD
+=======
+
+	/* New Variables */
+	--heart_color: #FF1493;
+	--star_color: #FACC15;
+	--text_gray: #666666;
+	--text_light_gray: #999999;
+>>>>>>> 7b38db15517c270fc9b3edf80632c48fc63969cd
 }
 
 /******************** html, head, body Common Style ********************/
@@ -65,4 +74,40 @@ body {
 
 .rdp-day_button:hover {
 	color: #DD6B20;
+<<<<<<< HEAD
+=======
+}
+
+/******************** Utility Classes ********************/
+.text-brand {
+	color: var(--brand_color);
+}
+
+.bg-brand {
+	background-color: var(--brand_color);
+}
+
+.text-heart {
+	color: var(--heart_color);
+}
+
+.text-star {
+	color: var(--star_color);
+}
+
+.bg-star {
+	background-color: var(--star_color);
+}
+
+.text-title-xl {
+	font-size: 32px;
+}
+
+.text-title-lg {
+	font-size: 24px;
+}
+
+.text-title-md {
+	font-size: 22px;
+>>>>>>> 7b38db15517c270fc9b3edf80632c48fc63969cd
 }
