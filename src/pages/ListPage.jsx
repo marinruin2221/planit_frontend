@@ -197,7 +197,7 @@ const ListPage = () => {
             <div className="border-b border-gray-100 pb-6">
               <h3 className="font-bold text-gray-900 mb-4">필터</h3>
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" className="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500" onChange={handleFilterClick} />
+                <input type="checkbox" className="form-checkbox h-5 w-5 rounded border-gray-300 accent-[var(--brand_color)] focus:ring-[var(--brand_color)]" onChange={handleFilterClick} />
                 <span className="text-gray-600">&nbsp;매진 숙소 제외</span>
               </label>
             </div>
@@ -430,7 +430,7 @@ const ListPage = () => {
               {currentItems.map((acc, index) => (
                 <React.Fragment key={acc.id}>
                   <div
-                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-[var(--brand_color)] hover:shadow-lg"
+                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:shadow-lg"
                     onClick={() => navigate(`/detail/${acc.id}`)}
                   >
                     {/* Image */}
@@ -448,35 +448,35 @@ const ListPage = () => {
                     {/* Content */}
                     <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
                       <div>
-                        <div className="text-xs text-gray-500 mb-1 font-medium group-hover:text-white/80 transition-colors">{acc.type}</div>
-                        <h3 className="font-bold text-gray-900 mb-2 group-hover:text-white transition-colors leading-tight text-title-lg">{acc.name}</h3>
+                        <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">{acc.type}</div>
+                        <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg">{acc.name}</h3>
                         <div className="flex items-center space-x-2 mb-2">
                           <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
                             {acc.rating}
                           </span>
-                          <span className="text-star text-xs font-bold group-hover:text-white transition-colors">추천해요</span>
-                          <span className="text-xs text-gray-400 group-hover:text-white/80 transition-colors">({acc.reviewCount}개 리뷰)</span>
+                          <span className="text-star text-xs font-bold transition-colors">추천해요</span>
+                          <span className="text-xs text-gray-400 transition-colors">({acc.reviewCount}개 리뷰)</span>
                         </div>
-                        <div className="text-sm text-gray-500 mb-1 group-hover:text-white/80 transition-colors flex items-center">
+                        <div className="text-sm text-gray-500 mb-1 transition-colors flex items-center">
                           {acc.location}
                         </div>
                       </div>
 
                       <div className="flex flex-col items-end mt-4 sm:mt-0">
                         {acc.originalPrice && (
-                          <span className="text-sm text-gray-400 line-through mb-1 group-hover:text-white/60 transition-colors">{acc.originalPrice}</span>
+                          <span className="text-sm text-gray-400 line-through mb-1 transition-colors">{acc.originalPrice}</span>
                         )}
                         <div className="flex flex-col items-end">
                           <div className="flex items-center gap-1 mb-1">
-                            <span className="text-xs text-gray-500 group-hover:text-white/80 transition-colors">숙박</span>
-                            <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded group-hover:bg-white/20 group-hover:text-white transition-colors">쿠폰적용가</span>
+                            <span className="text-xs text-gray-500 transition-colors">숙박</span>
+                            <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
                           </div>
-                          <span className="text-2xl font-bold text-gray-900 group-hover:text-white transition-colors">{acc.price}</span>
+                          <span className="text-2xl font-bold text-gray-900 transition-colors">{acc.price}</span>
                         </div>
                         {acc.badges.length > 0 && (
                           <div className="mt-3 flex gap-1">
                             {acc.badges.map((badge, idx) => (
-                              <span key={idx} className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded group-hover:bg-white group-hover:text-[var(--brand_color)] transition-colors font-medium">
+                              <span key={idx} className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded transition-colors font-medium">
                                 {badge}
                               </span>
                             ))}
