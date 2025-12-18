@@ -1,11 +1,14 @@
 import React from "react";
 
-import { Box, SimpleGrid, Image, Text, Container, Input, Button, HStack, Accordion } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+
+import { Box, Text, Container, Button } from "@chakra-ui/react";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
 
 export default function MyPage() {
+    const navigate = useNavigate();
 	return <React.Fragment>
 		<Header />
         <Container maxW="55%" py={10}>
@@ -120,7 +123,7 @@ export default function MyPage() {
             <br/><br/><br/><br/>
             </Text>
             <Box display="flex" justifyContent="center">
-                <Button size="2xl" bgColor="#dd6b20" fontSize="2xl" fontWeight="bold">홈으로</Button>
+                <Button size="2xl" bgColor="#dd6b20" fontSize="2xl" fontWeight="bold" onClick={() => navigate("/")}>홈으로</Button>
             </Box>
         </Container>
 		<Footer />
