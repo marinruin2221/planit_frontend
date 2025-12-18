@@ -27,13 +27,13 @@ export default function CustomerservicePage()
                     <Box>
                         <HStack spacing={3}>
                             <LuPhone size={20} color="#4A5568" />
-                            <Text fontSize="2xl" fontWeight="bold" color="gray.900">
+                            <Text fontSize="2xl" fontWeight="bold">
                                 1234-1234
                             </Text>
                         </HStack>
                         <HStack spacing={3} mb={4}>
                             <LuMail size={20} color="#4A5568" />
-                            <Text fontSize="2xl" fontWeight="bold" color="gray.900">
+                            <Text fontSize="2xl" fontWeight="bold">
                                 help@planitreserve.com
                             </Text>
                         </HStack>
@@ -64,7 +64,7 @@ export default function CustomerservicePage()
             </Text>
 
             <Accordion.Root multiple>
-                <Accordion.Item value="q1" mb={3}>
+                <Accordion.Item value="q1" mb={3} borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [숙소] 예약을 취소하고 싶어요.
@@ -81,7 +81,7 @@ export default function CustomerservicePage()
                     </Accordion.ItemContent>
                 </Accordion.Item>
 
-                <Accordion.Item value="q2" mb={3}>
+                <Accordion.Item value="q2" mb={3} borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [공통] 천재지변/감염병으로 인한 예약취소는 어떻게 하나요?
@@ -101,7 +101,7 @@ export default function CustomerservicePage()
                     </Accordion.ItemContent>
                 </Accordion.Item>
 
-                <Accordion.Item value="q3" mb={3}>
+                <Accordion.Item value="q3" mb={3} borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [숙소] 예약대기 건 예약취소하고 싶어요.
@@ -117,7 +117,7 @@ export default function CustomerservicePage()
                     </Accordion.ItemContent>
                 </Accordion.Item>
 
-                <Accordion.Item value="q4" mb={3}>
+                <Accordion.Item value="q4" mb={3} borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [숙소] 체크인날짜/객실타입을 변경하고 싶어요.
@@ -135,7 +135,7 @@ export default function CustomerservicePage()
                     </Accordion.ItemContent>
                 </Accordion.Item>
 
-                <Accordion.Item value="q5" mb={3}>
+                <Accordion.Item value="q5" mb={3} borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [공통] 현금영수증 발급받고 싶어요.
@@ -165,7 +165,7 @@ export default function CustomerservicePage()
                     </Accordion.ItemContent>
                 </Accordion.Item>
 
-                <Accordion.Item value="q6" >
+                <Accordion.Item value="q6" borderBottom="1px solid" borderColor="#DD6B20">
                     <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                             [공통] 영수증/거래내역서 발급받고 싶어요.
