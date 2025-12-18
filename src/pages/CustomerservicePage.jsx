@@ -193,8 +193,9 @@ export default function CustomerservicePage()
                     return (
                     <Button
                         key={cat}
-                        size="sm"
+                        size="md"
                         fontWeight="bold"
+                        fontSize="md"
                         variant={isActive ? "solid" : "outline"}
                         borderRadius="full"
                         onClick={() => setActiveFaqCategory(cat)}
@@ -209,16 +210,16 @@ export default function CustomerservicePage()
                 })}
             </HStack>
 
-            <Accordion.Root>
+            <Accordion.Root collapsible>
                 {filteredFaqs.map((faq) => (
                     <Accordion.Item
                     key={faq.value}
                     value={faq.value}
-                    mb={3}
+                    mb={0}
                     borderBottom="1px solid"
                     borderColor="#DD6B20"
                     >
-                    <Accordion.ItemTrigger py={4} _expanded={{ bg: "gray.50" }}>
+                    <Accordion.ItemTrigger py={6} _expanded={{ bg: "gray.100" }} _hover={{bg:"gray.100"}}>
                         <Box flex="1" textAlign="left" fontWeight="bold">
                         {faq.title}
                         </Box>
