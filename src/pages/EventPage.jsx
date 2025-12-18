@@ -222,7 +222,7 @@ export default function EventPage()
                     </HStack>
 
                     {/* 이벤트 카드들 */}
-                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacingX={8} spacingY={12}>
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gapX={8} gapY={12}>
                         {pagedEvents.map((e) => (
                             <Box
                                 key={e.id}
