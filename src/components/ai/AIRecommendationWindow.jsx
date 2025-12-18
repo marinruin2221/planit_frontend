@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { SimpleGrid, Button } from "@chakra-ui/react";
 
 const AIRecommendationWindow = ({ isOpen, onClose, reviews, accommodationName }) => {
   const [mbti, setMbti] = useState('');
@@ -94,16 +95,20 @@ const AIRecommendationWindow = ({ isOpen, onClose, reviews, accommodationName })
 
           <div className="mb-8">
             <label className="block text-sm font-bold text-gray-700 mb-3">당신의 MBTI는?</label>
-            <select
-              value={mbti}
-              onChange={(e) => setMbti(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--brand_color)] focus:border-transparent outline-none transition-all"
-            >
-              <option value="">선택해주세요</option>
-              {mbtiOptions.map(type => (
-                <option key={type} value={type}>{type}</option>
+            <SimpleGrid columns={4} spacing={2}>
+              {mbtiOptions.map((type) => (
+                <Button
+                  key={type}
+                  size="sm"
+                  variant={mbti === type ? "solid" : "outline"}
+                  colorPalette={mbti === type ? "orange" : "gray"}
+                  onClick={() => setMbti(type)}
+                  className={`transition-all ${mbti === type ? 'ring-2 ring-offset-1 ring-orange-500' : 'hover:bg-gray-50'}`}
+                >
+                  {type}
+                </Button>
               ))}
-            </select>
+            </SimpleGrid>
             {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
           </div>
 
@@ -141,7 +146,7 @@ const AIRecommendationWindow = ({ isOpen, onClose, reviews, accommodationName })
           </button>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

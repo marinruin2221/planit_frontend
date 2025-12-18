@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, HStack, Stack, Box, Text, Accordion, Checkbox } from '@chakra-ui/react';
+import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag } from '@chakra-ui/react';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { accommodations as mockAccommodations } from '../data/mockData';
@@ -16,6 +17,7 @@ const ListPage = () => {
   const [searchPersonnel, setSearchPersonnel] = useState('성인 2명');
   const [selectedType, setSelectedType] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 500000]);
   const [filteredAccommodations, setFilteredAccommodations] = useState(mockAccommodations);
 
   const listRef = useRef(null);
@@ -76,10 +78,16 @@ const ListPage = () => {
       );
     }
 
+    // Filter by Price
+    result = result.filter(acc => {
+      const price = parseInt(acc.price.replace(/[^0-9]/g, ''), 10);
+      return price >= priceRange[0] && price <= priceRange[1];
+    });
+
     setFilteredAccommodations(result);
     // We don't reset page here to avoid loops if params change, but if filters change manually we might want to.
     // For now, let's keep it simple.
-  }, [selectedType, selectedRegion, searchTerm]);
+  }, [selectedType, selectedRegion, searchTerm, priceRange]);
 
   const handleSearch = () => {
     // Update URL with current search state
@@ -273,10 +281,20 @@ const ListPage = () => {
             {/* Filter: Price */}
             <div className="border-b border-gray-100 pb-6">
               <h3 className="font-bold text-gray-900 mb-4">가격 <span className="text-xs font-normal text-gray-400">1박 기준</span></h3>
-              <input type="range" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-500" onChange={handleFilterClick} />
-              <div className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>1만원</span>
-                <span>30만원~</span>
+              <div className="px-2">
+                <input
+                  type="range"
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  min={0}
+                  max={500000}
+                  step={10000}
+                  value={priceRange[1]}
+                  onChange={(e) => setPriceRange([0, parseInt(e.target.value, 10)])}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 mt-4 font-medium">
+                <span>0원</span>
+                <span>{priceRange[1] === 500000 ? '50만원 이상' : `${priceRange[1].toLocaleString()}원`}</span>
               </div>
             </div>
 
@@ -285,9 +303,9 @@ const ListPage = () => {
               <h3 className="font-bold text-gray-900 mb-4">#취향</h3>
               <div className="flex flex-wrap gap-2 mb-2">
                 {['#숙박페스타', '#가족여행숙소', '#스파', '#파티룸', '#OTT', '#연인추천', '#감성숙소', '#뷰맛집', '#연박특가'].map((tag, idx) => (
-                  <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                    {tag}
-                  </button>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Label>{tag}</Tag.Label>
+                  </Tag.Root>
                 ))}
               </div>
               <Accordion.Root collapsible>
@@ -295,9 +313,9 @@ const ListPage = () => {
                   <Accordion.ItemContent p={0}>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {['#애견동반', '#조식포함', '#오션뷰', '#마운틴뷰', '#시티뷰'].map((tag, idx) => (
-                        <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                          {tag}
-                        </button>
+                        <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                          <Tag.Label>{tag}</Tag.Label>
+                        </Tag.Root>
                       ))}
                     </div>
                   </Accordion.ItemContent>
@@ -313,9 +331,9 @@ const ListPage = () => {
               <h3 className="font-bold text-gray-900 mb-4">할인혜택</h3>
               <div className="flex flex-wrap gap-2">
                 {['쿠폰할인', '무한대실', '할인특가'].map((benefit, idx) => (
-                  <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                    {benefit}
-                  </button>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Label>{benefit}</Tag.Label>
+                  </Tag.Root>
                 ))}
               </div>
             </div>
@@ -334,9 +352,9 @@ const ListPage = () => {
               <h3 className="font-bold text-gray-900 mb-4">등급</h3>
               <div className="flex flex-wrap gap-2">
                 {['5성급', '4성급', '블랙', '풀빌라'].map((grade, idx) => (
-                  <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                    {grade}
-                  </button>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Label>{grade}</Tag.Label>
+                  </Tag.Root>
                 ))}
               </div>
             </div>
@@ -349,9 +367,9 @@ const ListPage = () => {
                 <h4 className="text-xs font-bold text-gray-500 mb-2">공용시설</h4>
                 <div className="flex flex-wrap gap-2">
                   {['사우나', '수영장', '바베큐', '레스토랑', '피트니스', '물놀이시설'].map((fac, idx) => (
-                    <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                      {fac}
-                    </button>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                      <Tag.Label>{fac}</Tag.Label>
+                    </Tag.Root>
                   ))}
                 </div>
               </div>
@@ -360,9 +378,9 @@ const ListPage = () => {
                 <h4 className="text-xs font-bold text-gray-500 mb-2">객실 내 시설</h4>
                 <div className="flex flex-wrap gap-2">
                   {['스파/월풀', '객실스파', '미니바', '무선인터넷', '에어컨', '욕실용품'].map((fac, idx) => (
-                    <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                      {fac}
-                    </button>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                      <Tag.Label>{fac}</Tag.Label>
+                    </Tag.Root>
                   ))}
                 </div>
               </div>
@@ -371,9 +389,9 @@ const ListPage = () => {
                 <h4 className="text-xs font-bold text-gray-500 mb-2">기타시설</h4>
                 <div className="flex flex-wrap gap-2">
                   {['조식제공', '무료주차', '반려견동반'].map((fac, idx) => (
-                    <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                      {fac}
-                    </button>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                      <Tag.Label>{fac}</Tag.Label>
+                    </Tag.Root>
                   ))}
                 </div>
                 <Accordion.Root collapsible>
@@ -381,9 +399,9 @@ const ListPage = () => {
                     <Accordion.ItemContent p={0}>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {['수화물보관', '노래방', '편의점', '카페', '비즈니스센터'].map((fac, idx) => (
-                          <button key={idx} onClick={handleFilterClick} className="px-3 py-1.5 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-red-500 hover:text-red-500 transition-colors">
-                            {fac}
-                          </button>
+                          <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                            <Tag.Label>{fac}</Tag.Label>
+                          </Tag.Root>
                         ))}
                       </div>
                     </Accordion.ItemContent>
