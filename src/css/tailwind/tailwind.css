@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors mapped from common.css */
+    --color-brand: var(--brand_color);
+    --color-brand-hover: var(--brand_hover_color);
+    --color-white: var(--white_color);
+    --color-black: var(--black_color);
+    --color-heart: var(--heart_color);
+    --color-star: var(--star_color);
+    --color-text-gray: var(--text_gray);
+    --color-text-light-gray: var(--text_light_gray);
+
+    /* Fonts mapped from common.css */
+    --font-sans: "GMarketSans", sans-serif;
+}

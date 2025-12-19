@@ -19,6 +19,20 @@
 - **Next Themes (v0.4.6)**: 테마(다크/라이트 모드) 관리
 
 ## Project Brand Variable
-- **Primary Color : #B14E21 (Logo, Text)
-- **Highlight Color : #dd6b20 (Buttons, Hover)
-- **Font Family: SCoreDream4  
+### Fonts
+- **Font Family**: "GMarketSans" (Light: 300, Medium: 500, Bold: 700)
+
+### Colors
+- **Brand Color**: #DD6B20
+- **Brand Hover Color**: #C05621
+- **White Color**: #FCFCFC
+- **Black Color**: #333333
+- **Heart Color**: #FF1493
+- **Star Color**: #FACC15
+- **Text Gray**: #666666
+- **Text Light Gray**: #999999
+
+### Common Utility Classes
+- **Text Colors**: `.text-brand`, `.text-heart`, `.text-star`, `.text-title-xl` (32px), `.text-title-lg` (24px), `.text-title-md` (22px)
+- **Backgrounds**: `.bg-brand`, `.bg-star`
+  
