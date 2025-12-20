@@ -7,15 +7,15 @@ Fronend workspace for planit project
 | 날짜 | 담당 | 작업 내용 | 관련 파일/링크 | 비고 |
 | --- | --- | --- | --- | --- |
 | 2025-12-13 | 손종현 | 이벤트 페이지 카테고리별 페이지네이션 구현 완료 | [`src/pages/EventPage.jsx`](src/pages/EventPage.jsx) |  |
-| 2025-12-15 | 손종현 | 이벤트 페이지 검색 기능 및 검색 초기화 기능 추가, 고객센터 페이지 추가 및 간단한 기능 추가 | [`src/pages/EventPage.jsx`](src/pages/EventPage.jsx), [`src/pages/CustomerservicePage.jsx`](src/pages/CustomerservicePage.jsx) |  |
-| 2025-12-15 | 김관범 | 리스트 페이지 필터 기능 구현, UI 디자인 구성 / 디테일 페이지 UI 디자인 구성 완료 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx), [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) |  |
+| 2025-12-15 | 손종현 | 이벤트 페이지 검색 기능 및 검색 초기화 기능 추가<br> 고객센터 페이지 추가 및 간단한 기능 추가 | [`src/pages/EventPage.jsx`](src/pages/EventPage.jsx)<br>[`src/pages/CustomerservicePage.jsx`](src/pages/CustomerservicePage.jsx) |  |
+| 2025-12-15 | 김관범 | 리스트 페이지 필터 기능 구현<br> UI 디자인 구성 / 디테일 페이지 UI 디자인 구성 완료 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br> [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) |  |
 | 2025-12-16 | 손종현 | 푸터 제작 | [`src/components/common/Footer.jsx`](src/components/common/Footer.jsx) |  |
-| 2025-12-16 | 김관범 | 리스트페이지 UI 개편(스와이퍼 화면 제거, 필터 기능을 체크박스로 교체, 리스트 항목 gap 10px로 개선) | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx) |  |
-| 2025-12-18 | 손종현 | 이벤트/고객센터 페이지 디자인 수정, 이용약관/개인정보처리방침 페이지 추가 | [`src/pages/EventPage.jsx`](src/pages/EventPage.jsx), [`src/pages/CustomerservicePage.jsx`](src/pages/CustomerservicePage.jsx), [`src/pages/AgreementPage.jsx`](src/pages/AgreementPage.jsx), [`src/pages/privacyPage.jsx`](src/pages/privacyPage.jsx) |  |
-| 2025-12-18 | 김관범 | AI 여행 추천, 이미지 갤러리 구현 및 UI/스타일 리팩토링 | [`src/components/ai/AIRecommendationWindow.jsx`](src/components/ai/AIRecommendationWindow.jsx), [`src/components/common/ImageGalleryModal.jsx`](src/components/common/ImageGalleryModal.jsx), [`src/data/mockData.js`](src/data/mockData.js) |  |
-| 2025-12-19 | 김관범 | 리스트페이지 디자인 개선(가격 필터 구현, 필터 태그로 변경: 차크라 UI)<br>- MBTI 여행추천 'MBTI' UI (차크라 UI 그리드)로 변경 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx), [`src/components/main/BestCard.jsx`](src/components/main/BestCard.jsx) |  |
-| 2025-12-19 | 김현 | 회원가입 페이지 및 약관 구성 추가 | [`src/pages/SignupPage.jsx`](src/pages/SignupPage.jsx), [`src/components/signup/SignupForm.jsx`](src/components/signup/SignupForm.jsx), [`src/components/signup/TermsSection.jsx`](src/components/signup/TermsSection.jsx), [`src/components/signup/TermsCard.jsx`](src/components/signup/TermsCard.jsx), [`src/data/tos.js`](src/data/tos.js) |  |
-| 2025-12-20 | 김현 | 헤더 추가 | [`src/components/common/Header.jsx`](src/components/common/Header.jsx), [`src/data/user.js`](src/data/user.js) | 로고는 임시로 매꿔두었기에 수정必<br>로그인 페이지 없기에 회원가입 페이지로 연동<br>로그인 로직 백엔드 없어서 구현안함 |
+| 2025-12-16 | 김관범 | 리스트페이지 UI 개편(스와이퍼 화면 제거<br> 필터 기능을 체크박스로 교체<br> 리스트 항목 gap 10px로 개선) | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx) |  |
+| 2025-12-18 | 손종현 | 이벤트/고객센터 페이지 디자인 수정<br> 이용약관/개인정보처리방침 페이지 추가 | [`src/pages/EventPage.jsx`](src/pages/EventPage.jsx)<br> [`src/pages/CustomerservicePage.jsx`](src/pages/CustomerservicePage.jsx)<br> [`src/pages/AgreementPage.jsx`](src/pages/AgreementPage.jsx)<br> [`src/pages/privacyPage.jsx`](src/pages/privacyPage.jsx) |  |
+| 2025-12-18 | 김관범 | AI 여행 추천<br> 이미지 갤러리 구현 및 UI/스타일 리팩토링 | [`src/components/ai/AIRecommendationWindow.jsx`](src/components/ai/AIRecommendationWindow.jsx)<br> [`src/components/common/ImageGalleryModal.jsx`](src/components/common/ImageGalleryModal.jsx)<br> [`src/data/mockData.js`](src/data/mockData.js) |  |
+| 2025-12-19 | 김관범 | 리스트페이지 디자인 개선(가격 필터 구현<br> 필터 태그로 변경: 차크라 UI)<br>- MBTI 여행추천 'MBTI' UI (차크라 UI 그리드)로 변경 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br> [`src/components/main/BestCard.jsx`](src/components/main/BestCard.jsx) |  |
+| 2025-12-19 | 김현 | 회원가입 페이지 및 약관 구성 추가 | [`src/pages/SignupPage.jsx`](src/pages/SignupPage.jsx)<br> [`src/components/signup/SignupForm.jsx`](src/components/signup/SignupForm.jsx)<br> [`src/components/signup/TermsSection.jsx`](src/components/signup/TermsSection.jsx)<br> [`src/components/signup/TermsCard.jsx`](src/components/signup/TermsCard.jsx)<br> [`src/data/tos.js`](src/data/tos.js) |  |
+| 2025-12-20 | 김현 | 헤더 추가 | [`src/components/common/Header.jsx`](src/components/common/Header.jsx)<br> [`src/data/user.js`](src/data/user.js) | 로고는 임시로 매꿔두었기에 수정必<br>로그인 페이지 없기에 회원가입 페이지로 연동<br>로그인 로직 백엔드 없어서 구현안함 |
 
 ### 새 항목 추가 템플릿
 
