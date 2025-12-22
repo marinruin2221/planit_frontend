@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const AIRecommendationWindow = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([
@@ -30,63 +29,26 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-      if (!apiKey) {
-        // Mock response if no key
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setMessages(prev => [...prev, {
-          role: 'model',
-          text: '[MOCK] API 키가 설정되지 않았습니다. \n\n하지만 실제로는 다음과 같이 답변할 것입니다:\n\n사용자님의 요청에 맞춰 멋진 여행 일정을 계획해 보았습니다! \n1일차: 공항 도착 -> 렌터카 수령 -> 애월 해안도로 드라이브...'
-        }]);
-        setLoading(false);
-        return;
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-      const chat = model.startChat({
-        history: messages.map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.text }],
-        })),
-        generationConfig: {
-          maxOutputTokens: 1000,
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          message: userMessage,
+          history: messages.map(m => ({
+            role: m.role,
+            text: m.text
+          }))
+        }),
       });
 
-      const systemPrompt = `
-        당신은 전문적인 'AI 여행 비서'입니다. 다음 두 가지 핵심 기능을 수행합니다.
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-        1. **지능형 여행 일정 플래너 (Itinerary Generator)**:
-           - 사용자의 입력(목적지, 기간, 취향, 예산 등)을 바탕으로 상세 일정을 생성합니다.
-           - 정보가 부족하면 친절하게 되물어주세요 (예: "몇 박 며칠 일정인가요?", "선호하는 여행 스타일이 있으신가요?").
-           - "아이와 함께하는", "가성비", "힐링" 등 구체적인 요구사항을 반영하여 경로를 제안합니다.
-           - 이동 시간과 경로를 고려하여 현실적인 일정을 짜주세요.
-
-        2. **대화형 여행 검색 및 추천 (Conversational Search)**:
-           - 사용자가 자연어로 숙소나 장소를 찾을 때 최적의 추천을 제공합니다.
-           - 예: "조용히 책 읽기 좋은 부산 호텔", "강릉의 뷰 좋은 카페"
-           - 추천 이유와 주요 특징을 함께 설명해주세요.
-
-        **응답 스타일**:
-        - 친절하고 전문적인 톤을 유지하세요.
-        - 마크다운(Markdown)을 사용하여 가독성 좋게 출력하세요 (볼드체, 리스트 등 활용).
-        - 이모지를 적절히 사용하여 생동감을 주세요.
-      `;
-
-      // Note: Gemini API doesn't support system prompt in startChat directly in all versions, 
-      // but we can prepend it to the first message or rely on the context. 
-      // For this implementation, we'll send the user message directly, 
-      // but ideally we would set the system instruction if the SDK supports it or prepend context.
-      // Let's prepend context to the current prompt effectively.
-
-      const result = await chat.sendMessage(`${systemPrompt}\n\n사용자 메시지: ${userMessage}`);
-      const response = await result.response;
-      const text = response.text();
-
-      setMessages(prev => [...prev, { role: 'model', text: text }]);
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'model', text: data.response }]);
 
     } catch (err) {
       console.error("AI Error:", err);
