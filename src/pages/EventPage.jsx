@@ -151,11 +151,11 @@ export default function EventPage()
                                 <Image src={e.image} alt={e.title} />
 
                                 <Box p={4}>
-                                    <LinkOverlay as={RouterLink} to={`/events/${e.id}`}>
+                                    <LinkOverlay as={RouterLink} to={`/event/${e.id}`}>
                                         {/* <Text fontSize="xl" fontWeight="semibold">
                                             {e.title}
                                         </Text> */}
-                                        <Text mt={0} fontSize="sm" color="gray.600">
+                                        <Text mt={0} fontSize="xs" color="gray.600">
                                             {e.period}
                                         </Text>
                                     </LinkOverlay>
