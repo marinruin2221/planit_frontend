@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag } from '@chakra-ui/react';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { accommodations as mockAccommodations } from '../data/mockData';
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
 import SearchForm from "@components/main/SearchForm.jsx";
@@ -11,14 +9,15 @@ import SearchForm from "@components/main/SearchForm.jsx";
 const ListPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchDate, setSearchDate] = useState('');
   const [searchPersonnel, setSearchPersonnel] = useState('성인 2명');
   const [selectedType, setSelectedType] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 500000]);
-  const [filteredAccommodations, setFilteredAccommodations] = useState(mockAccommodations);
+  const [accommodations, setAccommodations] = useState([]); // API Data
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   const listRef = useRef(null);
 
@@ -30,8 +29,6 @@ const ListPage = () => {
     const keywordParam = searchParams.get('keyword');
     const dateParam = searchParams.get('date');
     const personnelParam = searchParams.get('personnel');
-    const categoryParam = searchParams.get('category');
-    // Note: 'personal', 'checkIn', 'checkOut', 'sortType' are available in params but not yet fully implemented in filter logic
 
     if (keywordParam) {
       setSearchTerm(keywordParam);
@@ -42,68 +39,76 @@ const ListPage = () => {
     if (personnelParam) {
       setSearchPersonnel(personnelParam);
     }
+  }, []);
 
-    // Map category param to selectedType if needed, or just use it directly if values match
-    // For now, we'll stick to the internal state names but you could add a mapping here
-  }, []); // Run once on mount
-
-  // Filter logic
+  // Fetch Data from API
   useEffect(() => {
-    let result = mockAccommodations;
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // 지역 코드 매핑 (VisitKorea 공식 코드)
+        const regionCodeMap = {
+          '서울': '1',
+          '인천': '2',
+          '대전': '3',
+          '대구': '4',
+          '광주': '5',
+          '부산': '6',
+          '울산': '7',
+          '세종': '8',
+          '경기': '31',
+          '강원': '32',
+          '충북': '33',
+          '충남': '34',
+          '경북': '35',
+          '경남': '36',
+          '전북': '37',
+          '전남': '38',
+          '제주': '39',
+          '충청': '33', // 충북 대표
+          '경상': '35', // 경북 대표
+          '전라': '37', // 전북 대표
+        };
 
-    // Filter by Type
-    if (selectedType.length > 0 && !selectedType.includes('전체')) {
-      result = result.filter(acc => {
-        return selectedType.some(type => {
-          if (type === '호텔·리조트') {
-            return acc.type === '호텔' || acc.type === '리조트';
-          } else if (type === '게하·한옥') {
-            return acc.type === '게하·한옥' || acc.type === '게스트하우스' || acc.type === '한옥';
-          } else {
-            return acc.type === type;
-          }
-        });
-      });
-    }
+        let areaCode = '';
+        if (selectedRegion.length > 0 && !selectedRegion.includes('전체')) {
+          // 첫 번째 선택된 지역의 코드 사용
+          areaCode = regionCodeMap[selectedRegion[0]] || '';
+        }
 
-    // Filter by Region
-    if (selectedRegion.length > 0 && !selectedRegion.includes('전체')) {
-      result = result.filter(acc => selectedRegion.some(region => acc.location.includes(region)));
-    }
+        const response = await fetch(`/api/tours?page=${currentPage}&size=${itemsPerPage}&areaCode=${areaCode}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
 
-    // Filter by Search Term (if any)
-    if (searchTerm) {
-      result = result.filter(acc =>
-        acc.name.includes(searchTerm) || acc.location.includes(searchTerm)
-      );
-    }
+        // Handle new response structure { items: [], totalCount: 0 }
+        if (data.items) {
+          setAccommodations(data.items);
+          setTotalPages(Math.ceil(data.totalCount / itemsPerPage));
+        } else {
+          // Fallback for old structure (array)
+          setAccommodations(data);
+          setTotalPages(1);
+        }
 
-    // Filter by Price
-    result = result.filter(acc => {
-      const price = parseInt(acc.price.replace(/[^0-9]/g, ''), 10);
-      return price >= priceRange[0] && price <= priceRange[1];
-    });
+      } catch (error) {
+        console.error("Failed to fetch tours:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setFilteredAccommodations(result);
-    // We don't reset page here to avoid loops if params change, but if filters change manually we might want to.
-    // For now, let's keep it simple.
-  }, [selectedType, selectedRegion, searchTerm, priceRange]);
+    fetchData();
+  }, [currentPage, selectedRegion]); // 의존성 배열에 필터 추가
 
   const handleSearch = () => {
-    // Update URL with current search state
     setSearchParams({
       keyword: searchTerm,
       date: searchDate,
       personnel: searchPersonnel,
-      // Add other params as needed
     });
     scrollToList();
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
   };
 
   const scrollToList = () => {
@@ -118,10 +123,6 @@ const ListPage = () => {
 
   const handleRegionChange = (value, isChecked) => {
     if (value === '전체') {
-      setSelectedRegion(isChecked ? [] : []); // '전체' clicking clears others or just resets
-      // Actually, if '전체' is clicked, we usually clear others.
-      // But if we want '전체' to be a state, let's say empty array means '전체'.
-      // If user clicks '전체', we clear the array.
       setSelectedRegion([]);
     } else {
       let newRegions = [...selectedRegion];
@@ -132,6 +133,11 @@ const ListPage = () => {
       }
       setSelectedRegion(newRegions);
     }
+    // 페이지 1로 리셋 필요할 수 있음
+    setSearchParams(prev => {
+      prev.set('page', '1');
+      return prev;
+    });
     scrollToList();
   };
 
@@ -150,12 +156,6 @@ const ListPage = () => {
     scrollToList();
   };
 
-  // Pagination Logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAccommodations.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredAccommodations.length / itemsPerPage);
-
   const paginate = (pageNumber) => {
     setSearchParams(prev => {
       prev.set('page', pageNumber);
@@ -164,9 +164,14 @@ const ListPage = () => {
     window.scrollTo(0, 0);
   };
 
+  // Pagination Window Logic
+  const pageGroupSize = 5;
+  const currentGroup = Math.ceil(currentPage / pageGroupSize);
+  const startPage = (currentGroup - 1) * pageGroupSize + 1;
+  const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
-      {/* Header */}
       {/* Header */}
       <Header />
 
@@ -417,7 +422,7 @@ const ListPage = () => {
           {/* Right Content - List */}
           <section className="flex-1" ref={listRef}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">검색 결과 {filteredAccommodations.length.toLocaleString()}개</h2>
+              <h2 className="text-xl font-bold text-gray-900">검색 결과 {accommodations.length.toLocaleString()}개</h2>
               <div className="relative">
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium">
                   <span>추천순</span>
@@ -426,69 +431,64 @@ const ListPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[10px]">
-              {currentItems.map((acc, index) => (
-                <React.Fragment key={acc.id}>
-                  <div
-                    className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:shadow-lg"
-                    onClick={() => navigate(`/detail/${acc.id}`)}
-                  >
-                    {/* Image */}
-                    <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
-                      <img
-                        src={acc.image}
-                        alt={acc.name}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <button className="absolute top-3 right-3 transition-colors text-heart">
-                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                      </button>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">{acc.type}</div>
-                        <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg">{acc.name}</h3>
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
-                            {acc.rating}
-                          </span>
-                          <span className="text-star text-xs font-bold transition-colors">추천해요</span>
-                          <span className="text-xs text-gray-400 transition-colors">({acc.reviewCount}개 리뷰)</span>
-                        </div>
-                        <div className="text-sm text-gray-500 mb-1 transition-colors flex items-center">
-                          {acc.location}
-                        </div>
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <Text>Loading...</Text>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-[10px]">
+                {accommodations.map((acc, index) => (
+                  <React.Fragment key={acc.contentid}>
+                    <div
+                      className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:shadow-lg"
+                      onClick={() => navigate(`/detail/${acc.contentid}`)}
+                    >
+                      {/* Image */}
+                      <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
+                        <img
+                          src={acc.firstimage || '/images/city.png'}
+                          alt={acc.title}
+                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => { e.target.src = '/images/jeju.png' }} // Temporary fallback
+                        />
+                        <button className="absolute top-3 right-3 transition-colors text-heart">
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                        </button>
                       </div>
 
-                      <div className="flex flex-col items-end mt-4 sm:mt-0">
-                        {acc.originalPrice && (
-                          <span className="text-sm text-gray-400 line-through mb-1 transition-colors">{acc.originalPrice}</span>
-                        )}
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center gap-1 mb-1">
-                            <span className="text-xs text-gray-500 transition-colors">숙박</span>
-                            <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
+                      {/* Content */}
+                      <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">숙박</div>
+                          <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg">{acc.title}</h3>
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                              9.0
+                            </span>
+                            <span className="text-star text-xs font-bold transition-colors">추천해요</span>
+                            <span className="text-xs text-gray-400 transition-colors">(100개 리뷰)</span>
                           </div>
-                          <span className="text-2xl font-bold text-gray-900 transition-colors">{acc.price}</span>
+                          <div className="text-sm text-gray-500 mb-1 transition-colors flex items-center">
+                            {acc.addr1}
+                          </div>
                         </div>
-                        {acc.badges.length > 0 && (
-                          <div className="mt-3 flex gap-1">
-                            {acc.badges.map((badge, idx) => (
-                              <span key={idx} className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded transition-colors font-medium">
-                                {badge}
-                              </span>
-                            ))}
+
+                        <div className="flex flex-col items-end mt-4 sm:mt-0">
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1 mb-1">
+                              <span className="text-xs text-gray-500 transition-colors">숙박</span>
+                              <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
+                            </div>
+                            <span className="text-2xl font-bold text-gray-900 transition-colors">가격 정보 없음</span>
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                </React.Fragment>
-              ))}
-            </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
 
             {/* Pagination */}
             {totalPages > 1 && (
@@ -497,8 +497,8 @@ const ListPage = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => paginate(currentPage - 1)}
-                  isDisabled={currentPage === 1}
+                  onClick={() => paginate(startPage - 1)}
+                  isDisabled={startPage === 1}
                   borderRadius="full"
                   borderColor="gray.300"
                   color="gray.700"
@@ -508,7 +508,7 @@ const ListPage = () => {
                 </Button>
 
                 {/* 번호 버튼들 */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((page) => {
                   const isActive = page === currentPage;
                   return (
                     <Button
@@ -533,8 +533,8 @@ const ListPage = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => paginate(currentPage + 1)}
-                  isDisabled={currentPage === totalPages}
+                  onClick={() => paginate(endPage + 1)}
+                  isDisabled={endPage === totalPages}
                   borderRadius="full"
                   borderColor="gray.300"
                   color="gray.700"
@@ -571,7 +571,6 @@ const ListPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
       {/* Footer */}
       <Footer />
     </div>

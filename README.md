@@ -17,6 +17,7 @@ Fronend workspace for planit project
 | 2025-12-19 | 김현 | 회원가입 페이지 및 약관 구성 추가 | [`src/pages/SignupPage.jsx`](src/pages/SignupPage.jsx)<br> [`src/components/signup/SignupForm.jsx`](src/components/signup/SignupForm.jsx)<br> [`src/components/signup/TermsSection.jsx`](src/components/signup/TermsSection.jsx)<br> [`src/components/signup/TermsCard.jsx`](src/components/signup/TermsCard.jsx)<br> [`src/data/tos.js`](src/data/tos.js) |  |
 | 2025-12-20 | 김현 | 헤더 추가 | [`src/components/common/Header.jsx`](src/components/common/Header.jsx)<br> [`src/data/user.js`](src/data/user.js) | 로고는 임시로 매꿔두었기에 수정必<br>로그인 페이지 없기에 회원가입 페이지로 연동<br>로그인 로직 백엔드 없어서 구현안함 |
 | 2025-12-22 | 손종현 | 이벤트 페이지 항목 상세페이지 구현 | [`src/pages/EventDetailPage.jsx`](src/pages/EventDetailPage.jsx)<br> [`src/data/events.js`](src/data/events.js) | 이벤드페이지 백엔드 구현 필요 |
+| 2025-12-23 | 김관범 | 리스트 페이지 페이지네이션 구현<br> - API 연동 및 동적 페이지 계산<br> - 페이지네이션 윈도우(5개씩 보기) 적용 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx) | 백엔드 API 연동 완료 |
 
 ### 새 항목 추가 템플릿
 
