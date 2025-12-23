@@ -16,6 +16,7 @@ Fronend workspace for planit project
 | 2025-12-19 | 김관범 | 리스트페이지 디자인 개선(가격 필터 구현<br> 필터 태그로 변경: 차크라 UI)<br>- MBTI 여행추천 'MBTI' UI (차크라 UI 그리드)로 변경 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br> [`src/components/main/BestCard.jsx`](src/components/main/BestCard.jsx) |  |
 | 2025-12-19 | 김현 | 회원가입 페이지 및 약관 구성 추가 | [`src/pages/SignupPage.jsx`](src/pages/SignupPage.jsx)<br> [`src/components/signup/SignupForm.jsx`](src/components/signup/SignupForm.jsx)<br> [`src/components/signup/TermsSection.jsx`](src/components/signup/TermsSection.jsx)<br> [`src/components/signup/TermsCard.jsx`](src/components/signup/TermsCard.jsx)<br> [`src/data/tos.js`](src/data/tos.js) |  |
 | 2025-12-20 | 김현 | 헤더 추가 | [`src/components/common/Header.jsx`](src/components/common/Header.jsx)<br> [`src/data/user.js`](src/data/user.js) | 로고는 임시로 매꿔두었기에 수정必<br>로그인 페이지 없기에 회원가입 페이지로 연동<br>로그인 로직 백엔드 없어서 구현안함 |
+| 2025-12-22 | 손종현 | 이벤트 페이지 항목 상세페이지 구현 | [`src/pages/EventDetailPage.jsx`](src/pages/EventDetailPage.jsx)<br> [`src/data/events.js`](src/data/events.js) | 이벤드페이지 백엔드 구현 필요 |
 
 ### 새 항목 추가 템플릿
 
