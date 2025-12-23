@@ -1,10 +1,9 @@
 // React
 import React from "react";
+import { FaStar } from "react-icons/fa";
 
 // Chakra UI
-import { Box , Flex , Text , Button , Image , Icon } from "@chakra-ui/react";
-import { LuArrowRight } from "react-icons/lu";
-import { FaStar } from "react-icons/fa";
+import { Box , Flex , Text , Image , Icon } from "@chakra-ui/react";
 
 // Swiper
 import { Swiper , SwiperSlide } from "swiper/react";
@@ -15,25 +14,19 @@ import "swiper/css/free-mode";
 export default function StayCard({name,data})
 {
 	return <React.Fragment>
-		<Flex justify={"space-between"} align={"center"} pb={"4"}>
-			<Box>
-				<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
-			</Box>
-			<Box>
-				<Button variant={"plain"} size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}}>
-					<Text>More</Text>
-					<Icon as={LuArrowRight}/>
-				</Button>
-			</Box>
+		<Flex pb={"4"}>
+			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
 		</Flex>
 		<Swiper modules={[FreeMode]} freeMode={true} slidesPerView={"auto"} spaceBetween={"20"}>
-			{data.map((e)=>(
-			<SwiperSlide style={{width:"250px",height:"auto"}}>
+			{data.map((e,i)=>(
+			<SwiperSlide key={i} style={{width:"250px",height:"auto"}}>
 				<Box cursor={"pointer"}>
-					<Image w={"250px"} h={"150px"} rounded={"md"} src={e.image}/>
+					<Box rounded={"md"} overflow={"hidden"}>
+						<Image w={"250px"} h={"150px"} transition={"0.5s"} _hover={{transform:"scale(1.1)"}} src={e.image}/>
+					</Box>
 					<Box pt={"4"}>
-						<Text truncate textAlign={"start"} fontSize={"sm"} color={"var(--brand_color)"}>{e.type}</Text>
-						<Text truncate textAlign={"start"} fontSize={"xl"} color={"var(--black_color)"}>{e.name}</Text>
+						<Text truncate fontSize={"xs"} color={"var(--brand_color)"}>{e.type}</Text>
+						<Text truncate fontSize={"xl"} color={"var(--black_color)"}>{e.name}</Text>
 					</Box>
 					<Box pt={"4"}>
 						<Flex justify={"space-between"} align={"end"}>
@@ -43,7 +36,7 @@ export default function StayCard({name,data})
 								<Text color={"var(--text_light_gray)"}>({e.review.toLocaleString()})</Text>
 							</Flex>
 							<Box>
-								<Text truncate textAlign={"end"} fontSize={"sm"} color={"var(--text_light_gray)"} textDecor={"line-through"}>{e.basePrice.toLocaleString()}원</Text>
+								<Text truncate textAlign={"end"} fontSize={"xs"} color={"var(--text_light_gray)"} textDecor={"line-through"}>{e.basePrice.toLocaleString()}원</Text>
 								<Text truncate textAlign={"end"} fontSize={"xl"} color={"var(--brand_color)"}>{e.salePrice.toLocaleString()}원</Text>
 							</Box>
 						</Flex>

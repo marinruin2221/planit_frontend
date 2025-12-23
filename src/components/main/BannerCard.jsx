@@ -10,19 +10,19 @@ import { EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-export default function BannerForm()
+export default function BannerCard()
 {
 	return <React.Fragment>
-		<Swiper effect={"fade"} modules={[EffectFade]}>
+		<Swiper modules={[EffectFade]} effect={"fade"}>
 			<SwiperSlide>
-				<Flex justify={"center"} align={"start"} direction={"column"} gap={"4"} pos={"absolute"} inset={"0"} p={{base:"4",md:"20"}} bg={{base:"linear-gradient(to bottom,rgba(0,0,0,0.5),transparent)",md:"linear-gradient(to right,rgba(0,0,0,0.5),transparent)"}}>
+				<Flex justify={"center"} align={"start"} direction={"column"} gap={"4"} pos={"absolute"} inset={"0"} p={{base:"4",md:"20"}} bg={{base:"linear-gradient(to bottom,rgba(0,0,0,0.5),rgba(0,0,0,0.0))",md:"linear-gradient(to right,rgba(0,0,0,0.5),rgba(0,0,0,0.0))"}}>
 					<Text lineHeight={"1.2"} wordBreak={"keep-all"} fontSize={{base:"5xl",md:"7xl"}} color={"var(--white_color)"}>여행의 시작은 여기서</Text>
 					<Text lineHeight={"1.2"} wordBreak={"keep-all"} fontSize={{base:"lg",md:"xl"}} color={"var(--white_color)"}>국내부터 해외까지, planit과 함께하세요</Text>
 				</Flex>
 				<Image w={"vw"} h={"vh"} src={"https://static.yeogi.com/_next/static/media/03_Kv_PC_Light_B.fcfed8ce.webp"}/>
 			</SwiperSlide>
 			<SwiperSlide>
-				<Flex justify={"center"} align={"start"} direction={"column"} gap={"4"} pos={"absolute"} inset={"0"} p={{base:"4",md:"20"}} bg={{base:"linear-gradient(to bottom,rgba(0,0,0,0.5),transparent)",md:"linear-gradient(to right,rgba(0,0,0,0.5),transparent)"}}>
+				<Flex justify={"center"} align={"start"} direction={"column"} gap={"4"} pos={"absolute"} inset={"0"} p={{base:"4",md:"20"}} bg={{base:"linear-gradient(to bottom,rgba(0,0,0,0.5),rgba(0,0,0,0.0))",md:"linear-gradient(to right,rgba(0,0,0,0.5),rgba(0,0,0,0.0))"}}>
 					<Text lineHeight={"1.2"} wordBreak={"keep-all"} fontSize={{base:"5xl",md:"7xl"}} color={"var(--white_color)"}>당신만의 일정으로</Text>
 					<Text lineHeight={"1.2"} wordBreak={"keep-all"} fontSize={{base:"lg",md:"xl"}} color={"var(--white_color)"}>숙소부터 일정까지 한 번에 계획하세요</Text>
 				</Flex>
