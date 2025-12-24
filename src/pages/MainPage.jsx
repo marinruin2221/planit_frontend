@@ -2,7 +2,7 @@
 import React from "react";
 
 // Chakra UI
-import { Container } from "@chakra-ui/react";
+import { Container , Box } from "@chakra-ui/react";
 
 // Components
 import Header from "@components/common/Header.jsx";
@@ -161,7 +161,13 @@ export default function MainPage()
 	return <React.Fragment>
 		<Header/>
 
-		<BannerCard/>
+		<Box pos={"relative"}>
+			<BannerCard/>
+			<Box pos={"absolute"} inset={"auto 5% 15% 5%"} zIndex={"1"} p={"5"} rounded={"sm"} bg={"var(--white_color)"}>
+				<SearchForm/>
+			</Box>
+		</Box>
+
 
 		<Container maxW={"1300px"} pt={"50px"}>
 			<AreaCard name={"국내 인기 지역"} data={AreaList}/>

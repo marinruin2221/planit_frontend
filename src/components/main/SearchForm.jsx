@@ -49,23 +49,34 @@ export default function SearchForm() {
 
 	return <React.Fragment>
 		<Flex direction={{ base: "column", md: "row" }} gap={{ base: "3", md: "4" }}>
-			<Popover.Root>
-				<Popover.Trigger asChild>
-					<Button variant="subtle" size="xl" w="auto" h="auto" p={{ base: "3", md: "4" }} flex="auto" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
-						<Icon as={LuSearch} />
-						<Text truncate>여행지, 숙소 검색</Text>
-					</Button>
-				</Popover.Trigger>
-				<Portal>
-					<Popover.Positioner>
-						<Popover.Content>
-							<Box p={{ base: "3", md: "4" }}>
-								<Input />
-							</Box>
-						</Popover.Content>
-					</Popover.Positioner>
-				</Portal>
-			</Popover.Root>
+			<Box position="relative" flex="2">
+			{/* Input */}
+			<Input
+				placeholder="여행지, 숙소 검색"
+				size="xl"
+				h="full"
+				pl="48px"
+				bg="gray.100"
+				border="none"
+				borderRadius="md"
+				fontSize="md"
+				outline="none"
+				color="gray.400"
+				_placeholder={{ color: "gray.400" }}
+				_hover={{ bg: "gray.200" }}
+			/>
+			{/* 돋보기 아이콘 */}
+			<Box
+				position="absolute"
+				left="16px"
+				top="50%"
+				transform="translateY(-50%)"
+				color="gray.400"
+				pointerEvents="none"
+			>
+				<LuSearch size={18} />
+			</Box>
+			</Box>
 			<Popover.Root>
 				<Popover.Trigger asChild>
 					<Button variant="subtle" size="xl" w="auto" h="auto" p={{ base: "3", md: "4" }} flex="1" justifyContent="normal" alignItems="normal" color="gray.400" truncate>
@@ -77,7 +88,7 @@ export default function SearchForm() {
 					<Popover.Positioner>
 						<Popover.Content w="auto" h="auto">
 							<Box p={{ base: "3", md: "4" }}>
-								<DayPicker mode="single" locale={ko} disabled={{ before: new Date() }} onSelect={(date) => { setDateF(mmdd_format(date, "ymd")); }} />
+								<DayPicker mode="single" locale={ko} disabled={{ before: new Date() }} onSelect={(date) => { setDateF(mmdd_format(date, "k")); }} />
 							</Box>
 						</Popover.Content>
 					</Popover.Positioner>
@@ -94,7 +105,7 @@ export default function SearchForm() {
 					<Popover.Positioner>
 						<Popover.Content w="auto" h="auto">
 							<Box p={{ base: "3", md: "4" }}>
-								<DayPicker mode="single" locale={ko} disabled={{ before: new Date() }} onSelect={(date) => { setDateT(mmdd_format(date, "ymd")); }} />
+								<DayPicker mode="single" locale={ko} disabled={{ before: new Date() }} onSelect={(date) => { setDateT(mmdd_format(date, "k")); }} />
 							</Box>
 						</Popover.Content>
 					</Popover.Positioner>
