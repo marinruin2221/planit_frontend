@@ -20,17 +20,17 @@ export default function MyPage()
 		<Container maxW={"1300px"} pt={"50px"}>
 			<Tabs.Root defaultValue="1">
 				<Tabs.List>
-					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} value={"1"}>
+					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} _hover={{color:"var(--brand_color)"}} _selected={{color:"var(--brand_color)"}} _before={{bg:"var(--brand_color)"}} value={"1"}>
 						<Icon as={LuUser}/>
 						내정보
 					</Tabs.Trigger>
-					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} value={"2"}>
+					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} _hover={{color:"var(--brand_color)"}} _selected={{color:"var(--brand_color)"}} _before={{bg:"var(--brand_color)"}} value={"2"}>
 						<Icon as={LuCalendarCheck}/>
 						예약 내역
 					</Tabs.Trigger>
-					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} value={"3"}>
+					<Tabs.Trigger flex={"1"} justifyContent={"center"} h={"auto"} py={"5"} fontSize={"md"} _hover={{color:"var(--brand_color)"}} _selected={{color:"var(--brand_color)"}} _before={{bg:"var(--brand_color)"}} value={"3"}>
 						<Icon as={LuMessageSquare}/>
-						여행 후기
+						여행 리뷰
 					</Tabs.Trigger>
 				</Tabs.List>
 				<Tabs.Content pt={"50px"} value={"1"}>

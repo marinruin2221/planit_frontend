@@ -9,7 +9,11 @@ import {
 	Input,
 	Button,
 	NativeSelect,
+	Portal,
+	CloseButton,
+	Dialog
 } from "@chakra-ui/react";
+import PageForm from "@components/mypage/PageForm.jsx";
 
 const PAGE_SIZE = 5;
 
@@ -36,20 +40,21 @@ const STATUS_STYLE = {
 
 export default function Breakdown()
 {
-	const [inputText, setInputText] = useState(""); // 검색창 입력값
-	const [searchText, setSearchText] = useState(""); // 실제 검색 적용
-	const [status, setStatus] = useState("all"); // 상태 필터
-	const [searchStatus, setSearchStatus] = useState("all"); // 검색 버튼 클릭 시 적용
+	const [inputText, setInputText] = useState("");
+	const [searchText, setSearchText] = useState("");
+	const [status, setStatus] = useState("all");
+	const [searchStatus, setSearchStatus] = useState("all");
 	const [page, setPage] = useState(1);
 	const [triggerSearch, setTriggerSearch] = useState(false);
+	const [reservations, setReservations] = useState(RESERVATIONS);
 
 	const filtered = useMemo(() => {
-		return RESERVATIONS.filter((item) => {
+		return reservations.filter((item) => {
 			const matchSearch = item.name.includes(searchText);
 			const matchStatus = searchStatus === "all" || item.status === searchStatus;
 			return matchSearch && matchStatus;
 		});
-	}, [searchText, searchStatus, triggerSearch]);
+	}, [searchText, searchStatus, triggerSearch, reservations]);
 
 	const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
 	const list = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -59,7 +64,7 @@ export default function Breakdown()
 		setSearchStatus(status);
 		setPage(1);
 		setTriggerSearch(prev => !prev);
-		window.scrollTo({top:0});
+		window.scrollTo({ top: 0 });
 	};
 
 	const resetSearch = () => {
@@ -69,25 +74,22 @@ export default function Breakdown()
 		setSearchStatus("all");
 		setPage(1);
 		setTriggerSearch(prev => !prev);
+		window.scrollTo({ top: 0 });
 	};
 
 	const handlePageChange = (newPage) => {
 		if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
 	};
 
-	return <React.Fragment>
-		<Text fontSize="3xl" fontWeight="bold" mb="6">
-			예약 내역
-		</Text>
+	const handleCancelReservation = (id) => {
+		setReservations((prev) => prev.map(r => r.id === id ? { ...r, status: "cancel" } : r));
+	};
 
-		<HStack mb={8} spacing={3}>
-			<NativeSelect.Root
-				value={status}
-				w="150px"
-				style={{ height: "45px" }}
-				onChange={(e) => setStatus(e.target.value)}
-			>
-				<NativeSelect.Field style={{ height: "45px" }}>
+	return <React.Fragment>
+		<Text fontSize="3xl" fontWeight="bold" mb="6">예약 내역</Text>
+		<HStack mb="8">
+			<NativeSelect.Root w="120px" h="45px" cursor="pointer" value={status} onChange={(e) => setStatus(e.target.value)}>
+				<NativeSelect.Field h="45px">
 					<option value="all">전체</option>
 					<option value="reserved">예약완료</option>
 					<option value="used">이용완료</option>
@@ -95,136 +97,82 @@ export default function Breakdown()
 				</NativeSelect.Field>
 				<NativeSelect.Indicator />
 			</NativeSelect.Root>
-
 			<Input
 				placeholder="예약 내역 검색"
-				height="45px"
+				h="45px"
+				rounded="md"
 				fontSize="md"
-				borderRadius="md"
 				value={inputText}
 				onChange={(e) => setInputText(e.target.value)}
-				onKeyDown={(e) => {
-					if (e.key === "Enter") applySearch();
-				}}
+				onKeyDown={(e) => e.key === "Enter" && applySearch()}
 			/>
-
-			<Button
-				height="45px"
-				px={6}
-				colorScheme="blue"
-				borderRadius="md"
-				bgColor={"var(--brand_color)"}
-				fontSize="lg"
-				fontWeight="bold"
-				onClick={applySearch}
-			>
-				<LuSearch size={20} />
+			<Button h="45px" px="6" rounded="md" bg="var(--brand_color)" fontSize="lg" fontWeight="bold" onClick={applySearch}>
+				<LuSearch size="20" />
 			</Button>
-
-			<Button
-				height="45px"
-				px={6}
-				variant="outline"
-				borderRadius="md"
-				fontSize="md"
-				onClick={resetSearch}
-			>
-				<LuRotateCcw size={20} />
+			<Button variant="outline" h="45px" px="6" rounded="md" fontSize="md" onClick={resetSearch}>
+				<LuRotateCcw size="20" />
 			</Button>
 		</HStack>
 
 		<Stack gap="4">
 			{list.map((item) => (
-				<Box
-					key={item.id}
-					p="6"
-					border="1px solid"
-					borderColor="gray.200"
-					borderRadius="xl"
-					_hover={{
-						borderColor: "var(--brand_color)",
-						boxShadow: "sm",
-					}}
-				>
-					<HStack justify="space-between" align="flex-start">
-						<HStack align="start" gap="4">
-							<Box p="2" borderRadius="md" bg="orange.50" color="var(--brand_color)">
+				<Box key={item.id} p={6} border="1px solid" borderColor="gray.200" borderRadius="xl" _hover={{ boxShadow: "md", borderColor: "var(--brand_color)", cursor: "pointer" }} transition="all 0.2s">
+					<HStack justify="space-between" align="start">
+						<HStack align="start" spacing={4}>
+							<Box p={3} borderRadius="lg" bg="orange.50" color="var(--brand_color)" display="flex" alignItems="center" justifyContent="center" fontSize="20px">
 								<Icon as={LuCalendarCheck} />
 							</Box>
-							<Stack gap="1">
-								<Text fontWeight="semibold">{item.name}</Text>
+							<Stack spacing={1}>
+								<Text fontWeight="bold" fontSize="lg" color="gray.800">{item.name}</Text>
 								<Text fontSize="sm" color="gray.500">{item.date}</Text>
-								<Text fontSize="sm">
-									결제금액 <b>{item.price}</b>
-								</Text>
+								<Text fontSize="sm" color="gray.700">결제금액 <b>{item.price}</b></Text>
 							</Stack>
 						</HStack>
 
-						<Box
-							px="3"
-							py="1"
-							fontSize="xs"
-							borderRadius="full"
-							bg={STATUS_STYLE[item.status].bg}
-							color={STATUS_STYLE[item.status].color}
-						>
-							{STATUS_STYLE[item.status].label}
-						</Box>
+						{item.status === "reserved" ? (
+							<Dialog.Root>
+								<Dialog.Trigger asChild>
+									<Button size="sm" colorScheme="red" variant="outline">예약 취소</Button>
+								</Dialog.Trigger>
+								<Portal>
+									<Dialog.Backdrop />
+									<Dialog.Positioner>
+										<Dialog.Content>
+											<Dialog.Header>
+												<Dialog.Title>예약 취소 확인</Dialog.Title>
+											</Dialog.Header>
+											<Dialog.Body>
+												<Text>정말 예약을 취소하시겠습니까?</Text>
+											</Dialog.Body>
+											<Dialog.Footer>
+												<Dialog.ActionTrigger asChild>
+													<Button variant="outline">취소</Button>
+												</Dialog.ActionTrigger>
+												<Button colorScheme="red" onClick={() => handleCancelReservation(item.id)}>확인</Button>
+											</Dialog.Footer>
+											<Dialog.CloseTrigger asChild>
+												<CloseButton size="sm" />
+											</Dialog.CloseTrigger>
+										</Dialog.Content>
+									</Dialog.Positioner>
+								</Portal>
+							</Dialog.Root>
+						) : (
+							<Box px={3} py={1} borderRadius="full" fontSize="xs" fontWeight="bold" bg={STATUS_STYLE[item.status].bg} color={STATUS_STYLE[item.status].color}>
+								{STATUS_STYLE[item.status].label}
+							</Box>
+						)}
 					</HStack>
 				</Box>
 			))}
 			{list.length === 0 && (
-				<Text textAlign="center" color="gray.400" py="10">
-					예약 내역이 없습니다.
-				</Text>
+				<Text textAlign="center" color="gray.400" py="10">예약 내역이 없습니다.</Text>
 			)}
 		</Stack>
-
 		{totalPages > 1 && (
-			<HStack mt={10} justify="center">
-				<Button
-					size="sm"
-					variant="outline"
-					onClick={() => handlePageChange(page - 1)}
-					isDisabled={page === 1}
-					borderRadius="full"
-					borderColor="gray.300"
-					color="gray.700"
-					_hover={{ bg: "gray.100" }}
-				>
-					이전
-				</Button>
-				{Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-					const isActive = p === page;
-					return (
-						<Button
-							key={p}
-							size="sm"
-							borderRadius="full"
-							variant={isActive ? "solid" : "outline"}
-							bg={isActive ? "var(--brand_color)" : "transparent"}
-							color={isActive ? "white" : "gray.700"}
-							borderColor={isActive ? "var(--brand_color)" : "gray.300"}
-							_hover={{ bg: isActive ? "var(--brand_color)" : "gray.100" }}
-							onClick={() => handlePageChange(p)}
-						>
-							{p}
-						</Button>
-					);
-				})}
-				<Button
-					size="sm"
-					variant="outline"
-					onClick={() => handlePageChange(page + 1)}
-					isDisabled={page === totalPages}
-					borderRadius="full"
-					borderColor="gray.300"
-					color="gray.700"
-					_hover={{ bg: "gray.100" }}
-				>
-					다음
-				</Button>
-			</HStack>
+			<Box mt="10">
+				<PageForm currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+			</Box>
 		)}
 	</React.Fragment>
 }

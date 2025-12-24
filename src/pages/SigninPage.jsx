@@ -10,7 +10,7 @@ export default function SigninPage()
 	return <React.Fragment>
 		<Header/>
 
-		<Container>
+		<Container maxW={"1300px"} py={"200px"}>
 			<SigninForm/>
 		</Container>
 
