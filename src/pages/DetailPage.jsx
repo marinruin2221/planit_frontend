@@ -89,16 +89,26 @@ const DetailPage = () => {
     return <div className="min-h-screen flex items-center justify-center">데이터를 불러올 수 없습니다.</div>;
   }
 
-  // Combine main images with fetched images
-  const allImages = [
+  // Combine main images with fetched images and deduplicate
+  const rawImages = [
     destination.firstimage,
-    destination.firstimage2,
     ...images
   ].filter(Boolean);
 
+  const uniqueImages = rawImages.filter((url, index, self) => {
+    const getFilename = (u) => {
+      try {
+        return u.split('/').pop().split('?')[0];
+      } catch (e) {
+        return u;
+      }
+    };
+    return index === self.findIndex((t) => getFilename(t) === getFilename(url));
+  });
+
   // Fallback images if not enough
   const displayImages = [
-    ...allImages,
+    ...uniqueImages,
     '/images/city.png',
     '/images/beach.png',
     '/images/mountain.png',
@@ -119,8 +129,8 @@ const DetailPage = () => {
           <div className="w-full lg:w-[70%]">
 
             {/* Image Gallery */}
-            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] mb-8 rounded-xl overflow-hidden">
-              <div className="col-span-2 row-span-2 relative">
+            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] mb-8 rounded-xl overflow-hidden bg-gray-200">
+              <div className="col-span-2 row-span-2 relative h-full">
                 <img src={displayImages[0]} alt="Main" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/jeju.png' }} />
                 <button
                   onClick={() => setIsGalleryOpen(true)}
@@ -130,10 +140,10 @@ const DetailPage = () => {
                   사진 더보기
                 </button>
               </div>
-              <div className="col-span-1 row-span-1"><img src={displayImages[1]} alt="Sub 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
-              <div className="col-span-1 row-span-1"><img src={displayImages[2]} alt="Sub 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/beach.png' }} /></div>
-              <div className="col-span-1 row-span-1"><img src={displayImages[3]} alt="Sub 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/jeju.png' }} /></div>
-              <div className="col-span-1 row-span-1"><img src={displayImages[4]} alt="Sub 4" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
+              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[1]} alt="Sub 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
+              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[2]} alt="Sub 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/beach.png' }} /></div>
+              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[3]} alt="Sub 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/jeju.png' }} /></div>
+              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[4]} alt="Sub 4" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
             </div>
 
             {/* Header Info */}
@@ -204,9 +214,13 @@ const DetailPage = () => {
               )}
 
               <div className="flex flex-wrap gap-2">
-                {['무료 Wi-Fi', '주차 가능', '레스토랑', '24시간 프론트', '피트니스'].map((tag) => (
-                  <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">{tag}</span>
-                ))}
+                {intro && intro.subfacility ? (
+                  intro.subfacility.split(',').map((tag, idx) => (
+                    <span key={idx} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">{tag.trim()}</span>
+                  ))
+                ) : (
+                  <span className="text-gray-400 text-sm">시설 정보가 제공되지 않습니다.</span>
+                )}
               </div>
             </div>
 
@@ -283,12 +297,16 @@ const DetailPage = () => {
             <div className="mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">서비스 및 부대시설</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                {['무선인터넷', '주차장', '반신욕', '드윈베드', '게임기', '스타일러', 'OTT', '스프링쿨러'].map((fac, idx) => (
-                  <div key={idx} className="flex items-center text-gray-600 text-sm">
-                    <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    {fac}
-                  </div>
-                ))}
+                {intro && intro.subfacility ? (
+                  intro.subfacility.split(',').slice(0, 8).map((fac, idx) => (
+                    <div key={idx} className="flex items-center text-gray-600 text-sm">
+                      <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                      {fac.trim()}
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-4 text-gray-400 text-sm">시설 정보가 제공되지 않습니다.</div>
+                )}
               </div>
 
               <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2>
@@ -411,7 +429,7 @@ const DetailPage = () => {
       <ImageGalleryModal
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
-        images={displayImages}
+        images={uniqueImages.length > 0 ? uniqueImages : displayImages}
       />
     </div>
   );

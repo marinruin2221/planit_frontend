@@ -18,6 +18,7 @@ Fronend workspace for planit project
 | 2025-12-20 | 김현 | 헤더 추가 | [`src/components/common/Header.jsx`](src/components/common/Header.jsx)<br> [`src/data/user.js`](src/data/user.js) | 로고는 임시로 매꿔두었기에 수정必<br>로그인 페이지 없기에 회원가입 페이지로 연동<br>로그인 로직 백엔드 없어서 구현안함 |
 | 2025-12-22 | 손종현 | 이벤트 페이지 항목 상세페이지 구현 | [`src/pages/EventDetailPage.jsx`](src/pages/EventDetailPage.jsx)<br> [`src/data/events.js`](src/data/events.js) | 이벤드페이지 백엔드 구현 필요 |
 | 2025-12-23 | 김관범 | 리스트 페이지 페이지네이션 구현<br> - API 연동 및 동적 페이지 계산<br> - 페이지네이션 윈도우(5개씩 보기) 적용 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx) | 백엔드 API 연동 완료 |
+| 2025-12-24 | 김관범 | 리스트 페이지 가격 조회 API 연동<br> - 숙박 카테고리 동적 표시<br> - 가격 정보 비동기 로딩 구현<br>디테일 페이지 API 연동 개선<br> - 시설 정보(subfacility) 동적 표시<br> - 이미지 갤러리 중복 제거 로직 적용<br>이미지 갤러리 모달 스타일 개선 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx)<br>[`src/components/common/ImageGalleryModal.jsx`](src/components/common/ImageGalleryModal.jsx) | 가격 API 연동 완료 |
 
 ### 새 항목 추가 템플릿
 

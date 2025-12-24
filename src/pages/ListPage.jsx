@@ -18,6 +18,7 @@ const ListPage = () => {
   const [accommodations, setAccommodations] = useState([]); // API Data
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+  const [prices, setPrices] = useState({}); // { contentid: price }
 
   const listRef = useRef(null);
 
@@ -70,13 +71,28 @@ const ListPage = () => {
           '전라': '37', // 전북 대표
         };
 
-        let areaCode = '';
+        const params = new URLSearchParams();
+        params.append('page', currentPage);
+        params.append('size', itemsPerPage);
+
+        // 지역 필터
         if (selectedRegion.length > 0 && !selectedRegion.includes('전체')) {
-          // 첫 번째 선택된 지역의 코드 사용
-          areaCode = regionCodeMap[selectedRegion[0]] || '';
+          selectedRegion.forEach(region => {
+            const code = regionCodeMap[region];
+            if (code) {
+              params.append('areaCode', code);
+            }
+          });
         }
 
-        const response = await fetch(`/api/tours?page=${currentPage}&size=${itemsPerPage}&areaCode=${areaCode}`);
+        // 숙소 유형 필터
+        if (selectedType.length > 0 && !selectedType.includes('전체')) {
+          selectedType.forEach(type => {
+            params.append('category', type);
+          });
+        }
+
+        const response = await fetch(`/api/tours?${params.toString()}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -100,7 +116,32 @@ const ListPage = () => {
     };
 
     fetchData();
-  }, [currentPage, selectedRegion]); // 의존성 배열에 필터 추가
+  }, [currentPage, selectedRegion, selectedType]);
+
+  // Fetch prices asynchronously after accommodations load
+  useEffect(() => {
+    const fetchPrices = async () => {
+      if (accommodations.length === 0) return;
+
+      const newPrices = { ...prices };
+      for (const acc of accommodations) {
+        if (!newPrices[acc.contentid]) {
+          try {
+            const response = await fetch(`/api/tours/${acc.contentid}/price`);
+            if (response.ok) {
+              const data = await response.json();
+              newPrices[acc.contentid] = data.hasPrice ? data.minPrice : null;
+              setPrices({ ...newPrices });
+            }
+          } catch (error) {
+            console.error(`Failed to fetch price for ${acc.contentid}:`, error);
+          }
+        }
+      }
+    };
+
+    fetchPrices();
+  }, [accommodations]);
 
   const handleSearch = () => {
     setSearchParams({
@@ -169,6 +210,38 @@ const ListPage = () => {
   const currentGroup = Math.ceil(currentPage / pageGroupSize);
   const startPage = (currentGroup - 1) * pageGroupSize + 1;
   const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+  const getCategoryName = (cat3) => {
+    if (!cat3) return '숙박';
+    // 호텔 (B02010100)
+    if (cat3 === 'B02010100') return '호텔';
+    // 콘도미니엄 (B02010200)
+    if (cat3 === 'B02010200') return '콘도미니엄';
+    // 유스호스텔 (B02010300)
+    if (cat3 === 'B02010300') return '유스호스텔';
+    // 펜션 (B02010400)
+    if (cat3 === 'B02010400') return '펜션';
+    // 모텔 (B02010500)
+    if (cat3 === 'B02010500') return '모텔';
+    // 민박 (B02010600)
+    if (cat3 === 'B02010600') return '민박';
+    // 게스트하우스 (B02010700)
+    if (cat3 === 'B02010700') return '게스트하우스';
+    // 홈스테이 (B02010800)
+    if (cat3 === 'B02010800') return '홈스테이';
+    // 서비스드레지던스 (B02010900)
+    if (cat3 === 'B02010900') return '서비스드레지던스';
+    // 한옥 (B02011000)
+    if (cat3 === 'B02011000') return '한옥';
+    // 캠핑장 (B02011100)
+    if (cat3 === 'B02011100') return '캠핑장';
+    // 글램핑 (B02011200)
+    if (cat3 === 'B02011200') return '글램핑';
+    // 카라반 (B02011300)
+    if (cat3 === 'B02011300') return '카라반';
+    // 기타 숙박
+    return '숙박';
+  };
 
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
@@ -263,7 +336,7 @@ const ListPage = () => {
                   </Checkbox.Control>
                   <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
                 </Checkbox.Root>
-                {['모텔', '호텔·리조트', '펜션', '홈&빌라', '캠핑', '게하·한옥'].map((type) => (
+                {['호텔', '콘도미니엄', '펜션', '모텔', '게스트하우스', '한옥', '캠핑장', '글램핑'].map((type) => (
                   <Checkbox.Root
                     key={type}
                     checked={selectedType.includes(type)}
@@ -459,7 +532,7 @@ const ListPage = () => {
                       {/* Content */}
                       <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
                         <div>
-                          <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">숙박</div>
+                          <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">{getCategoryName(acc.cat3)}</div>
                           <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg">{acc.title}</h3>
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
@@ -476,15 +549,25 @@ const ListPage = () => {
                         <div className="flex flex-col items-end mt-4 sm:mt-0">
                           <div className="flex flex-col items-end">
                             <div className="flex items-center gap-1 mb-1">
-                              <span className="text-xs text-gray-500 transition-colors">숙박</span>
+                              <span className="text-xs text-gray-500 transition-colors">{getCategoryName(acc.cat3)}</span>
                               <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
                             </div>
-                            <span className="text-2xl font-bold text-gray-900 transition-colors">가격 정보 없음</span>
+                            <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
                           </div>
+                          <span className="text-2xl font-bold text-gray-900 transition-colors">
+                            {prices[acc.contentid] !== undefined ? (
+                              prices[acc.contentid] !== null ? (
+                                `${prices[acc.contentid].toLocaleString()}원~`
+                              ) : (
+                                '가격 문의'
+                              )
+                            ) : (
+                              <span className="text-gray-400">가격 조회중...</span>
+                            )}
+                          </span>
                         </div>
                       </div>
                     </div>
-
                   </React.Fragment>
                 ))}
               </div>
@@ -541,15 +624,15 @@ const ListPage = () => {
                   _hover={{ bg: "gray.100" }}
                 >
                   다음
-                </Button> <br /> <br /> <br />
+                </Button>
               </HStack>
             )}
           </section>
         </div>
-      </div>
+      </div >
 
       {/* Banner Section */}
-      <section className="w-full py-16 flex justify-center">
+      < section className="w-full py-16 flex justify-center" >
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg">
             <img
@@ -569,11 +652,11 @@ const ListPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Footer */}
-      <Footer />
-    </div>
+      < Footer />
+    </div >
   );
 };
 

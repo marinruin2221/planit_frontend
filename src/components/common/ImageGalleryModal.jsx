@@ -37,11 +37,11 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
           }}
         >
           {images.map((img, idx) => (
-            <SwiperSlide key={idx} className="flex items-center justify-center bg-transparent">
+            <SwiperSlide key={idx} className="flex items-center justify-center bg-black">
               <img
                 src={img}
                 alt={`Gallery ${idx + 1}`}
-                className="max-w-full max-h-full object-contain"
+                className="w-full h-full object-cover rounded-lg"
               />
             </SwiperSlide>
           ))}
