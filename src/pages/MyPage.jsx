@@ -1,16 +1,22 @@
+// React
 import React from "react";
 
+// Chakra UI
+import { Container } from "@chakra-ui/react";
+
+// Components
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
+import TabForm from "@components/mypage/TabForm.jsx";
 
 export default function MyPage() {
 	return <React.Fragment>
 		<Header />
-		mypage
-		종현 테스트3
-		성현 테스트
-		성원 테스트2
-		관범 테스트3
+		
+		<Container maxW={"1300px"} pt={"50px"}>
+			<TabForm/>
+		</Container>
+
 		<Footer />
 	</React.Fragment>
 }
