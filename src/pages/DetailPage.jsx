@@ -4,6 +4,7 @@ import { Accordion } from "@chakra-ui/react";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
+import KakaoMap from "@components/map/kakaomap.jsx";
 import AIRecommendationWindow from "@components/ai/AIRecommendationWindow.jsx";
 import ImageGalleryModal from "@components/common/ImageGalleryModal.jsx";
 
@@ -80,6 +81,10 @@ const DetailPage = () => {
     fetchIntro();
     fetchRooms();
   }, [id]);
+
+  // 카카오맵 초기화
+  useEffect(() => {
+  }, [destination]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -310,12 +315,10 @@ const DetailPage = () => {
               </div>
 
               <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2>
-              <div className="rounded-xl overflow-hidden h-[300px] bg-gray-100 relative">
-                <img src="/images/city.png" alt="Map" className="w-full h-full object-cover opacity-50" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <button className="bg-white px-4 py-2 rounded-full shadow-lg font-bold text-gray-800 hover:bg-gray-50">지도 크게 보기</button>
-                </div>
-              </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2>
+              <KakaoMap x={destination.mapx} y={destination.mapy} className="rounded-xl overflow-hidden h-[300px] bg-gray-100 relative w-full">
+              </KakaoMap>
+
               <div className="mt-4 text-gray-600 text-sm">
                 {destination.addr1} <span className="text-blue-500 cursor-pointer ml-2">주소복사</span>
               </div>

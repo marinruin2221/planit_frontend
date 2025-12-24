@@ -13,7 +13,7 @@ export default defineConfig
 			open: true,
 			proxy:
 			{
-				"/api": "http://localhost:9999",
+				"/api": "http://localhost:5002",
 			},
 		},
 		resolve:

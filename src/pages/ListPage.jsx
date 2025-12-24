@@ -20,6 +20,8 @@ const ListPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // 전체 검색 결과 수
   const [prices, setPrices] = useState({}); // { contentid: price }
+  const [showMap, setShowMap] = useState(false); // 지도 보기 토글
+  const mapRef = useRef(null); // 지도 인스턴스 저장
 
   const listRef = useRef(null);
 
@@ -143,7 +145,85 @@ const ListPage = () => {
     };
 
     fetchPrices();
+    fetchPrices();
   }, [accommodations]);
+
+  // 카카오맵 초기화 및 마커 표시
+  useEffect(() => {
+    if (!showMap || accommodations.length === 0) return;
+
+    const initMap = () => {
+      const container = document.getElementById('list-map');
+      if (!container) return;
+
+      // 첫 번째 숙소 좌표를 중심으로 설정하거나, 서울 시청 등을 기본값으로
+      const firstAcc = accommodations.find(acc => acc.mapy && acc.mapx);
+      const center = firstAcc
+        ? new window.kakao.maps.LatLng(firstAcc.mapy, firstAcc.mapx)
+        : new window.kakao.maps.LatLng(37.566826, 126.9786567);
+
+      const options = {
+        center: center,
+        level: 7
+      };
+      const map = new window.kakao.maps.Map(container, options);
+      mapRef.current = map;
+
+      // 마커 생성
+      accommodations.forEach(acc => {
+        if (acc.mapy && acc.mapx) {
+          const position = new window.kakao.maps.LatLng(acc.mapy, acc.mapx);
+          const marker = new window.kakao.maps.Marker({
+            position: position,
+            map: map,
+            title: acc.title
+          });
+
+          // 마커 클릭 이벤트 (인포윈도우 또는 커스텀 오버레이)
+          const content = `
+            <div style="padding:10px;background:white;border-radius:8px;border:1px solid #ccc;font-size:12px;width:150px;">
+              <div style="font-weight:bold;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${acc.title}</div>
+              <div style="color:#888;">${getCategoryName(acc.cat3)}</div>
+            </div>
+          `;
+
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: content
+          });
+
+          window.kakao.maps.event.addListener(marker, 'mouseover', function () {
+            infowindow.open(map, marker);
+          });
+
+          window.kakao.maps.event.addListener(marker, 'mouseout', function () {
+            infowindow.close();
+          });
+
+          window.kakao.maps.event.addListener(marker, 'click', function () {
+            navigate(`/detail/${acc.contentid}`);
+          });
+        }
+      });
+    };
+
+
+    // SDK 로드 체크
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(() => {
+        initMap();
+      });
+    } else {
+      const checkKakao = setInterval(() => {
+        if (window.kakao && window.kakao.maps) {
+          clearInterval(checkKakao);
+          window.kakao.maps.load(() => {
+            initMap();
+          });
+        }
+      }, 100);
+    }
+
+  }, [showMap, accommodations]);
 
   const handleSearch = () => {
     setSearchParams({
@@ -273,11 +353,14 @@ const ListPage = () => {
           {/* Left Sidebar - Filters */}
           <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8">
             {/* Map Button */}
-            <div className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
+            <div
+              className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => setShowMap(!showMap)}
+            >
               <img src="/images/city.png" alt="Map" className="w-full h-full object-cover" />
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10">
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-blue-600 transition-colors">
-                  지도 보기
+                  {showMap ? '리스트 보기' : '지도 보기'}
                 </button>
               </div>
             </div>
@@ -581,6 +664,21 @@ const ListPage = () => {
               </div>
             )}
 
+            {/* Map View Area */}
+            {showMap && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-10">
+                <div className="bg-white rounded-xl w-full h-full max-w-6xl max-h-[80vh] flex flex-col overflow-hidden relative">
+                  <button
+                    onClick={() => setShowMap(false)}
+                    className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                  <div id="list-map" className="w-full h-full"></div>
+                </div>
+              </div>
+            )}
+
             {/* Pagination */}
             {totalPages > 1 && (
               <HStack mt={10} spacing={2} justify="center">
@@ -637,7 +735,7 @@ const ListPage = () => {
             )}
           </section>
         </div>
-      </div >
+      </div>
 
       {/* Banner Section */}
       < section className="w-full py-16 flex justify-center" >

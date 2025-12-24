@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from './components/ui/provider';
 
@@ -18,6 +18,17 @@ import "@css/common/common.css";
 import "@css/tailwind/tailwind.css";
 
 export default function App() {
+	useEffect(() => {
+		const script = document.createElement('script');
+		script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&autoload=false`;
+		script.async = true;
+		document.head.appendChild(script);
+
+		return () => {
+			// document.head.removeChild(script);
+		};
+	}, []);
+
 	return <React.Fragment>
 		<Provider>
 			<BrowserRouter>
