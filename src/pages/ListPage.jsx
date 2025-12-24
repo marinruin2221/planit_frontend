@@ -18,6 +18,7 @@ const ListPage = () => {
   const [accommodations, setAccommodations] = useState([]); // API Data
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // 전체 검색 결과 수
   const [prices, setPrices] = useState({}); // { contentid: price }
 
   const listRef = useRef(null);
@@ -101,6 +102,7 @@ const ListPage = () => {
         // Handle new response structure { items: [], totalCount: 0 }
         if (data.items) {
           setAccommodations(data.items);
+          setTotalCount(data.totalCount); // 전체 결과 수 저장
           setTotalPages(Math.ceil(data.totalCount / itemsPerPage));
         } else {
           // Fallback for old structure (array)
@@ -194,6 +196,11 @@ const ListPage = () => {
       }
       setSelectedType(newTypes);
     }
+    // 페이지 1로 리셋
+    setSearchParams(prev => {
+      prev.set('page', '1');
+      return prev;
+    });
     scrollToList();
   };
 
@@ -239,7 +246,11 @@ const ListPage = () => {
     if (cat3 === 'B02011200') return '글램핑';
     // 카라반 (B02011300)
     if (cat3 === 'B02011300') return '카라반';
-    // 기타 숙박
+    // 기타 숙박 (B02011600)
+    if (cat3 === 'B02011600') return '기타';
+    // 야영장/오토캠핑장 (A03020200 - 레포츠 카테고리)
+    if (cat3 === 'A03020200') return '야영장';
+    // 기타 숙박 (알 수 없는 코드)
     return '숙박';
   };
 
@@ -336,7 +347,7 @@ const ListPage = () => {
                   </Checkbox.Control>
                   <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
                 </Checkbox.Root>
-                {['호텔', '콘도미니엄', '펜션', '모텔', '게스트하우스', '한옥', '캠핑장', '글램핑'].map((type) => (
+                {['호텔', '콘도미니엄', '펜션', '모텔', '게스트하우스', '한옥', '캠핑장', '글램핑', '야영장 및 기타'].map((type) => (
                   <Checkbox.Root
                     key={type}
                     checked={selectedType.includes(type)}
@@ -495,7 +506,7 @@ const ListPage = () => {
           {/* Right Content - List */}
           <section className="flex-1" ref={listRef}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">검색 결과 {accommodations.length.toLocaleString()}개</h2>
+              <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2>
               <div className="relative">
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium">
                   <span>추천순</span>
@@ -547,11 +558,8 @@ const ListPage = () => {
                         </div>
 
                         <div className="flex flex-col items-end mt-4 sm:mt-0">
-                          <div className="flex flex-col items-end">
-                            <div className="flex items-center gap-1 mb-1">
-                              <span className="text-xs text-gray-500 transition-colors">{getCategoryName(acc.cat3)}</span>
-                              <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
-                            </div>
+                          <div className="flex items-center gap-1 mb-1">
+                            <span className="text-xs text-gray-500 transition-colors">{getCategoryName(acc.cat3)}</span>
                             <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
                           </div>
                           <span className="text-2xl font-bold text-gray-900 transition-colors">
