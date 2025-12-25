@@ -12,7 +12,7 @@ import SearchForm from "@components/main/SearchForm.jsx";
 import AreaCard from "@components/main/AreaCard.jsx";
 import StayCard from "@components/main/StayCard.jsx";
 import EventForm from "@components/main/EventForm.jsx";
-import TagForm from "@components/main/TagForm.jsx";
+import GuideForm from "@components/main/GuideForm.jsx";
 
 export default function MainPage()
 {
@@ -126,66 +126,48 @@ export default function MainPage()
 	const EventList = 
 	[{
 		id:1,
-		image:"https://contents.verygoodtour.com/Images/pc/package/main/pc_banner_14962.jpg",
-	},{
-		id:2,
 		image:"https://image6.yanolja.com/cx-ydm/kzYJoRc7Eo9itmL8",
 	},{
-		id:3,
+		id:2,
 		image:"https://image6.yanolja.com/cx-ydm/qQ2a8GlG3dDs2sv0",
 	},{
-		id:4,
+		id:3,
 		image:"https://image6.yanolja.com/cx-ydm/gfgPQFZbAVMKIUQD",
+	},{
+		id:4,
+		image:"https://image6.yanolja.com/cx-ydm/Tv7mRL1cDUvQlWxD",
 	}];
-	const SidoList = 
-	[
-		{ id: 1, name: "서울", link: "" },
-		{ id: 2, name: "부산", link: "" },
-		{ id: 3, name: "대구", link: "" },
-		{ id: 4, name: "인천", link: "" },
-		{ id: 5, name: "광주", link: "" },
-		{ id: 6, name: "대전", link: "" },
-		{ id: 7, name: "울산", link: "" },
-		{ id: 8, name: "세종", link: "" },
-		{ id: 9, name: "경기", link: "" },
-		{ id: 10, name: "강원", link: "" },
-		{ id: 11, name: "충북", link: "" },
-		{ id: 12, name: "충남", link: "" },
-		{ id: 13, name: "전북", link: "" },
-		{ id: 14, name: "전남", link: "" },
-		{ id: 15, name: "경북", link: "" },
-		{ id: 16, name: "경남", link: "" },
-		{ id: 17, name: "제주", link: "" },
-	];
 
 	return <React.Fragment>
 		<Header/>
 
-		<Box pos={"relative"}>
+		<Box pos="relative">
 			<BannerCard/>
-			<Box pos={"absolute"} inset={"auto 5% 15% 5%"} zIndex={"1"} p={"5"} rounded={"sm"} bg={"var(--white_color)"}>
-				<SearchForm/>
+			<Box pos="absolute" inset={{ base: "auto 0 3% 0", md: "auto 0 15% 0" }} zIndex="1">
+				<Container maxW="1300px">
+					<Box p="6" rounded="md" bg="var(--white_color)" boxShadow="0 10px 30px black">
+						<SearchForm/>
+					</Box>
+				</Container>
 			</Box>
 		</Box>
-
-
-		<Container maxW={"1300px"} pt={"50px"}>
+		<Container maxW="1300px" pt="60px">
 			<AreaCard name={"국내 인기 지역"} data={AreaList}/>
 		</Container>
-		<Container maxW={"1300px"} pt={"50px"}>
+		<Container maxW="1300px" pt="60px">
 			<StayCard name={"국내 인기 숙소"} data={StayList}/>
 		</Container>
-		<Container maxW={"1300px"} pt={"50px"}>
+		<Container maxW="1300px" pt="60px">
 			<EventForm data={EventList}/>
 		</Container>
-		<Container maxW={"1300px"} pt={"50px"}>
-			<TagForm name={"국내 지역"} data={SidoList}/>
+		<Container maxW="1300px" pt="60px">
+			<StayCard name={"리뷰가 증명한 인기 숙소"} data={StayList}/>
 		</Container>
-		<Container maxW={"1300px"} pt={"50px"}>
-			<TagForm name={"국내 도시"} data={SidoList}/>
+		<Container maxW="1300px" pt="60px">
+			<StayCard name={"합리적인 가격의 인기 숙소"} data={StayList}/>
 		</Container>
-		<Container maxW={"1300px"} pt={"50px"}>
-			<TagForm name={"국내 숙소"} data={SidoList}/>
+		<Container maxW="1300px" pt="60px">
+			<GuideForm/>
 		</Container>
 
 		<Footer/>

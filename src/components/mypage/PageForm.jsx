@@ -1,5 +1,8 @@
 import React from "react";
-import { HStack, Button } from "@chakra-ui/react";
+import {
+	HStack,
+	Button
+} from "@chakra-ui/react";
 
 export default function PageForm({ currentPage, totalPages, onPageChange })
 {
