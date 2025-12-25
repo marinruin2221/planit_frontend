@@ -45,3 +45,7 @@ This document outlines the coding standards, technology stack, and design system
 *   **Conciseness:** Keep code and explanations brief and focused on the core logic. Avoid unnecessary boilerplate or verbose descriptions.
 *   **Pathing:** Always use relative paths from the **project root** directory.
 *   **Data Handling:** Until backend integration is established, exclusively use `src/data/mockData.js` for data binding and testing.
+
+## 6. AI Communication Rules
+*   **Language:** All artifacts (plans, tasks, walkthroughs) and responses must be written in **Korean (한국어)**.
+*   **Compliance:** This file (`AGENTS.md`) must be read at the start of every project execution to ensure these guidelines are followed.
