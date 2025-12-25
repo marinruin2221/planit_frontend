@@ -88,12 +88,15 @@ const ListPage = () => {
           });
         }
 
-        // 숙소 유형 필터
         if (selectedType.length > 0 && !selectedType.includes('전체')) {
           selectedType.forEach(type => {
             params.append('category', type);
           });
         }
+
+        // 가격 API 필터
+        params.append('minPrice', priceRange[0]);
+        params.append('maxPrice', priceRange[1]);
 
         const response = await fetch(`/api/tours?${params.toString()}`);
         if (!response.ok) {
@@ -119,34 +122,50 @@ const ListPage = () => {
       }
     };
 
-    fetchData();
-  }, [currentPage, selectedRegion, selectedType]);
+    // 가격 필터 디바운스 적용
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 500);
 
+    return () => clearTimeout(timer);
+  }, [currentPage, selectedRegion, selectedType, priceRange]);
+
+  // Fetch prices asynchronously after accommodations load
   // Fetch prices asynchronously after accommodations load
   useEffect(() => {
     const fetchPrices = async () => {
       if (accommodations.length === 0) return;
 
-      const newPrices = { ...prices };
-      for (const acc of accommodations) {
-        if (!newPrices[acc.contentid]) {
-          try {
-            const response = await fetch(`/api/tours/${acc.contentid}/price`);
-            if (response.ok) {
-              const data = await response.json();
-              newPrices[acc.contentid] = data.hasPrice ? data.minPrice : null;
-              setPrices({ ...newPrices });
-            }
-          } catch (error) {
-            console.error(`Failed to fetch price for ${acc.contentid}:`, error);
+      // 이미 가격 정보가 있는 항목(minPrice 존재)은 제외
+      const itemsToFetch = accommodations.filter(acc => prices[acc.contentid] === undefined && acc.minPrice === undefined);
+      if (itemsToFetch.length === 0) return;
+
+      const newPriceUpdates = {};
+
+      // 병렬로 API 호출하여 속도 향상 (minPrice가 없는 경우에만)
+      await Promise.all(itemsToFetch.map(async (acc) => {
+        try {
+          const response = await fetch(`/api/tours/${acc.contentid}/price`);
+          if (response.ok) {
+            const data = await response.json();
+            newPriceUpdates[acc.contentid] = data.hasPrice ? data.minPrice : null;
+          } else {
+            newPriceUpdates[acc.contentid] = null;
           }
+        } catch (error) {
+          console.error(`Failed to fetch price for ${acc.contentid}:`, error);
+          newPriceUpdates[acc.contentid] = null;
         }
-      }
+      }));
+
+      // 상태 한 번에 업데이트 (렌더링 횟수 최소화)
+      setPrices(prev => ({ ...prev, ...newPriceUpdates }));
     };
 
     fetchPrices();
-    fetchPrices();
   }, [accommodations]);
+
+
 
   // 카카오맵 초기화 및 마커 표시
   useEffect(() => {
@@ -646,14 +665,14 @@ const ListPage = () => {
                             <span className="text-xs bg-gray-200 text-gray-600 px-1 rounded transition-colors">쿠폰적용가</span>
                           </div>
                           <span className="text-2xl font-bold text-gray-900 transition-colors">
-                            {prices[acc.contentid] !== undefined ? (
-                              prices[acc.contentid] !== null ? (
-                                `${prices[acc.contentid].toLocaleString()}원~`
-                              ) : (
-                                '가격 문의'
-                              )
+                            {(acc.minPrice || (prices[acc.contentid] !== undefined && prices[acc.contentid] !== null)) ? (
+                              `${(acc.minPrice || prices[acc.contentid]).toLocaleString()}원~`
                             ) : (
-                              <span className="text-gray-400">가격 조회중...</span>
+                              prices[acc.contentid] === null ? (
+                                '가격 문의'
+                              ) : (
+                                <span className="text-gray-400">가격 조회중...</span>
+                              )
                             )}
                           </span>
                         </div>

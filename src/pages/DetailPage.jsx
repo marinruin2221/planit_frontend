@@ -19,6 +19,7 @@ const DetailPage = () => {
   const [isAIWindowOpen, setIsAIWindowOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [estimatedPrice, setEstimatedPrice] = useState(null); // 추가: 예상 가격 상태
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -76,10 +77,25 @@ const DetailPage = () => {
       }
     };
 
+    const fetchPrice = async () => {
+      try {
+        const response = await fetch(`/api/tours/${id}/price`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.minPrice) {
+            setEstimatedPrice(data.minPrice);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch price:", error);
+      }
+    };
+
     fetchDetail();
     fetchImages();
     fetchIntro();
     fetchRooms();
+    fetchPrice(); // 가격 호출 추가
   }, [id]);
 
   // 카카오맵 초기화
@@ -240,8 +256,19 @@ const DetailPage = () => {
                     // 객실 이미지 우선순위: roomimg1 > roomimg2 > API images > fallback
                     const roomImage = room.roomimg1 || room.roomimg2 || room.roomimg3 || images[index + 2] || `/images/${['city', 'beach', 'mountain'][index % 3]}.png`;
                     // 가격 포맷팅 (숫자만 추출)
-                    const price = room.roomoffseasonminfee1 || room.roomoffseasonminfee2 || room.roompeakseasonminfee1;
-                    const formattedPrice = price ? parseInt(price).toLocaleString() + '원' : '가격 문의';
+                    let priceStr = room.roomoffseasonminfee1 || room.roomoffseasonminfee2 || room.roompeakseasonminfee1;
+                    let displayPrice = '가격 문의';
+                    let priceValue = null;
+
+                    if (priceStr) {
+                      priceValue = parseInt(priceStr);
+                      displayPrice = priceValue.toLocaleString() + '원';
+                    } else if (estimatedPrice) {
+                      // 실제 가격이 없고 예상 가격이 있는 경우
+                      priceValue = estimatedPrice;
+                      displayPrice = `${estimatedPrice.toLocaleString()}원`;
+                    }
+
                     // 편의시설 태그 생성
                     const amenities = [];
                     if (room.roombathfacility === 'Y') amenities.push('욕실');
@@ -253,8 +280,8 @@ const DetailPage = () => {
                     if (room.roomcook === 'Y') amenities.push('취사 가능');
 
                     return (
-                      <div key={index} className="border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 hover:border-gray-900 transition-colors cursor-pointer">
-                        <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden">
+                      <div key={index} className="border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 hover:border-gray-900 transition-colors">
+                        <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0">
                           <img
                             src={roomImage}
                             alt={room.roomtitle || `객실 ${index + 1}`}
@@ -278,15 +305,58 @@ const DetailPage = () => {
                           </div>
                           <div className="flex justify-between items-end mt-4 md:mt-0">
                             <div className="text-xs text-red-500"></div>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-gray-900">{formattedPrice}</div>
-                              <div className="text-xs text-gray-400">1박, 세금 포함</div>
+                            <div className="text-right flex flex-col items-end gap-2 sm:gap-0 sm:block">
+                              <div className="text-lg font-bold text-gray-900">{displayPrice}</div>
+                              <div className="text-xs text-gray-400 mb-2">1박, 세금 포함</div>
+                              <button
+                                onClick={() => alert(`${room.roomtitle || '객실'} 예약이 진행됩니다. (가격: ${displayPrice})`)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors text-sm"
+                              >
+                                예약하기
+                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
                     );
                   })
+                ) : estimatedPrice ? (
+                  // 객실 정보가 없지만 예상 가격이 있는 경우 (가상 객실 표시)
+                  <div className="border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 hover:border-gray-900 transition-colors">
+                    <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0">
+                      <img
+                        src={destination.firstimage || '/images/hotel_default.png'}
+                        alt="Standard Room"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = '/images/jeju.png' }}
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-bold text-gray-900 mb-1">Standard Room</h3>
+                        <p className="text-sm text-gray-500 mb-2">
+                          기준 2인 / 최대 2인
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">더블 침대</span>
+                          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">무료 와이파이</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-end mt-4 md:mt-0">
+                        <div className="text-xs text-red-500"></div>
+                        <div className="text-right flex flex-col items-end gap-2 sm:gap-0 sm:block">
+                          <div className="text-lg font-bold text-gray-900">{estimatedPrice.toLocaleString()}원</div>
+                          <div className="text-xs text-gray-400 mb-2">1박, 세금 포함</div>
+                          <button
+                            onClick={() => alert(`Standard Room 예약이 진행됩니다. (가격: ${estimatedPrice.toLocaleString()}원)`)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors text-sm"
+                          >
+                            예약하기
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-center py-8 bg-gray-50 rounded-xl border border-gray-200">
                     <p className="text-gray-500 mb-2">이 숙소의 상세 객실 정보가 제공되지 않습니다.</p>
