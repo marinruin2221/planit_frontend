@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
+import { loadPaymentWidget, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
 import { nanoid } from 'nanoid';
 
 // Toss Payments 클라이언트 키 (환경 변수에서 가져옴)
 const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY;
-const customerKey = nanoid();
+// const clientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'; // 공용 테스트 키
+const customerKey = ANONYMOUS; // 비회원 결제용 상수 사용
 
 const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail }) => {
   const paymentWidgetRef = useRef(null);
@@ -31,27 +32,44 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
 
       (async () => {
         try {
+          console.log('Toss Client Key:', clientKey ? clientKey.substring(0, 10) + '...' : 'undefined'); // 디버깅용 로그
+
           const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
 
           const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
             '#payment-widget',
-            { value: totalPrice },
-            { variantKey: 'DEFAULT' }
+            { value: totalPrice }
+            // { variantKey: 'DEFAULT' } // 공용 키 사용 시 variantKey 제거 시도
           );
 
           paymentWidget.renderAgreement(
-            '#agreement',
-            { variantKey: 'AGREEMENT' }
+            '#agreement'
+            // { variantKey: 'AGREEMENT' } // 공용 키 사용 시 variantKey 제거 시도
           );
 
           paymentWidgetRef.current = paymentWidget;
           paymentMethodsWidgetRef.current = paymentMethodsWidget;
-          setIsWidgetReady(true);
+
+          // 위젯 렌더링 완료 이벤트 감지
+          paymentMethodsWidget.on('ready', () => {
+            console.log('Payment Widget is ready!');
+            setIsWidgetReady(true);
+          });
+
         } catch (error) {
           console.error('Widget load error:', error);
-          setWidgetError('결제 위젯을 불러오는데 실패했습니다. API 키를 확인해주세요.');
+          setWidgetError('결제 위젯을 불러오는데 실패했습니다. API 키를 확인해주세요. (' + error.message + ')');
         }
       })();
+
+      // 클린업 함수: 컴포넌트 언마운트 또는 의존성 변경 시 실행
+      return () => {
+        const paymentMethodsWidget = paymentMethodsWidgetRef.current;
+        if (paymentMethodsWidget && typeof paymentMethodsWidget.destroy === 'function') {
+          paymentMethodsWidget.destroy();
+        }
+        setIsWidgetReady(false);
+      };
     }
   }, [isOpen, totalPrice]);
 
