@@ -1,11 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
+import KakaoMap from "@components/map/kakaomap.jsx";
+
+import AccommodationCard from "./AccommodationCard";
+
+const SUGGESTION_CHIPS = [
+  "제주도 가성비 호텔 추천해줘",
+  "강원도 오션뷰 펜션 찾아줘",
+  "서울 호캉스 하기 좋은 곳",
+  "부산 조식 맛있는 호텔"
+];
+
 const AIRecommendationWindow = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([
     {
       role: 'model',
-      text: '안녕하세요! AI 여행 비서입니다. 👋\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?'
+      text: '안녕하세요! AI 여행 비서입니다. 👋\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?',
+      recommendations: []
     }
   ]);
   const [input, setInput] = useState('');
@@ -20,11 +32,19 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!input.trim()) return;
+  const handleChipClick = (chipText) => {
+    setInput(chipText);
+    // 상태 업데이트 후 바로 전송하기 위해 setTimeout 사용 또는 useEffect 처리 필요하지만
+    // 여기서는 setInput 후 바로 handleSendMessage를 호출하려면 input state가 반영되기 전일 수 있음.
+    // 안전하게 메시지를 인자로 받는 send 함수로 분리하는 것이 좋음.
+    sendMessage(chipText);
+  };
 
-    const userMessage = input;
-    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+  const sendMessage = async (textProp) => {
+    const textToSend = textProp || input;
+    if (!textToSend.trim()) return;
+
+    setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     setInput('');
     setLoading(true);
 
@@ -35,7 +55,7 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage,
+          message: textToSend,
           history: messages.map(m => ({
             role: m.role,
             text: m.text
@@ -48,7 +68,11 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
       }
 
       const data = await response.json();
-      setMessages(prev => [...prev, { role: 'model', text: data.response }]);
+      setMessages(prev => [...prev, {
+        role: 'model',
+        text: data.response,
+        recommendations: data.recommendations || []
+      }]);
 
     } catch (err) {
       console.error("AI Error:", err);
@@ -57,6 +81,8 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
       setLoading(false);
     }
   };
+
+  const handleSendMessage = () => sendMessage();
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -115,16 +141,47 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-gray-50 custom-scrollbar space-y-4">
+        <div className="flex-1 overflow-y-auto px-6 py-6 bg-gray-50 custom-scrollbar space-y-6 pb-10">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm whitespace-pre-wrap ${msg.role === 'user'
+                className={`max-w-[85%] rounded-2xl px-6 py-5 text-base leading-relaxed shadow-md whitespace-pre-wrap ${msg.role === 'user'
                   ? 'bg-[var(--brand_color)] text-white rounded-tr-none'
                   : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'
                   }`}
               >
                 {msg.text}
+
+                {/* 추천 숙소 카드 리스트 (Carousel) */}
+                {msg.recommendations && msg.recommendations.length > 0 && (
+                  <div className="mt-6 -mx-3">
+                    <div className="flex overflow-x-auto gap-4 pb-4 px-3 custom-scrollbar snap-x">
+                      {msg.recommendations.map((item, idx) => (
+                        <div key={idx} className="snap-center">
+                          <AccommodationCard
+                            accommodation={item}
+                            onClick={() => window.open(`/detail/${item.contentId}`, '_blank')}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 지도 렌더링 */}
+                {msg.recommendations && msg.recommendations.length > 0 && (
+                  <div className="mt-4 w-full h-56 rounded-xl overflow-hidden border border-gray-200 shadow-sm relative z-0">
+                    <KakaoMap
+                      className="w-full h-full"
+                      markers={msg.recommendations.map(item => ({
+                        lat: parseFloat(item.mapy),
+                        lng: parseFloat(item.mapx),
+                        title: item.title,
+                        content: item.title
+                      }))}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -140,8 +197,23 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
           <div ref={messagesEndRef} />
         </div>
 
+        {/* Suggestion Chips (입력이 비어있을 때만 노출) */}
+        {!input.trim() && messages.length < 3 && !loading && (
+          <div className="px-4 pb-2 flex gap-2 overflow-x-auto custom-scrollbar">
+            {SUGGESTION_CHIPS.map((chip, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleChipClick(chip)}
+                className="flex-shrink-0 bg-gray-100 text-[var(--brand_color)] text-xs font-bold px-3 py-2 rounded-full border border-gray-200 hover:bg-[var(--brand_color)] hover:text-white transition-all whitespace-nowrap"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Input Area */}
-        <div className="p-4 bg-white border-t border-gray-100 flex-shrink-0">
+        <div className="p-5 pb-8 bg-white border-t border-gray-100 flex-shrink-0">
           <div className="flex gap-2">
             <input
               type="text"
@@ -149,7 +221,7 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="여행 계획이나 숙소 추천을 물어보세요..."
-              className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand_color)] focus:border-transparent text-sm"
+              className="flex-1 border border-gray-300 rounded-full px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--brand_color)] focus:border-transparent text-sm shadow-sm"
               disabled={loading}
             />
             <button
