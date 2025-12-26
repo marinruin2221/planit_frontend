@@ -13,6 +13,8 @@ import Agreement from "@pages/AgreementPage.jsx"
 import Privacy from "@pages/privacyPage.jsx"
 import SignupPage from "@pages/SignupPage.jsx";
 import SigninPage from "@pages/SigninPage.jsx";
+import PaymentSuccessPage from "@pages/PaymentSuccessPage.jsx";
+import PaymentFailPage from "@pages/PaymentFailPage.jsx";
 import AIFloatingButton from "@components/ai/AIFloatingButton.jsx";
 
 import "@css/common/common.css";
@@ -37,6 +39,8 @@ export default function App() {
 					<Route path="/privacy" element={<Privacy />}></Route>
 					<Route path="/signup" element={<SignupPage />}></Route>
 					<Route path="/signin" element={<SigninPage />}></Route>
+					<Route path="/payment/success" element={<PaymentSuccessPage />}></Route>
+					<Route path="/payment/fail" element={<PaymentFailPage />}></Route>
 				</Routes>
 				{/* Global AI Floating Button */}
 				<AIFloatingButton />

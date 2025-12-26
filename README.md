@@ -21,6 +21,7 @@ Fronend workspace for planit project
 | 2025-12-24 | 김관범 | 리스트 페이지 가격 조회 API 연동<br> - 숙박 카테고리 동적 표시<br> - 가격 정보 비동기 로딩 구현<br>디테일 페이지 API 연동 개선<br> - 시설 정보(subfacility) 동적 표시<br> - 이미지 갤러리 중복 제거 로직 적용<br>이미지 갤러리 모달 스타일 개선 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx)<br>[`src/components/common/ImageGalleryModal.jsx`](src/components/common/ImageGalleryModal.jsx) | 가격 API 연동 완료 |
 | 2025-12-25 | 김관범 | 카카오맵 API 로딩 최적화<br> - parser-blocking 경고 해결 (`autoload=false`)<br> - API 인증(401) 오류 해결 (중복 로딩 제거)<br> - 패키지 설치 및 컴포넌트명 수정<br> - 리스트 페이지 가격 비동기 조회(`fetchPrices`) 로직 최적화 (`Promise.all` 병렬 처리) | [`frontend/index.html`](index.html)<br>[`src/App.jsx`](src/App.jsx)<br>[`src/components/map/KakaoMap.jsx`](src/components/map/KakaoMap.jsx)<br>[`src/pages/ListPage.jsx`](src/pages/ListPage.jsx) | 카카오맵 및 가격 표시 개선 완료 |
 | 2025-12-26 | AI | **AI 여행 비서 UI/UX 고도화**<br> - **지도 연동**: `KakaoMap` 다중 마커 지원 및 추천 숙소 위치 표시<br> - **숙소 카드(Rich UI)**: 이미지, 평점, 가격이 포함된 숙소 카드 구현 및 Carousel 레이아웃 적용<br> - **편의 기능**: 추천 질문 칩(Suggestion Chips) 추가<br> - **디자인 개선**: 가독성 향상(여백, 폰트) 및 공통 스타일(`GMarketSans`, 브랜드 컬러) 적용 | [`src/components/ai/AIRecommendationWindow.jsx`](src/components/ai/AIRecommendationWindow.jsx)<br>[`src/components/ai/AccommodationCard.jsx`](src/components/ai/AccommodationCard.jsx)<br>[`src/components/map/kakaomap.jsx`](src/components/map/kakaomap.jsx) | AI 채팅 편의성 및 시인성 강화 완료 |
+| 2025-12-26 | AI | **Toss Payments 결제 시스템 연동**<br> - 결제 모달(`PaymentModal.jsx`) 구현: 상품 선택 체크박스, 총 결제 금액 계산<br> - 결제 성공/실패 페이지 구현<br> - 상세 페이지 예약하기 버튼 브랜드 컬러 적용 및 호버 효과<br> - 환경 변수(`.env`) 기반 API 키 보안 처리<br> - `App.jsx` 결제 라우트 추가 | [`src/components/payment/PaymentModal.jsx`](src/components/payment/PaymentModal.jsx)<br>[`src/pages/PaymentSuccessPage.jsx`](src/pages/PaymentSuccessPage.jsx)<br>[`src/pages/PaymentFailPage.jsx`](src/pages/PaymentFailPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx)<br>[`src/App.jsx`](src/App.jsx) | Toss Payments SDK 연동 완료 |
 
 ### 새 항목 추가 템플릿
 
@@ -54,3 +55,4 @@ Fronend workspace for planit project
 | 캘린더 | react-day-picker | ^9.12.0 |  |
 | 아이콘 | react-icons | ^5.5.0 |  |
 | AI | @google/generative-ai | ^0.24.1 |  |
+| 결제 | @tosspayments/payment-widget-sdk | - | Toss Payments |

@@ -7,6 +7,7 @@ import Footer from "@components/common/Footer.jsx";
 import KakaoMap from "@components/map/kakaomap.jsx";
 import AIRecommendationWindow from "@components/ai/AIRecommendationWindow.jsx";
 import ImageGalleryModal from "@components/common/ImageGalleryModal.jsx";
+import PaymentModal from "@components/payment/PaymentModal.jsx";
 
 const DetailPage = () => {
   const { id } = useParams();
@@ -20,6 +21,11 @@ const DetailPage = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [estimatedPrice, setEstimatedPrice] = useState(null); // 추가: 예상 가격 상태
+
+  // 결제 관련 상태
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedRoomForPayment, setSelectedRoomForPayment] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState(0);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -101,6 +107,12 @@ const DetailPage = () => {
   // 카카오맵 초기화
   useEffect(() => {
   }, [destination]);
+
+  const handlePaymentClick = (roomName, price) => {
+    setSelectedRoomForPayment(roomName);
+    setPaymentAmount(price);
+    setIsPaymentModalOpen(true);
+  };
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -303,14 +315,14 @@ const DetailPage = () => {
                               ))}
                             </div>
                           </div>
-                          <div className="flex justify-between items-end mt-4 md:mt-0">
-                            <div className="text-xs text-red-500"></div>
-                            <div className="text-right flex flex-col items-end gap-2 sm:gap-0 sm:block">
+                          <div className="flex justify-end items-center mt-4 md:mt-0">
+                            <div className="flex flex-col items-center gap-1">
                               <div className="text-lg font-bold text-gray-900">{displayPrice}</div>
-                              <div className="text-xs text-gray-400 mb-2">1박, 세금 포함</div>
+                              <div className="text-xs text-gray-400">1박, 세금 포함</div>
                               <button
-                                onClick={() => alert(`${room.roomtitle || '객실'} 예약이 진행됩니다. (가격: ${displayPrice})`)}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors text-sm"
+                                onClick={() => handlePaymentClick(room.roomtitle || `객실 ${index + 1}`, priceValue || 50000)}
+                                style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px' }}
+                                className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2"
                               >
                                 예약하기
                               </button>
@@ -342,14 +354,14 @@ const DetailPage = () => {
                           <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">무료 와이파이</span>
                         </div>
                       </div>
-                      <div className="flex justify-between items-end mt-4 md:mt-0">
-                        <div className="text-xs text-red-500"></div>
-                        <div className="text-right flex flex-col items-end gap-2 sm:gap-0 sm:block">
+                      <div className="flex justify-end items-center mt-4 md:mt-0">
+                        <div className="flex flex-col items-center gap-1">
                           <div className="text-lg font-bold text-gray-900">{estimatedPrice.toLocaleString()}원</div>
-                          <div className="text-xs text-gray-400 mb-2">1박, 세금 포함</div>
+                          <div className="text-xs text-gray-400">1박, 세금 포함</div>
                           <button
-                            onClick={() => alert(`Standard Room 예약이 진행됩니다. (가격: ${estimatedPrice.toLocaleString()}원)`)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors text-sm"
+                            onClick={() => handlePaymentClick('Standard Room', estimatedPrice)}
+                            style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px' }}
+                            className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2"
                           >
                             예약하기
                           </button>
@@ -503,6 +515,15 @@ const DetailPage = () => {
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
         images={uniqueImages.length > 0 ? uniqueImages : displayImages}
+      />
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        amount={paymentAmount}
+        orderName={selectedRoomForPayment}
+        customerName="테스트유저"
       />
     </div>
   );

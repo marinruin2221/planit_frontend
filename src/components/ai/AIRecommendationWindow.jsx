@@ -12,17 +12,48 @@ const SUGGESTION_CHIPS = [
   "부산 조식 맛있는 호텔"
 ];
 
+// Suggestion Chip 버튼 컴포넌트 (hover 효과 적용)
+const SuggestionChipButton = ({ text, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        flexShrink: 0,
+        backgroundColor: isHovered ? 'var(--brand_color)' : '#f3f4f6',
+        color: isHovered ? 'white' : 'var(--brand_color)',
+        fontSize: '0.75rem',
+        fontWeight: '600',
+        padding: '0.5rem 1rem',
+        borderRadius: '12px',
+        border: '1px solid #e5e7eb',
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+        transition: 'all 0.2s ease',
+        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        boxShadow: isHovered ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none'
+      }}
+    >
+      {text}
+    </button>
+  );
+};
+
 const AIRecommendationWindow = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([
     {
       role: 'model',
-      text: '안녕하세요! AI 여행 비서입니다. 👋\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?',
+      text: '안녕하세요! AI 여행 비서입니다.\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?',
       recommendations: []
     }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,17 +63,43 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
     scrollToBottom();
   }, [messages]);
 
+  // ESC 키로 요청 중지
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape' && loading) {
+        handleAbort();
+      }
+    };
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [loading]);
+
+  // 요청 중지 함수
+  const handleAbort = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setLoading(false);
+      setMessages(prev => [...prev, { role: 'model', text: '요청이 중지되었습니다.' }]);
+    }
+  };
+
   const handleChipClick = (chipText) => {
     setInput(chipText);
-    // 상태 업데이트 후 바로 전송하기 위해 setTimeout 사용 또는 useEffect 처리 필요하지만
-    // 여기서는 setInput 후 바로 handleSendMessage를 호출하려면 input state가 반영되기 전일 수 있음.
-    // 안전하게 메시지를 인자로 받는 send 함수로 분리하는 것이 좋음.
     sendMessage(chipText);
   };
 
   const sendMessage = async (textProp) => {
     const textToSend = textProp || input;
     if (!textToSend.trim()) return;
+
+    // 이전 요청이 있으면 중지
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
 
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     setInput('');
@@ -61,6 +118,7 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
             text: m.text
           }))
         }),
+        signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
@@ -75,10 +133,15 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
       }]);
 
     } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('Request aborted');
+        return;
+      }
       console.error("AI Error:", err);
       setMessages(prev => [...prev, { role: 'model', text: "죄송합니다. 오류가 발생하여 답변을 드릴 수 없습니다. 잠시 후 다시 시도해주세요." }]);
     } finally {
       setLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -88,6 +151,11 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+    // ESC 키로 요청 중지
+    if (e.key === 'Escape' && loading) {
+      e.preventDefault();
+      handleAbort();
     }
   };
 
@@ -114,41 +182,85 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
         backgroundColor: 'white',
         width: '90%',
         maxWidth: '500px',
-        height: '70vh',
-        maxHeight: '550px',
+        height: '85vh',
+        minHeight: '400px',
+        maxHeight: '700px',
         borderRadius: '1rem',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        margin: 'auto'
+        boxSizing: 'border-box'
       }}>
 
         {/* Header */}
-        <div className="bg-[var(--brand_color)] p-4 flex justify-between items-center text-white flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div style={{
+          backgroundColor: 'var(--brand_color)',
+          padding: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          color: 'white',
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            <h2 className="text-lg font-bold">AI 여행 비서</h2>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 'bold', margin: 0 }}>AI 여행 비서</h2>
           </div>
-          <button onClick={onClose} className="hover:bg-white/20 rounded-full p-1 transition-colors">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button onClick={onClose} style={{
+            background: 'transparent',
+            border: 'none',
+            borderRadius: '50%',
+            padding: '4px',
+            cursor: 'pointer',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 bg-gray-50 custom-scrollbar space-y-6 pb-10">
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '1.5rem',
+          backgroundColor: '#f9fafb',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }} className="custom-scrollbar">
           {messages.map((msg, idx) => (
-            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={idx} style={{
+              display: 'flex',
+              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              width: '100%'
+            }}>
               <div
-                className={`max-w-[85%] rounded-2xl px-6 py-5 text-base leading-relaxed shadow-md whitespace-pre-wrap ${msg.role === 'user'
-                  ? 'bg-[var(--brand_color)] text-white rounded-tr-none'
-                  : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'
-                  }`}
+                style={{
+                  maxWidth: '85%',
+                  borderRadius: '1rem',
+                  padding: '1.25rem 1.5rem',
+                  fontSize: '0.9375rem',
+                  lineHeight: '1.6',
+                  boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
+                  backgroundColor: msg.role === 'user' ? 'var(--brand_color)' : 'white',
+                  color: msg.role === 'user' ? 'white' : '#1f2937',
+                  border: msg.role === 'user' ? 'none' : '1px solid #f3f4f6',
+                  borderTopRightRadius: msg.role === 'user' ? '0.25rem' : '1rem',
+                  borderTopLeftRadius: msg.role === 'user' ? '1rem' : '0.25rem'
+                }}
               >
                 {msg.text}
 
@@ -186,12 +298,28 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
             </div>
           ))}
           {loading && (
-            <div className="flex justify-start">
+            <div className="flex justify-start items-center gap-2">
               <div className="bg-white text-gray-500 border border-gray-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm shadow-sm flex items-center gap-2">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
               </div>
+              <button
+                onClick={handleAbort}
+                style={{
+                  backgroundColor: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '9999px',
+                  padding: '0.375rem 0.75rem',
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
+                }}
+              >
+                중지 (ESC)
+              </button>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -199,39 +327,66 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
 
         {/* Suggestion Chips (입력이 비어있을 때만 노출) */}
         {!input.trim() && messages.length < 3 && !loading && (
-          <div className="px-4 pb-2 flex gap-2 overflow-x-auto custom-scrollbar">
+          <div style={{
+            padding: '0.5rem 1rem 0.75rem 1rem',
+            display: 'flex',
+            gap: '0.5rem',
+            overflowX: 'auto'
+          }} className="custom-scrollbar">
             {SUGGESTION_CHIPS.map((chip, idx) => (
-              <button
+              <SuggestionChipButton
                 key={idx}
+                text={chip}
                 onClick={() => handleChipClick(chip)}
-                className="flex-shrink-0 bg-gray-100 text-[var(--brand_color)] text-xs font-bold px-3 py-2 rounded-full border border-gray-200 hover:bg-[var(--brand_color)] hover:text-white transition-all whitespace-nowrap"
-              >
-                {chip}
-              </button>
+              />
             ))}
           </div>
         )}
 
         {/* Input Area */}
-        <div className="p-5 pb-8 bg-white border-t border-gray-100 flex-shrink-0">
-          <div className="flex gap-2">
+        <div style={{
+          padding: '1rem 1.25rem 1.5rem 1.25rem',
+          backgroundColor: 'white',
+          borderTop: '1px solid #f3f4f6',
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="여행 계획이나 숙소 추천을 물어보세요..."
-              className="flex-1 border border-gray-300 rounded-full px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--brand_color)] focus:border-transparent text-sm shadow-sm"
+              style={{
+                flex: 1,
+                border: '1px solid #d1d5db',
+                borderRadius: '9999px',
+                padding: '0.75rem 1.25rem',
+                fontSize: '0.875rem',
+                outline: 'none',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+              }}
               disabled={loading}
             />
             <button
               onClick={handleSendMessage}
               disabled={loading || !input.trim()}
-              className={`bg-[var(--brand_color)] text-white rounded-full p-2.5 shadow-md transition-all
-                ${loading || !input.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[var(--brand_hover_color)] hover:scale-105'}
-              `}
+              style={{
+                backgroundColor: 'var(--brand_color)',
+                color: 'white',
+                borderRadius: '50%',
+                padding: '0.625rem',
+                border: 'none',
+                cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
+                opacity: loading || !input.trim() ? 0.5 : 1,
+                boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
               </svg>
             </button>
