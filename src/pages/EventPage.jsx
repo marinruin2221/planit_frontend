@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Box, SimpleGrid, Image, Text, Container, Input, Button, HStack, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { LuSearch, LuRotateCcw } from "react-icons/lu";
-import { events } from "../data/events";
+// import { events } from "../data/events";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
@@ -27,14 +27,13 @@ export default function EventPage()
     const [searchText, setSearchText] = useState("");
     const [appliedSearchText, setAppliedSearchText] = useState("");
 
+    const [events, setEvents] = useState([]); // 서버 응답 content
+    const [totalPages, setTotalPages] = useState(1); // 서버 응답 totalPages (UI용 1 이상 보정)
+    const [loading, setLoading] = useState(false);
+
     const applySearch = () => {
         setAppliedSearchText(searchText.trim());
     };
-    
-    // const filteredEvents =
-    //     activeCategory === "전체"
-    //       ? events
-    //       : events.filter((e) => e.category === activeCategory);
 
     const filteredEvents = useMemo(() => {
         const q = appliedSearchText.trim().toLowerCase();
@@ -50,10 +49,49 @@ export default function EventPage()
         setCurrentPage(1);
     }, [activeCategory, appliedSearchText]);
 
-    const totalPages = Math.ceil(filteredEvents.length / perPage) || 1;
-    const startIndex = (currentPage - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const pagedEvents = filteredEvents.slice(startIndex, endIndex);
+    useEffect(() => {
+        const controller = new AbortController();
+    
+        const fetchEvents = async () => {
+          try {
+            setLoading(true);
+    
+            const params = new URLSearchParams();
+            params.set("page", String(currentPage)); // 서버는 1-based로 받도록 구현해둠
+            params.set("size", String(perPage));
+    
+            if (activeCategory !== "전체") {
+              params.set("category", activeCategory);
+            }
+            if (appliedSearchText) {
+              params.set("q", appliedSearchText);
+            }
+
+            const res = await fetch(`http://localhost:5001/api/events?${params.toString()}`, {
+              signal: controller.signal,
+            });
+    
+            if (!res.ok) throw new Error(`EVENT_LIST_FAILED: ${res.status}`);
+    
+            const data = await res.json();
+    
+            setEvents(data.content ?? []);
+    
+            setTotalPages(Math.max(1, data.totalPages ?? 1));
+          } catch (e) {
+            if (e.name !== "AbortError") {
+              console.error(e);
+              setEvents([]);
+              setTotalPages(1);
+            }
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchEvents();
+        return () => controller.abort();
+    }, [currentPage, activeCategory, appliedSearchText]);
 
     const handlePageChange = (page) => {
         if (page < 1 || page > totalPages) return;
@@ -138,7 +176,7 @@ export default function EventPage()
 
                     {/* 이벤트 카드들 */}
                     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gapX={8} gapY={12}>
-                        {pagedEvents.map((e) => (
+                        {events.map((e) => (
                             <LinkBox
                                 key={e.id}
                                 // borderWidth="1px"
@@ -148,7 +186,7 @@ export default function EventPage()
                                 transition="all 0.2s"
                                 cursor="pointer"
                             >
-                                <Image src={e.image} alt={e.title} />
+                                <Image src={e.imageUrl} alt={e.title} />
 
                                 <Box p={4}>
                                     <LinkOverlay as={RouterLink} to={`/event/${e.id}`}>
@@ -156,7 +194,8 @@ export default function EventPage()
                                             {e.title}
                                         </Text> */}
                                         <Text mt={0} fontSize="xs" color="gray.600">
-                                            {e.period}
+                                            {new Date(e.startAt).toLocaleDateString()} ~{" "}
+                                            {new Date(e.endAt).toLocaleDateString()}
                                         </Text>
                                     </LinkOverlay>
                                 </Box>
