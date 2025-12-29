@@ -360,6 +360,34 @@ const ListPage = () => {
     return '숙박';
   };
 
+  // contentid 기반 일관된 랜덤 값 생성
+  const getRandomRating = (contentid) => {
+    if (!contentid) return { score: 7.5, reviewCount: 50, label: '추천해요' };
+
+    // 간단한 해시 함수 (contentid 문자열 기반)
+    let hash = 0;
+    const str = String(contentid);
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = hash & hash;
+    }
+
+    // 점수: 3.0 ~ 9.0 (0.1 단위)
+    const score = (Math.abs(hash % 61) + 30) / 10; // 3.0 ~ 9.0
+
+    // 리뷰 수: 10 ~ 120
+    const reviewCount = (Math.abs((hash >> 8) % 111)) + 10;
+
+    // 점수에 따른 추천 문구
+    let label = '좋아요';
+    if (score >= 8.5) label = '최고에요';
+    else if (score >= 7.0) label = '추천해요';
+    else if (score >= 5.0) label = '괜찮아요';
+    else label = '보통이에요';
+
+    return { score: score.toFixed(1), reviewCount, label };
+  };
+
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
       <style>{`
@@ -665,11 +693,18 @@ const ListPage = () => {
                           </div>
 
                           <div className="flex items-center space-x-2 mb-3">
-                            <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
-                              9.0
-                            </span>
-                            <span className="text-yellow-500 text-sm font-bold transition-colors">추천해요</span>
-                            <span className="text-sm text-gray-400 transition-colors">(100개 리뷰)</span>
+                            {(() => {
+                              const { score, reviewCount, label } = getRandomRating(acc.contentid);
+                              return (
+                                <>
+                                  <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                                    {score}
+                                  </span>
+                                  <span className="text-yellow-500 text-sm font-bold transition-colors">{label}</span>
+                                  <span className="text-sm text-gray-400 transition-colors">({reviewCount}개 리뷰)</span>
+                                </>
+                              );
+                            })()}
                           </div>
                           <div className="text-sm text-gray-500 mb-1 transition-colors flex items-center">
                             {acc.addr1}

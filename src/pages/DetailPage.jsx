@@ -116,6 +116,103 @@ const DetailPage = () => {
     setIsPaymentModalOpen(true);
   };
 
+  // contentid 기반 일관된 랜덤 값 생성 (ListPage와 동일한 로직)
+  const getRandomRating = (contentid) => {
+    if (!contentid) return { score: 7.5, reviewCount: 50, label: '추천해요' };
+
+    let hash = 0;
+    const str = String(contentid);
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = hash & hash;
+    }
+
+    // 점수: 3.0 ~ 9.0 (0.1 단위)
+    const score = (Math.abs(hash % 61) + 30) / 10;
+
+    // 리뷰 수: 10 ~ 120
+    const reviewCount = (Math.abs((hash >> 8) % 111)) + 10;
+
+    // 점수에 따른 추천 문구
+    let label = '좋아요';
+    if (score >= 8.5) label = '최고에요';
+    else if (score >= 7.0) label = '추천해요';
+    else if (score >= 5.0) label = '괜찮아요';
+    else label = '보통이에요';
+
+    return { score: score.toFixed(1), reviewCount, label };
+  };
+
+  // 더미 리뷰 생성 함수
+  const generateDummyReviews = (contentid, reviewCount) => {
+    const reviewerNames = [
+      '여행러버', '힐링여행', '가족여행자', '커플여행', '솔로여행러',
+      '맛집탐험가', '휴식추구', '액티비티러버', '뷰맛집탐방', '청결중시',
+      '서비스중시', '위치중시', '가성비왕', '럭셔리러버', '조용한휴식'
+    ];
+
+    const reviewContents = [
+      '정말 좋았습니다! 다음에 또 방문하고 싶어요.',
+      '깨끗하고 위치도 좋았습니다. 추천합니다.',
+      '직원분들이 친절하셔서 기분 좋게 묵었습니다.',
+      '가격 대비 만족스러웠어요. 시설이 깔끔합니다.',
+      '전망이 정말 좋았어요! 사진보다 실제가 더 좋았습니다.',
+      '조용하고 편안하게 쉬다 왔습니다.',
+      '위치가 좋아서 관광하기 편했어요.',
+      '침구가 깨끗하고 푹신해서 잘 잤습니다.',
+      '조식도 맛있고, 전체적으로 만족스러웠어요.',
+      '화장실이 넓고 깨끗해서 좋았습니다.',
+      '주차가 편리해서 좋았어요.',
+      '체크인/체크아웃이 빠르고 편리했습니다.',
+      '가족 여행으로 방문했는데 아이들도 좋아했어요.',
+      '커플 여행으로 왔는데 분위기가 좋았습니다.',
+      '비즈니스 출장으로 이용했는데 편했습니다.'
+    ];
+
+    // contentid 기반 시드 생성
+    let seed = 0;
+    const str = String(contentid);
+    for (let i = 0; i < str.length; i++) {
+      seed = ((seed << 5) - seed) + str.charCodeAt(i);
+      seed = seed & seed;
+    }
+
+    const reviews = [];
+
+    for (let i = 0; i < reviewCount; i++) {
+      const reviewSeed = Math.abs((seed * (i + 1)) & 0xFFFFFFFF);
+
+      // 리뷰어 정보
+      const nameIdx = reviewSeed % reviewerNames.length;
+      const level = (reviewSeed % 10) + 1;
+      const userReviewCount = ((reviewSeed >> 4) % 50) + 1;
+
+      // 별점 (3~5점)
+      const starCount = (reviewSeed % 3) + 3;
+
+      // 리뷰 내용
+      const contentIdx = (reviewSeed >> 8) % reviewContents.length;
+
+      // 날짜 (최근 1년 내)
+      const daysAgo = (reviewSeed % 365);
+      const reviewDate = new Date();
+      reviewDate.setDate(reviewDate.getDate() - daysAgo);
+      const dateStr = `${reviewDate.getFullYear()}.${String(reviewDate.getMonth() + 1).padStart(2, '0')}.${String(reviewDate.getDate()).padStart(2, '0')}`;
+
+      reviews.push({
+        id: i,
+        name: reviewerNames[nameIdx],
+        level: level,
+        userReviewCount: userReviewCount,
+        stars: starCount,
+        date: dateStr,
+        content: reviewContents[contentIdx]
+      });
+    }
+
+    return reviews;
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -243,11 +340,16 @@ const DetailPage = () => {
             <div className="mb-8 border-b border-gray-100 pb-8">
               <div className="text-sm text-gray-500 mb-2">숙박</div>
               <h1 className="font-bold text-gray-900 mb-3 leading-tight text-title-xl">{destination.title}</h1>
-              <div className="flex items-center space-x-2 mb-4">
-                <span className="bg-gray-900 text-white text-xs px-2 py-1 rounded">9.2</span>
-                <span className="text-sm font-medium text-gray-900">최고예요</span>
-                <span className="text-sm text-gray-500">· 이용자 리뷰 1,234개</span>
-              </div>
+              {(() => {
+                const { score, reviewCount, label } = getRandomRating(id);
+                return (
+                  <div className="flex items-center space-x-2 mb-4">
+                    <span className="bg-gray-900 text-white text-xs px-2 py-1 rounded">{score}</span>
+                    <span className="text-sm font-medium text-gray-900">{label}</span>
+                    <span className="text-sm text-gray-500">· 이용자 리뷰 {reviewCount}개</span>
+                  </div>
+                );
+              })()}
               <div className="flex items-center text-gray-500 text-sm">
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 {destination.addr1}
@@ -446,11 +548,16 @@ const DetailPage = () => {
             {/* Review Section */}
             <div className="mb-12">
               <div className="flex justify-between items-end mb-6">
-                <div className="flex items-center">
-                  <span className="text-yellow-400 text-2xl mr-2">★</span>
-                  <h2 className="text-xl font-bold text-gray-900">리얼 리뷰 <span className="text-2xl">9.0</span></h2>
-                  <span className="text-gray-400 text-sm ml-2">100명 평가 · 100개 리뷰</span>
-                </div>
+                {(() => {
+                  const { score, reviewCount, label } = getRandomRating(id);
+                  return (
+                    <div className="flex items-center">
+                      <span className="text-yellow-400 text-2xl mr-2">★</span>
+                      <h2 className="text-xl font-bold text-gray-900">리얼 리뷰 <span className="text-2xl">{score}</span></h2>
+                      <span className="text-gray-400 text-sm ml-2">{reviewCount}명 평가 · {reviewCount}개 리뷰</span>
+                    </div>
+                  );
+                })()}
                 <div className="text-sm text-gray-500 flex items-center cursor-pointer">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
                   추천순
@@ -458,25 +565,31 @@ const DetailPage = () => {
               </div>
 
               <div className="space-y-8">
-                <div className="border-b border-gray-100 pb-8 last:border-0">
-                  <div className="flex items-start mb-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 mr-3 overflow-hidden">
-                      <img src="/images/jeju.png" alt="User" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <div className="flex items-center mb-1">
-                        <span className="font-bold text-gray-900 text-sm mr-2">Lv. 1</span>
-                        <span className="font-bold text-gray-900 text-sm">사용자</span>
+                {(() => {
+                  const { reviewCount } = getRandomRating(id);
+                  const dummyReviews = generateDummyReviews(id, reviewCount);
+                  return dummyReviews.map((review) => (
+                    <div key={review.id} className="border-b border-gray-100 pb-8 last:border-0">
+                      <div className="flex items-start mb-4">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 mr-3 flex items-center justify-center text-white font-bold text-sm">
+                          {review.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="flex items-center mb-1">
+                            <span className="font-bold text-gray-900 text-sm mr-2">Lv. {review.level}</span>
+                            <span className="font-bold text-gray-900 text-sm">{review.name}</span>
+                          </div>
+                          <div className="text-xs text-gray-400">리뷰 {review.userReviewCount}</div>
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-400">리뷰 1</div>
+                      <div className="flex items-center mb-3">
+                        <div className="flex text-yellow-400 text-sm mr-2">{'★'.repeat(review.stars)}{'☆'.repeat(5 - review.stars)}</div>
+                        <span className="text-xs text-gray-400">{review.date}</span>
+                      </div>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{review.content}</p>
                     </div>
-                  </div>
-                  <div className="flex items-center mb-3">
-                    <div className="flex text-yellow-400 text-sm mr-2">★★★★★</div>
-                    <span className="text-xs text-gray-400">2024.01.01</span>
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">좋은 숙소입니다.</p>
-                </div>
+                  ));
+                })()}
               </div>
             </div>
 
