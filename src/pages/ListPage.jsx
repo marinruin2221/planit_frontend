@@ -6,6 +6,7 @@ import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
 import SearchForm from "@components/main/SearchForm.jsx";
 import EventForm from "@components/main/EventForm.jsx";
+import { EventList } from "@data/mockData";
 
 const ListPage = () => {
   const navigate = useNavigate();
@@ -29,21 +30,7 @@ const ListPage = () => {
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const itemsPerPage = 10;
 
-  const EventList = [
-    {
-      id: 1,
-      image: "https://image6.yanolja.com/cx-ydm/kzYJoRc7Eo9itmL8",
-    }, {
-      id: 2,
-      image: "https://image6.yanolja.com/cx-ydm/qQ2a8GlG3dDs2sv0",
-    }, {
-      id: 3,
-      image: "https://image6.yanolja.com/cx-ydm/gfgPQFZbAVMKIUQD",
-    }, {
-      id: 4,
-      image: "https://image6.yanolja.com/cx-ydm/Tv7mRL1cDUvQlWxD",
-    }
-  ];
+
 
   // Initialize state from URL params
   useEffect(() => {

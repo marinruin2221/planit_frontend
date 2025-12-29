@@ -26,6 +26,7 @@ export default defineConfig
 				"@hooks": Path.resolve(__dirname, "src/hooks"),
 				"@img": Path.resolve(__dirname, "src/img"),
 				"@pages": Path.resolve(__dirname, "src/pages"),
+				"@data": Path.resolve(__dirname, "src/data"),
 			},
 		},
 	});
