@@ -1,4 +1,7 @@
+import { getFallbackImage } from '@utils/imageUtils'; // Import utility
+
 import React, { useState, useEffect } from 'react';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { Accordion } from "@chakra-ui/react";
 
@@ -20,7 +23,7 @@ const DetailPage = () => {
   const [isAIWindowOpen, setIsAIWindowOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [estimatedPrice, setEstimatedPrice] = useState(null); // 추가: 예상 가격 상태
+  const [estimatedPrice, setEstimatedPrice] = useState(null);
 
   // 결제 관련 상태
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -101,10 +104,9 @@ const DetailPage = () => {
     fetchImages();
     fetchIntro();
     fetchRooms();
-    fetchPrice(); // 가격 호출 추가
+    fetchPrice();
   }, [id]);
 
-  // 카카오맵 초기화
   useEffect(() => {
   }, [destination]);
 
@@ -139,15 +141,35 @@ const DetailPage = () => {
     return index === self.findIndex((t) => getFilename(t) === getFilename(url));
   });
 
-  // Fallback images if not enough
-  const displayImages = [
-    ...uniqueImages,
-    '/images/city.png',
-    '/images/beach.png',
-    '/images/mountain.png',
-    '/images/jeju.png',
-    '/images/city.png'
-  ].slice(0, 5);
+  // Ensure we have exactly 5 images using the correct fallback strategy
+  const fallbackImg = getFallbackImage(destination.cat3);
+  const displayImages = Array.from({ length: 5 }, (_, i) => uniqueImages[i] || fallbackImg);
+
+  const SafeImage = ({ src, alt, className, fallback }) => {
+    const [imgSrc, setImgSrc] = useState(src);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+      setImgSrc(src);
+      setHasError(false);
+    }, [src]);
+
+    const handleError = () => {
+      if (!hasError) {
+        setImgSrc(fallback);
+        setHasError(true);
+      }
+    };
+
+    return (
+      <img
+        src={imgSrc}
+        alt={alt}
+        className={className}
+        onError={handleError}
+      />
+    );
+  };
 
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
@@ -161,22 +183,60 @@ const DetailPage = () => {
           {/* Left Content (70%) */}
           <div className="w-full lg:w-[70%]">
 
-            {/* Image Gallery */}
-            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] mb-8 rounded-xl overflow-hidden bg-gray-200">
-              <div className="col-span-2 row-span-2 relative h-full">
-                <img src={displayImages[0]} alt="Main" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/jeju.png' }} />
+            {/* Image Gallery - Flexbox Mosaic Layout */}
+            <div className="flex h-[400px] mb-8 rounded-xl overflow-hidden bg-black">
+              {/* Left: Main Image (50%) */}
+              <div className="w-1/2 h-full relative">
+                <SafeImage
+                  src={displayImages[0]}
+                  fallback={getFallbackImage(destination.cat3)}
+                  alt="Main"
+                  className="w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover -m-[1px]"
+                />
                 <button
                   onClick={() => setIsGalleryOpen(true)}
-                  className="absolute bottom-4 right-4 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-bold flex items-center shadow-lg hover:bg-gray-50 transition-all transform hover:scale-105 z-10 cursor-pointer"
+                  className="absolute bottom-4 right-4 !bg-[#FCFCFC] !text-[#DD6B20] px-6 py-3 rounded-full text-sm font-bold inline-flex items-center justify-center shadow-lg hover:!text-[#C05621] hover:bg-gray-50 transition-all transform hover:scale-105 z-50 cursor-pointer whitespace-nowrap w-fit gap-2"
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  사진 더보기
+                  사진 전체보기
                 </button>
               </div>
-              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[1]} alt="Sub 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
-              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[2]} alt="Sub 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/beach.png' }} /></div>
-              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[3]} alt="Sub 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/jeju.png' }} /></div>
-              <div className="col-span-1 row-span-1 h-full bg-gray-200"><img src={displayImages[4]} alt="Sub 4" className="w-full h-full object-cover" onError={(e) => { e.target.src = '/images/city.png' }} /></div>
+
+              {/* Right: Sub Images Grid (50%) */}
+              <div className="w-1/2 h-full grid grid-cols-2 grid-rows-2">
+                <div className="relative h-full overflow-hidden">
+                  <SafeImage
+                    src={displayImages[1]}
+                    fallback={getFallbackImage(destination.cat3)}
+                    alt="Sub 1"
+                    className="w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover -m-[1px]"
+                  />
+                </div>
+                <div className="relative h-full overflow-hidden">
+                  <SafeImage
+                    src={displayImages[2]}
+                    fallback={getFallbackImage(destination.cat3)}
+                    alt="Sub 2"
+                    className="w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover -m-[1px]"
+                  />
+                </div>
+                <div className="relative h-full overflow-hidden">
+                  <SafeImage
+                    src={displayImages[3]}
+                    fallback={getFallbackImage(destination.cat3)}
+                    alt="Sub 3"
+                    className="w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover -m-[1px]"
+                  />
+                </div>
+                <div className="relative h-full overflow-hidden">
+                  <SafeImage
+                    src={displayImages[4]}
+                    fallback={getFallbackImage(destination.cat3)}
+                    alt="Sub 4"
+                    className="w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover -m-[1px]"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Header Info */}
@@ -265,9 +325,7 @@ const DetailPage = () => {
                   <div className="text-center py-10 text-gray-500">객실 정보를 불러오는 중입니다...</div>
                 ) : rooms.length > 0 ? (
                   rooms.map((room, index) => {
-                    // 객실 이미지 우선순위: roomimg1 > roomimg2 > API images > fallback
-                    const roomImage = room.roomimg1 || room.roomimg2 || room.roomimg3 || images[index + 2] || `/images/${['city', 'beach', 'mountain'][index % 3]}.png`;
-                    // 가격 포맷팅 (숫자만 추출)
+                    const roomImage = room.roomimg1 || room.roomimg2 || room.roomimg3 || images[index + 2] || getFallbackImage(destination.cat3);
                     let priceStr = room.roomoffseasonminfee1 || room.roomoffseasonminfee2 || room.roompeakseasonminfee1;
                     let displayPrice = '가격 문의';
                     let priceValue = null;
@@ -276,12 +334,10 @@ const DetailPage = () => {
                       priceValue = parseInt(priceStr);
                       displayPrice = priceValue.toLocaleString() + '원';
                     } else if (estimatedPrice) {
-                      // 실제 가격이 없고 예상 가격이 있는 경우
                       priceValue = estimatedPrice;
                       displayPrice = `${estimatedPrice.toLocaleString()}원`;
                     }
 
-                    // 편의시설 태그 생성
                     const amenities = [];
                     if (room.roombathfacility === 'Y') amenities.push('욕실');
                     if (room.roomtv === 'Y') amenities.push('TV');
@@ -298,7 +354,7 @@ const DetailPage = () => {
                             src={roomImage}
                             alt={room.roomtitle || `객실 ${index + 1}`}
                             className="w-full h-full object-cover"
-                            onError={(e) => { e.target.src = '/images/jeju.png' }}
+                            onError={(e) => { e.target.onerror = null; e.target.src = getFallbackImage(destination.cat3); }}
                           />
                         </div>
                         <div className="flex-1 flex flex-col justify-between">
@@ -333,22 +389,19 @@ const DetailPage = () => {
                     );
                   })
                 ) : estimatedPrice ? (
-                  // 객실 정보가 없지만 예상 가격이 있는 경우 (가상 객실 표시)
                   <div className="border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 hover:border-gray-900 transition-colors">
                     <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0">
                       <img
-                        src={destination.firstimage || '/images/hotel_default.png'}
+                        src={destination.firstimage || getFallbackImage(destination.cat3)}
                         alt="Standard Room"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = '/images/jeju.png' }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = getFallbackImage(destination.cat3); }}
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <h3 className="font-bold text-gray-900 mb-1">Standard Room</h3>
-                        <p className="text-sm text-gray-500 mb-2">
-                          기준 2인 / 최대 2인
-                        </p>
+                        <p className="text-sm text-gray-500 mb-2">기준 2인 / 최대 2인</p>
                         <div className="flex flex-wrap gap-2">
                           <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">더블 침대</span>
                           <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">무료 와이파이</span>
@@ -380,27 +433,11 @@ const DetailPage = () => {
               </div>
             </div>
 
-            {/* Facilities & Map */}
+            {/* Location */}
             <div className="mb-12">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">서비스 및 부대시설</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                {intro && intro.subfacility ? (
-                  intro.subfacility.split(',').slice(0, 8).map((fac, idx) => (
-                    <div key={idx} className="flex items-center text-gray-600 text-sm">
-                      <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                      {fac.trim()}
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-4 text-gray-400 text-sm">시설 정보가 제공되지 않습니다.</div>
-                )}
-              </div>
-
-              <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2>
               <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2>
               <KakaoMap x={destination.mapx} y={destination.mapy} className="rounded-xl overflow-hidden h-[300px] bg-gray-100 relative w-full">
               </KakaoMap>
-
               <div className="mt-4 text-gray-600 text-sm">
                 {destination.addr1} <span className="text-blue-500 cursor-pointer ml-2">주소복사</span>
               </div>
@@ -421,7 +458,6 @@ const DetailPage = () => {
               </div>
 
               <div className="space-y-8">
-                {/* Mock Review */}
                 <div className="border-b border-gray-100 pb-8 last:border-0">
                   <div className="flex items-start mb-4">
                     <div className="w-10 h-10 rounded-full bg-gray-200 mr-3 overflow-hidden">
@@ -435,17 +471,11 @@ const DetailPage = () => {
                       <div className="text-xs text-gray-400">리뷰 1</div>
                     </div>
                   </div>
-
                   <div className="flex items-center mb-3">
-                    <div className="flex text-yellow-400 text-sm mr-2">
-                      ★★★★★
-                    </div>
+                    <div className="flex text-yellow-400 text-sm mr-2">★★★★★</div>
                     <span className="text-xs text-gray-400">2024.01.01</span>
                   </div>
-
-                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                    좋은 숙소입니다.
-                  </p>
+                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">좋은 숙소입니다.</p>
                 </div>
               </div>
             </div>
@@ -455,9 +485,6 @@ const DetailPage = () => {
           {/* Right Sticky Sidebar (30%) */}
           <div className="hidden lg:block w-[30%]">
             <div className="sticky top-24 space-y-4">
-
-              {/* AI Recommendation Button */}
-
 
               {/* Coupon Box */}
               <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">

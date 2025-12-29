@@ -1,4 +1,7 @@
+import { getFallbackImage } from '@utils/imageUtils'; // Import utility
+
 import React, { useState, useEffect, useRef } from 'react';
+
 import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -21,7 +24,7 @@ const ListPage = () => {
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // 전체 검색 결과 수
-  const [prices, setPrices] = useState({}); // { contentid: price }
+  const [prices, setPrices] = useState({}); // {contentid: price }
   const [showMap, setShowMap] = useState(false); // 지도 보기 토글
   const mapRef = useRef(null); // 지도 인스턴스 저장
 
@@ -108,7 +111,7 @@ const ListPage = () => {
         }
         const data = await response.json();
 
-        // Handle new response structure { items: [], totalCount: 0 }
+        // Handle new response structure {items: [], totalCount: 0 }
         if (data.items) {
           setAccommodations(data.items);
           setTotalCount(data.totalCount); // 전체 결과 수 저장
@@ -204,11 +207,11 @@ const ListPage = () => {
 
           // 마커 클릭 이벤트 (인포윈도우 또는 커스텀 오버레이)
           const content = `
-            <div style="padding:10px;background:white;border-radius:8px;border:1px solid #ccc;font-size:12px;width:150px;">
-              <div style="font-weight:bold;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${acc.title}</div>
-              <div style="color:#888;">${getCategoryName(acc.cat3)}</div>
-            </div>
-          `;
+      <div style="padding:10px;background:white;border-radius:8px;border:1px solid #ccc;font-size:12px;width:150px;">
+        <div style="font-weight:bold;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${acc.title}</div>
+        <div style="color:#888;">${getCategoryName(acc.cat3)}</div>
+      </div>
+      `;
 
           const infowindow = new window.kakao.maps.InfoWindow({
             content: content
@@ -640,10 +643,10 @@ const ListPage = () => {
                       {/* Image */}
                       <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
                         <img
-                          src={acc.firstimage || '/images/city.png'}
+                          src={acc.firstimage || getFallbackImage(acc.cat3)}
                           alt={acc.title}
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => { e.target.src = '/images/jeju.png' }} // Temporary fallback
+                          onError={(e) => { e.target.onerror = null; e.target.src = getFallbackImage(acc.cat3); }}
                         />
                       </div>
 

@@ -1,20 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { loadPaymentWidget, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
+import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
 import { nanoid } from 'nanoid';
 
-// Toss Payments 클라이언트 키 (환경 변수에서 가져옴)
-const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY;
-// const clientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'; // 공용 테스트 키
-const customerKey = ANONYMOUS; // 비회원 결제용 상수 사용
+// Toss Payments 클라이언트 키 (사용자 요청으로 하드코딩)
+// API 개별 연동 키는 'test_ck_'로 시작하며, 결제 위젯이 아닌 일반 결제창(tosspayments-sdk)을 사용해야 합니다.
+const clientKey = 'test_ck_PBal2vxj81zazxgQz7ek35RQgOAN'.trim();
+const customerKey = ANONYMOUS;
 
 const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail }) => {
-  const paymentWidgetRef = useRef(null);
-  const paymentMethodsWidgetRef = useRef(null);
   const [isProductSelected, setIsProductSelected] = useState(true);
   const [totalPrice, setTotalPrice] = useState(amount);
-  const [isWidgetReady, setIsWidgetReady] = useState(false);
-  const [widgetError, setWidgetError] = useState(null);
 
   // 상품 선택 상태에 따라 총 금액 업데이트
   useEffect(() => {
@@ -24,64 +20,6 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
       setTotalPrice(0);
     }
   }, [isProductSelected, amount]);
-
-  useEffect(() => {
-    if (isOpen && totalPrice > 0) {
-      setIsWidgetReady(false);
-      setWidgetError(null);
-
-      (async () => {
-        try {
-          console.log('Toss Client Key:', clientKey ? clientKey.substring(0, 10) + '...' : 'undefined'); // 디버깅용 로그
-
-          const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-
-          const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
-            '#payment-widget',
-            { value: totalPrice }
-            // { variantKey: 'DEFAULT' } // 공용 키 사용 시 variantKey 제거 시도
-          );
-
-          paymentWidget.renderAgreement(
-            '#agreement'
-            // { variantKey: 'AGREEMENT' } // 공용 키 사용 시 variantKey 제거 시도
-          );
-
-          paymentWidgetRef.current = paymentWidget;
-          paymentMethodsWidgetRef.current = paymentMethodsWidget;
-
-          // 위젯 렌더링 완료 이벤트 감지
-          paymentMethodsWidget.on('ready', () => {
-            console.log('Payment Widget is ready!');
-            setIsWidgetReady(true);
-          });
-
-        } catch (error) {
-          console.error('Widget load error:', error);
-          setWidgetError('결제 위젯을 불러오는데 실패했습니다. API 키를 확인해주세요. (' + error.message + ')');
-        }
-      })();
-
-      // 클린업 함수: 컴포넌트 언마운트 또는 의존성 변경 시 실행
-      return () => {
-        const paymentMethodsWidget = paymentMethodsWidgetRef.current;
-        if (paymentMethodsWidget && typeof paymentMethodsWidget.destroy === 'function') {
-          paymentMethodsWidget.destroy();
-        }
-        setIsWidgetReady(false);
-      };
-    }
-  }, [isOpen, totalPrice]);
-
-  useEffect(() => {
-    const paymentMethodsWidget = paymentMethodsWidgetRef.current;
-
-    if (paymentMethodsWidget == null) {
-      return;
-    }
-
-    paymentMethodsWidget.updateAmount(totalPrice);
-  }, [totalPrice]);
 
   const handleProductToggle = () => {
     setIsProductSelected(!isProductSelected);
@@ -93,34 +31,26 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
       return;
     }
 
-    if (!isWidgetReady) {
-      alert('결제 위젯이 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.');
-      return;
-    }
-
-    const paymentWidget = paymentWidgetRef.current;
-
-    if (!paymentWidget) {
-      alert('결제 위젯을 불러오지 못했습니다. 페이지를 새로고침 후 다시 시도해주세요.');
-      return;
-    }
-
     try {
-      await paymentWidget.requestPayment({
+      const tossPayments = await loadTossPayments(clientKey);
+      const payment = tossPayments.payment({ customerKey });
+
+      await payment.requestPayment({
+        method: "CARD", // 카드/간편결제 통합 결제창
+        amount: {
+          currency: "KRW",
+          value: totalPrice,
+        },
         orderId: nanoid(),
         orderName: orderName,
-        customerName: customerName || '익명',
-        customerEmail: customerEmail || 'customer@example.com',
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,
+        customerEmail: customerEmail || 'customer@example.com',
+        customerName: customerName || '익명',
       });
     } catch (error) {
-      console.error('Error requesting payment:', error);
-      if (error.message?.includes('렌더링')) {
-        alert('결제 위젯이 아직 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
-      } else {
-        alert('결제 요청 중 오류가 발생했습니다.');
-      }
+      console.error('Payment error:', error);
+      alert('결제 요청 중 오류가 발생했습니다: ' + error.message);
     }
   };
 
@@ -275,69 +205,7 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
             </div>
           </div>
 
-          {/* Widget Error Message */}
-          {widgetError && (
-            <div style={{
-              backgroundColor: '#fef2f2',
-              padding: '1rem',
-              borderRadius: '0.75rem',
-              border: '1px solid #fecaca',
-              color: '#dc2626'
-            }}>
-              <p style={{ margin: '0 0 0.5rem 0', fontWeight: 'bold' }}>⚠️ API 키 오류</p>
-              <p style={{ margin: 0, fontSize: '0.875rem' }}>
-                {widgetError}
-                <br />
-                <a
-                  href="https://developers.tosspayments.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: '#2563eb', textDecoration: 'underline' }}
-                >
-                  Toss Payments 개발자 센터
-                </a>에서 테스트 키를 발급받으세요.
-              </p>
-            </div>
-          )}
-
-          {/* Payment Widget Container */}
-          {totalPrice > 0 && !widgetError && (
-            <div style={{
-              backgroundColor: 'white',
-              padding: '1rem',
-              borderRadius: '0.75rem',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              border: '1px solid #e5e7eb',
-              width: '100%',
-              boxSizing: 'border-box',
-              position: 'relative'
-            }}>
-              {!isWidgetReady && (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '2rem',
-                  color: '#6b7280'
-                }}>
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    border: '3px solid #e5e7eb',
-                    borderTop: '3px solid var(--brand_color)',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite',
-                    marginRight: '0.75rem'
-                  }} />
-                  결제 위젯 로딩 중...
-                </div>
-              )}
-              <div id="payment-widget" style={{ width: '100%', minHeight: isWidgetReady ? '200px' : '0' }} />
-              <div id="agreement" style={{ width: '100%', marginTop: '1rem' }} />
-            </div>
-          )}
-
-          {totalPrice <= 0 && !widgetError && (
+          {totalPrice <= 0 && (
             <div style={{
               backgroundColor: '#fef3c7',
               padding: '1rem',
@@ -349,6 +217,19 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
               상품을 선택해주세요.
             </div>
           )}
+
+          <div style={{
+            backgroundColor: '#eff6ff',
+            padding: '1rem',
+            borderRadius: '0.75rem',
+            border: '1px solid #bfdbfe',
+            color: '#1e40af',
+            fontSize: '0.875rem'
+          }}>
+            <p style={{ margin: 0 }}>
+              ℹ️ <strong>결제하기</strong> 버튼을 누르면 토스페이먼츠 결제창이 팝업으로 열립니다.
+            </p>
+          </div>
         </div>
 
         {/* Footer Actions */}
@@ -378,31 +259,23 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
           </button>
           <button
             onClick={handlePayment}
-            disabled={totalPrice <= 0 || !isWidgetReady}
+            disabled={totalPrice <= 0}
             style={{
               padding: '0.75rem 2rem',
-              backgroundColor: (totalPrice > 0 && isWidgetReady) ? 'var(--brand_color)' : '#d1d5db',
+              backgroundColor: (totalPrice > 0) ? 'var(--brand_color)' : '#d1d5db',
               color: 'white',
               fontWeight: 'bold',
               borderRadius: '0.75rem',
               border: 'none',
-              cursor: (totalPrice > 0 && isWidgetReady) ? 'pointer' : 'not-allowed',
-              boxShadow: (totalPrice > 0 && isWidgetReady) ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
+              cursor: (totalPrice > 0) ? 'pointer' : 'not-allowed',
+              boxShadow: (totalPrice > 0) ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
               transition: 'all 0.2s'
             }}
           >
-            {isWidgetReady ? `${totalPrice?.toLocaleString() || 0}원 결제하기` : '로딩 중...'}
+            {totalPrice?.toLocaleString() || 0}원 결제하기
           </button>
         </div>
       </div>
-
-      {/* CSS for spinner animation */}
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>,
     document.body
   );

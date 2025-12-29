@@ -27,6 +27,7 @@ export default defineConfig
 				"@img": Path.resolve(__dirname, "src/img"),
 				"@pages": Path.resolve(__dirname, "src/pages"),
 				"@data": Path.resolve(__dirname, "src/data"),
+				"@utils": Path.resolve(__dirname, "src/utils"),
 			},
 		},
 	});
