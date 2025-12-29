@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
 import SearchForm from "@components/main/SearchForm.jsx";
+import EventForm from "@components/main/EventForm.jsx";
 
 const ListPage = () => {
   const navigate = useNavigate();
@@ -27,6 +28,22 @@ const ListPage = () => {
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const itemsPerPage = 10;
+
+  const EventList = [
+    {
+      id: 1,
+      image: "https://image6.yanolja.com/cx-ydm/kzYJoRc7Eo9itmL8",
+    }, {
+      id: 2,
+      image: "https://image6.yanolja.com/cx-ydm/qQ2a8GlG3dDs2sv0",
+    }, {
+      id: 3,
+      image: "https://image6.yanolja.com/cx-ydm/gfgPQFZbAVMKIUQD",
+    }, {
+      id: 4,
+      image: "https://image6.yanolja.com/cx-ydm/Tv7mRL1cDUvQlWxD",
+    }
+  ];
 
   // Initialize state from URL params
   useEffect(() => {
@@ -312,7 +329,7 @@ const ListPage = () => {
   };
 
   // Pagination Window Logic
-  const pageGroupSize = 5;
+  const pageGroupSize = 10;
   const currentGroup = Math.ceil(currentPage / pageGroupSize);
   const startPage = (currentGroup - 1) * pageGroupSize + 1;
   const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
@@ -355,6 +372,10 @@ const ListPage = () => {
 
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
+      <style>{`
+        .heart-icon-btn { color: #FFB6C1 !important; }
+        .heart-icon-btn:hover { color: #ef4444 !important; }
+      `}</style>
       {/* Header */}
       <Header />
 
@@ -370,10 +391,10 @@ const ListPage = () => {
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
 
           {/* Left Sidebar - Filters */}
-          <aside className="hidden lg:block w-[250px] flex-shrink-0 space-y-8">
+          <aside className="hidden lg:block w-[250px] flex-shrink-0">
             {/* Map Button */}
             <div
-              className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+              className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity mb-12"
               onClick={() => setShowMap(!showMap)}
             >
               <img src="/images/city.png" alt="Map" className="w-full h-full object-cover" />
@@ -382,34 +403,34 @@ const ListPage = () => {
                   {showMap ? '리스트 보기' : '지도 보기'}
                 </button>
               </div>
-            </div>
+            </div><br />
 
             {/* Filter: Sold Out */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">필터</h3>
-              <label className="flex items-center space-x-2 cursor-pointer">
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">필터</h3><br />
+              <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors -ml-2">
                 <input type="checkbox" className="form-checkbox h-5 w-5 rounded border-gray-300 accent-[var(--brand_color)] focus:ring-[var(--brand_color)]" onChange={handleFilterClick} />
-                <span className="text-gray-600">&nbsp;매진 숙소 제외</span>
+                <span className="text-gray-700">매진 숙소 제외</span>
               </label>
-            </div>
+            </div><br />
 
             {/* Filter: Region */}
-            <div className="border-b border-gray-100 pb-6 mb-6">
-              <h3 className="font-bold text-gray-900 mb-4">지역</h3>
-              <Stack direction="column" gap={2}>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">지  역</h3><br />
+              <Stack direction="column" gap={3}>
                 <Checkbox.Root
                   checked={selectedRegion.length === 0}
                   onCheckedChange={(e) => handleRegionChange('전체', !!e.checked)}
                   colorPalette="orange"
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
                 >
                   <Checkbox.HiddenInput />
-                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
                     <Checkbox.Indicator className="text-white">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
                     </Checkbox.Indicator>
                   </Checkbox.Control>
-                  <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
+                  <Checkbox.Label className="text-gray-700">전체</Checkbox.Label>
                 </Checkbox.Root>
                 {['서울', '경기', '인천', '강원', '제주', '부산', '경상', '전라', '충청'].map((region) => (
                   <Checkbox.Root
@@ -417,37 +438,37 @@ const ListPage = () => {
                     checked={selectedRegion.includes(region)}
                     onCheckedChange={(e) => handleRegionChange(region, !!e.checked)}
                     colorPalette="orange"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
                   >
                     <Checkbox.HiddenInput />
-                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
                       <Checkbox.Indicator className="text-white">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
                       </Checkbox.Indicator>
                     </Checkbox.Control>
-                    <Checkbox.Label className="text-sm text-gray-600">{region}</Checkbox.Label>
+                    <Checkbox.Label className="text-gray-700">{region}</Checkbox.Label>
                   </Checkbox.Root>
                 ))}
               </Stack>
-            </div>
+            </div><br />
 
             {/* Filter: Check Box Type */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">숙소유형</h3>
-              <Stack direction="column" gap={2}>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">숙소 유형</h3><br />
+              <Stack direction="column" gap={3}>
                 <Checkbox.Root
                   checked={selectedType.length === 0}
                   onCheckedChange={(e) => handleTypeChange('전체', !!e.checked)}
                   colorPalette="orange"
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
                 >
                   <Checkbox.HiddenInput />
-                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
                     <Checkbox.Indicator className="text-white">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
                     </Checkbox.Indicator>
                   </Checkbox.Control>
-                  <Checkbox.Label className="text-sm text-gray-600">전체</Checkbox.Label>
+                  <Checkbox.Label className="text-gray-700">전체</Checkbox.Label>
                 </Checkbox.Root>
                 {['호텔', '콘도미니엄', '펜션', '모텔', '게스트하우스', '한옥', '캠핑장', '글램핑', '야영장 및 기타'].map((type) => (
                   <Checkbox.Root
@@ -455,27 +476,27 @@ const ListPage = () => {
                     checked={selectedType.includes(type)}
                     onCheckedChange={(e) => handleTypeChange(type, !!e.checked)}
                     colorPalette="orange"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
                   >
                     <Checkbox.HiddenInput />
-                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-4 h-4 rounded border flex items-center justify-center transition-colors">
+                    <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
                       <Checkbox.Indicator className="text-white">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
                       </Checkbox.Indicator>
                     </Checkbox.Control>
-                    <Checkbox.Label className="text-sm text-gray-600">{type}</Checkbox.Label>
+                    <Checkbox.Label className="text-gray-700">{type}</Checkbox.Label>
                   </Checkbox.Root>
                 ))}
               </Stack>
-            </div>
+            </div><br />
 
             {/* Filter: Price */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">가격 <span className="text-xs font-normal text-gray-400">1박 기준</span></h3>
-              <div className="px-2">
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">가격 <span className="text-sm font-normal text-gray-500 ml-1">&nbsp;1박 기준</span></h3>
+              <div className="px-2 py-2">
                 <input
                   type="range"
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[var(--brand_color)]"
                   min={0}
                   max={500000}
                   step={10000}
@@ -483,104 +504,104 @@ const ListPage = () => {
                   onChange={(e) => setPriceRange([0, parseInt(e.target.value, 10)])}
                 />
               </div>
-              <div className="flex justify-between text-xs text-gray-500 mt-4 font-medium">
+              <div className="flex justify-between text-sm text-gray-600 mt-4 font-medium">
                 <span>0원</span>
                 <span>{priceRange[1] === 500000 ? '50만원 이상' : `${priceRange[1].toLocaleString()}원`}</span>
               </div>
-            </div>
+            </div><br />
 
             {/* Filter: #Preference */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">#취향</h3>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">#취향</h3><br />
               <div className="flex flex-wrap gap-2 mb-2">
                 {['#숙박페스타', '#가족여행숙소', '#스파', '#파티룸', '#OTT', '#연인추천', '#감성숙소', '#뷰맛집', '#연박특가'].map((tag, idx) => (
-                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                     <Tag.Label>{tag}</Tag.Label>
                   </Tag.Root>
                 ))}
-              </div>
+              </div><br />
               <Accordion.Root collapsible>
                 <Accordion.Item value="more-pref" border="none">
                   <Accordion.ItemContent p={0}>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {['#애견동반', '#조식포함', '#오션뷰', '#마운틴뷰', '#시티뷰'].map((tag, idx) => (
-                        <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                        <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                           <Tag.Label>{tag}</Tag.Label>
                         </Tag.Root>
                       ))}
                     </div>
                   </Accordion.ItemContent>
-                  <Accordion.ItemTrigger className="text-xs text-blue-500 font-medium mt-1 p-0 hover:no-underline justify-start">
-                    ...
+                  <Accordion.ItemTrigger className="text-sm text-blue-500 font-medium mt-3 p-0 hover:no-underline hover:text-blue-600 justify-start transition-colors flex items-center">
+                    더보기 <span className="ml-1 text-xs">v</span>
                   </Accordion.ItemTrigger>
                 </Accordion.Item>
               </Accordion.Root>
-            </div>
+            </div><br />
 
             {/* Filter: Discount Benefits */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">할인혜택</h3>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">할인혜택</h3><br />
               <div className="flex flex-wrap gap-2">
                 {['쿠폰할인', '무한대실', '할인특가'].map((benefit, idx) => (
-                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                     <Tag.Label>{benefit}</Tag.Label>
                   </Tag.Root>
                 ))}
-              </div>
+              </div><br />
             </div>
 
             {/* Filter: Reservation Type */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">예약유형</h3>
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" className="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500" onChange={handleFilterClick} />
-                <span className="text-gray-600">내실예약</span>
-              </label>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">예약유형</h3><br />
+              <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors -ml-2">
+                <input type="checkbox" className="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500 accent-[var(--brand_color)]" onChange={handleFilterClick} />
+                <span className="text-gray-700">내실예약</span>
+              </label><br />
             </div>
 
             {/* Filter: Grade */}
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="font-bold text-gray-900 mb-4">등급</h3>
+            <div className="border-b border-solid border-gray-300 py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">등급</h3><br />
               <div className="flex flex-wrap gap-2">
                 {['5성급', '4성급', '블랙', '풀빌라'].map((grade, idx) => (
-                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                  <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                     <Tag.Label>{grade}</Tag.Label>
                   </Tag.Root>
                 ))}
-              </div>
+              </div><br />
             </div>
 
             {/* Filter: Facilities */}
-            <div>
-              <h3 className="font-bold text-gray-900 mb-4">시설</h3>
+            <div className="py-8">
+              <h3 className="font-bold text-gray-900 mb-5 text-lg">시설</h3><br />
 
-              <div className="mb-4">
-                <h4 className="text-xs font-bold text-gray-500 mb-2">공용시설</h4>
+              <div className="mb-6">
+                <h4 className="text-sm font-bold text-gray-500 mb-3">공용시설</h4><br />
                 <div className="flex flex-wrap gap-2">
                   {['사우나', '수영장', '바베큐', '레스토랑', '피트니스', '물놀이시설'].map((fac, idx) => (
-                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                       <Tag.Label>{fac}</Tag.Label>
                     </Tag.Root>
                   ))}
                 </div>
-              </div>
+              </div><br />
 
-              <div className="mb-4">
-                <h4 className="text-xs font-bold text-gray-500 mb-2">객실 내 시설</h4>
+              <div className="mb-6">
+                <h4 className="text-sm font-bold text-gray-500 mb-3">객실 내 시설</h4><br />
                 <div className="flex flex-wrap gap-2">
                   {['스파/월풀', '객실스파', '미니바', '무선인터넷', '에어컨', '욕실용품'].map((fac, idx) => (
-                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                       <Tag.Label>{fac}</Tag.Label>
                     </Tag.Root>
                   ))}
                 </div>
-              </div>
+              </div><br />
 
               <div>
-                <h4 className="text-xs font-bold text-gray-500 mb-2">기타시설</h4>
+                <h4 className="text-sm font-bold text-gray-500 mb-3">기타시설</h4><br />
                 <div className="flex flex-wrap gap-2">
                   {['조식제공', '무료주차', '반려견동반'].map((fac, idx) => (
-                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                    <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                       <Tag.Label>{fac}</Tag.Label>
                     </Tag.Root>
                   ))}
@@ -590,25 +611,25 @@ const ListPage = () => {
                     <Accordion.ItemContent p={0}>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {['수화물보관', '노래방', '편의점', '카페', '비즈니스센터'].map((fac, idx) => (
-                          <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "red.500", color: "red.500" }}>
+                          <Tag.Root key={idx} onClick={handleFilterClick} cursor="pointer" variant="outline" size="lg" borderRadius="full" _hover={{ borderColor: "var(--brand_color)", color: "var(--brand_color)", bg: "orange.50" }} transition="all 0.2s">
                             <Tag.Label>{fac}</Tag.Label>
                           </Tag.Root>
                         ))}
                       </div>
                     </Accordion.ItemContent>
-                    <Accordion.ItemTrigger className="text-xs text-blue-500 font-medium mt-2 p-0 hover:no-underline justify-start">
-                      ...
+                    <Accordion.ItemTrigger className="text-sm text-blue-500 font-medium mt-3 p-0 hover:no-underline hover:text-blue-600 justify-start transition-colors flex items-center">
+                      더보기 <span className="ml-1 text-xs">v</span>
                     </Accordion.ItemTrigger>
                   </Accordion.Item>
                 </Accordion.Root>
-              </div>
+              </div><br />
             </div>
           </aside>
 
           {/* Right Content - List */}
           <section className="flex-1" ref={listRef}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2>
+              <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2><br />
               <div className="relative">
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium">
                   <span>추천순</span>
@@ -622,11 +643,11 @@ const ListPage = () => {
                 <Text>Loading...</Text>
               </div>
             ) : (
-              <div className="flex flex-col gap-[10px]">
+              <div className="flex flex-col gap-6">
                 {accommodations.map((acc, index) => (
                   <React.Fragment key={acc.contentid}>
                     <div
-                      className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row h-auto sm:h-[240px] py-8 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:shadow-lg"
+                      className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row gap-12 h-auto sm:h-[240px] py-6 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-50 hover:shadow-md border-b border-gray-100 last:border-0"
                       onClick={() => navigate(`/detail/${acc.contentid}`)}
                     >
                       {/* Image */}
@@ -637,22 +658,28 @@ const ListPage = () => {
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => { e.target.src = '/images/jeju.png' }} // Temporary fallback
                         />
-                        <button className="absolute top-3 right-3 transition-colors text-heart">
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                        </button>
                       </div>
 
                       {/* Content */}
-                      <div className="p-6 sm:px-8 sm:py-6 flex flex-col flex-grow justify-between">
+                      <div className="flex flex-col flex-grow justify-between py-2 w-full">
                         <div>
-                          <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">{getCategoryName(acc.cat3)}</div>
-                          <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg">{acc.title}</h3>
-                          <div className="flex items-center space-x-2 mb-2">
-                            <span className="bg-star text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="text-xs text-gray-500 mb-1 font-medium transition-colors">{getCategoryName(acc.cat3)}</div>
+                              <h3 className="font-bold text-gray-900 mb-2 transition-colors leading-tight text-title-lg text-2xl">{acc.title}</h3>
+                            </div>
+                            {/* Heart Icon Moved Here */}
+                            <button className="transition-colors heart-icon-btn">
+                              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                            </button>
+                          </div>
+
+                          <div className="flex items-center space-x-2 mb-3">
+                            <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
                               9.0
                             </span>
-                            <span className="text-star text-xs font-bold transition-colors">추천해요</span>
-                            <span className="text-xs text-gray-400 transition-colors">(100개 리뷰)</span>
+                            <span className="text-yellow-500 text-sm font-bold transition-colors">추천해요</span>
+                            <span className="text-sm text-gray-400 transition-colors">(100개 리뷰)</span>
                           </div>
                           <div className="text-sm text-gray-500 mb-1 transition-colors flex items-center">
                             {acc.addr1}
@@ -700,19 +727,33 @@ const ListPage = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <HStack mt={10} spacing={2} justify="center">
-                {/* 이전 버튼 */}
+              <HStack mt={16} spacing={2} justify="center">
+                {/* 맨 앞으로 버튼 */}
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => paginate(startPage - 1)}
-                  isDisabled={startPage === 1}
+                  onClick={() => paginate(1)}
+                  isDisabled={currentPage === 1}
                   borderRadius="full"
                   borderColor="gray.300"
                   color="gray.700"
                   _hover={{ bg: "gray.100" }}
                 >
-                  이전
+                  &lt;&lt;
+                </Button>
+
+                {/* 이전 버튼 */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => paginate(Math.max(1, currentPage - 1))}
+                  isDisabled={currentPage === 1}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  color="gray.700"
+                  _hover={{ bg: "gray.100" }}
+                >
+                  &lt;
                 </Button>
 
                 {/* 번호 버튼들 */}
@@ -741,43 +782,41 @@ const ListPage = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => paginate(endPage + 1)}
-                  isDisabled={endPage === totalPages}
+                  onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                  isDisabled={currentPage === totalPages}
                   borderRadius="full"
                   borderColor="gray.300"
                   color="gray.700"
                   _hover={{ bg: "gray.100" }}
                 >
-                  다음
+                  &gt;
+                </Button>
+
+                {/* 맨 뒤로 버튼 */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => paginate(totalPages)}
+                  isDisabled={currentPage === totalPages}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  color="gray.700"
+                  _hover={{ bg: "gray.100" }}
+                >
+                  &gt;&gt;
                 </Button>
               </HStack>
             )}
           </section>
         </div>
-      </div>
+      </div><br />
 
       {/* Banner Section */}
-      < section className="w-full py-16 flex justify-center" >
+      <section className="w-full py-16 flex justify-center">
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-lg">
-            <img
-              src="/images/jeju.png"
-              alt="Banner"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-70"></div>
-            <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 text-white">
-              <h2 className="text-2xl md:text-4xl font-bold mb-4">특별한 멤버십 혜택</h2>
-              <p className="text-base md:text-xl mb-8 max-w-xl">지금 가입하고 전 세계 호텔 10% 추가 할인 혜택을 받으세요. 더 많은 여행이 당신을 기다립니다.</p>
-              <button
-                className="w-fit bg-white text-gray-900 px-6 py-2 md:px-8 md:py-3 rounded-full font-bold hover:bg-gray-100 transition-colors"
-              >
-                멤버십 가입하기
-              </button>
-            </div>
-          </div>
+          <EventForm data={EventList} />
         </div>
-      </section >
+      </section>
 
       {/* Footer */}
       < Footer />
