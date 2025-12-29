@@ -52,7 +52,7 @@ export default function Header() {
 
   const menuItems = useMemo(
     () => [
-      { label: "메인", to: "/main" },
+      // { label: "메인", to: "/main" },
       { label: "숙소", to: "/list" },
       { label: "이벤트", to: "/event" },
       { label: "고객센터", to: "/customerservice" },
@@ -89,9 +89,15 @@ export default function Header() {
       >
         {/* Left: icon -> menu */}
         <HStack spacing={{ base: 4, md: 6 }} alignItems="center">
-          <Box color="gray.600">
-            <Logo size={60} style={{ marginTop: "-10px" }}/>
-          </Box>
+            <Link
+              as={RouterLink}
+              to="/main"
+              _hover={{ textDecoration: "none" }}
+              display="inline-flex"
+              alignItems="center"
+            >
+              <Logo size={60} style={{ marginTop: "-10px" }}/>
+            </Link>
 
           <HStack as="nav" spacing={{ base: 3, md: 6 }}>
             {menuItems.map((item) => (
@@ -99,16 +105,13 @@ export default function Header() {
                 key={item.to}
                 as={NavLink}
                 to={item.to}
-                className={({ isActive }) =>
-                  [
-                    "text-sm font-medium",
-                    "px-1 py-2",
-                    isActive
-                      ? "text-[var(--brand_color)]"
-                      : "text-gray-700 hover:text-[var(--brand_color)]",
-                  ].join(" ")
-                }
-                _hover={{ textDecoration: "none" }}
+                fontSize="xl"
+                fontWeight="600"
+                px="1"
+                py="2"
+                color="gray.700"
+                _hover={{ textDecoration: "none", color: "var(--brand_color)" }}
+                _activeLink={{ color: "var(--brand_color)" }}
               >
                 {item.label}
               </Link>
@@ -142,8 +145,11 @@ export default function Header() {
             <Link
               as={RouterLink}
               to="/signup"
-              className="text-sm font-medium text-gray-700 hover:text-[var(--brand_color)] px-1 py-2"
-              _hover={{ textDecoration: "none" }}
+              // className="text-sm font-medium text-gray-700 hover:text-[var(--brand_color)] px-1 py-2"
+              fontSize="xl"
+              fontWeight="medium"
+              _hover={{ textDecoration: "none", color: "var(--brand_color)" }}
+              // _hover={{ textDecoration: "none" }}
             >
               로그인
             </Link>
