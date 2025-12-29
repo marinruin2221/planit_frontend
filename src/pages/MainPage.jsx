@@ -38,7 +38,7 @@ export default function MainPage() {
 			<StayCard name={"국내 인기 숙소"} data={StayList} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<EventForm data={EventList} />
+			<EventForm name={"진행중인 이벤트"}/>
 		</Container>
 		<Container maxW="1300px" pt="60px">
 			<StayCard name={"리뷰가 증명한 인기 숙소"} data={StayList} />
