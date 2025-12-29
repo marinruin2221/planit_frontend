@@ -1,10 +1,9 @@
-// React
 import React from "react";
+import {
+	Container,
+	Box
+} from "@chakra-ui/react";
 
-// Chakra UI
-import { Container, Box } from "@chakra-ui/react";
-
-// Components
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
 import BannerCard from "@components/main/BannerCard.jsx";
@@ -15,9 +14,10 @@ import EventForm from "@components/main/EventForm.jsx";
 import GuideForm from "@components/main/GuideForm.jsx";
 
 // Data
-import { AreaList, StayList, EventList } from "@data/mockData";
+import { AreaList } from "@data/mockData";
 
-export default function MainPage() {
+export default function MainPage()
+{
 	return <React.Fragment>
 		<Header />
 
@@ -35,16 +35,10 @@ export default function MainPage() {
 			<AreaCard name={"국내 인기 지역"} data={AreaList} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<StayCard name={"국내 인기 숙소"} data={StayList} />
+			<StayCard name={"국내 인기 숙소"} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<EventForm name={"진행중인 이벤트"}/>
-		</Container>
-		<Container maxW="1300px" pt="60px">
-			<StayCard name={"리뷰가 증명한 인기 숙소"} data={StayList} />
-		</Container>
-		<Container maxW="1300px" pt="60px">
-			<StayCard name={"합리적인 가격의 인기 숙소"} data={StayList} />
+			<EventForm name={"진행중인 이벤트"} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
 			<GuideForm />

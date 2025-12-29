@@ -26,7 +26,7 @@ export default function EventForm({name})
 	return <React.Fragment>
 		<Flex justify={"space-between"} pb={"4"}>
 			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
-			<Button size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}}>
+			<Button size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={() => navigate(`/event`)}>
 				More
 				<LuArrowRight/>
 			</Button>
