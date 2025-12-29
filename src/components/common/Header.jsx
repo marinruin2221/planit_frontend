@@ -5,7 +5,7 @@ import { Box, Container, HStack, Button, Link } from "@chakra-ui/react";
 
 import { getLoginStatus } from "@src/data/user.js";
 
-function Logo({ size = 28 }) {
+function Logo({ size = 28, style }) {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -38,9 +38,10 @@ function Logo({ size = 28 }) {
 
   return (
     <img
-      src="/images/logo.svg"
+      src="/images/planitLogo-transparent.png"
       alt="Planit"
-      className="h-7 w-auto"
+      // className="h-7 w-auto"
+      style={{ height: size, width: "auto", ...style }}
       onError={() => setHasError(true)}
     />
   );
@@ -88,8 +89,8 @@ export default function Header() {
       >
         {/* Left: icon -> menu */}
         <HStack spacing={{ base: 4, md: 6 }} alignItems="center">
-          <Box color="gray.700">
-            <Logo />
+          <Box color="gray.600">
+            <Logo size={60} style={{ marginTop: "-10px" }}/>
           </Box>
 
           <HStack as="nav" spacing={{ base: 3, md: 6 }}>
