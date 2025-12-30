@@ -5,6 +5,8 @@ import { Box, Container, HStack, Button, Link } from "@chakra-ui/react";
 
 import { getLoginStatus } from "@src/data/user.js";
 
+import { FiLogIn } from "react-icons/fi";
+
 function Logo({ size = 28, style }) {
   const [hasError, setHasError] = useState(false);
 
@@ -54,6 +56,7 @@ export default function Header() {
     () => [
       // { label: "메인", to: "/main" },
       { label: "숙소", to: "/list" },
+      { label: "예약조회", to: "/signin" },
       { label: "이벤트", to: "/event" },
       { label: "고객센터", to: "/customerservice" },
     ],
@@ -99,14 +102,14 @@ export default function Header() {
               <Logo size={60} style={{ marginTop: "-10px" }}/>
             </Link>
 
-          <HStack as="nav" spacing={{ base: 3, md: 6 }}>
+          <HStack as="nav" gap={{ base: 3, md: 6 }} ml={10}>
             {menuItems.map((item) => (
               <Link
                 key={item.to}
                 as={NavLink}
                 to={item.to}
-                fontSize="xl"
-                fontWeight="600"
+                fontSize="lg"
+                fontWeight="500"
                 px="1"
                 py="2"
                 color="gray.700"
@@ -144,14 +147,14 @@ export default function Header() {
           ) : (
             <Link
               as={RouterLink}
-              to="/signup"
+              to="/signin"
               // className="text-sm font-medium text-gray-700 hover:text-[var(--brand_color)] px-1 py-2"
               fontSize="xl"
               fontWeight="medium"
               _hover={{ textDecoration: "none", color: "var(--brand_color)" }}
               // _hover={{ textDecoration: "none" }}
             >
-              로그인
+              <FiLogIn size={22} />
             </Link>
           )}
         </HStack>
