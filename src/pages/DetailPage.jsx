@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { Accordion } from "@chakra-ui/react";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 import Header from "@components/common/Header.jsx";
 import Footer from "@components/common/Footer.jsx";
@@ -133,14 +134,25 @@ const DetailPage = () => {
     // 리뷰 수: 10 ~ 120
     const reviewCount = (Math.abs((hash >> 8) % 111)) + 10;
 
-    // 점수에 따른 추천 문구
+    // 점수에 따른 추천 문구 및 색상
     let label = '좋아요';
-    if (score >= 8.5) label = '최고에요';
-    else if (score >= 7.0) label = '추천해요';
-    else if (score >= 5.0) label = '괜찮아요';
-    else label = '보통이에요';
+    let colorClass = 'text-green-500';
 
-    return { score: score.toFixed(1), reviewCount, label };
+    if (score >= 8.5) {
+      label = '최고에요';
+      colorClass = 'text-orange-600';
+    } else if (score >= 7.0) {
+      label = '추천해요';
+      colorClass = 'text-yellow-500';
+    } else if (score >= 5.0) {
+      label = '괜찮아요';
+      colorClass = 'text-blue-500';
+    } else {
+      label = '보통이에요';
+      colorClass = 'text-gray-500';
+    }
+
+    return { score: score.toFixed(1), reviewCount, label, colorClass };
   };
 
   // 더미 리뷰 생성 함수
@@ -341,11 +353,19 @@ const DetailPage = () => {
               <div className="text-sm text-gray-500 mb-2">숙박</div>
               <h1 className="font-bold text-gray-900 mb-3 leading-tight text-title-xl">{destination.title}</h1>
               {(() => {
-                const { score, reviewCount, label } = getRandomRating(id);
+                const { score, reviewCount, label, colorClass } = getRandomRating(id);
+                const rating = parseFloat(score) / 2;
                 return (
-                  <div className="flex items-center space-x-2 mb-4">
-                    <span className="bg-gray-900 text-white text-xs px-2 py-1 rounded">{score}</span>
-                    <span className="text-sm font-medium text-gray-900">{label}</span>
+                  <div className="flex items-center mb-4 gap-3">
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        if (rating >= star) return <FaStar key={star} className="text-yellow-400 text-sm" />;
+                        if (rating >= star - 0.5) return <FaStarHalfAlt key={star} className="text-yellow-400 text-sm" />;
+                        return <FaRegStar key={star} className="text-gray-300 text-sm" />;
+                      })}
+                    </div>
+                    <span className="text-sm font-bold text-gray-900">{score}</span>
+                    <span className={`text-sm font-medium ${colorClass}`}>{label}</span>
                     <span className="text-sm text-gray-500">· 이용자 리뷰 {reviewCount}개</span>
                   </div>
                 );

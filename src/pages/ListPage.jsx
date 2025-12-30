@@ -2,7 +2,8 @@ import { getFallbackImage } from '@utils/imageUtils'; // Import utility
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag } from '@chakra-ui/react';
+import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag, NativeSelect } from '@chakra-ui/react';
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import Header from "@components/common/Header.jsx";
@@ -20,6 +21,7 @@ const ListPage = () => {
   const [selectedType, setSelectedType] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 500000]);
+  const [sortOption, setSortOption] = useState('recommend'); // 정렬 옵션 상태 추가
   const [accommodations, setAccommodations] = useState([]); // API Data
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -378,15 +380,69 @@ const ListPage = () => {
     // 리뷰 수: 10 ~ 120
     const reviewCount = (Math.abs((hash >> 8) % 111)) + 10;
 
-    // 점수에 따른 추천 문구
+    // 점수에 따른 추천 문구 및 색상
     let label = '좋아요';
-    if (score >= 8.5) label = '최고에요';
-    else if (score >= 7.0) label = '추천해요';
-    else if (score >= 5.0) label = '괜찮아요';
-    else label = '보통이에요';
+    let colorClass = 'text-green-500';
 
-    return { score: score.toFixed(1), reviewCount, label };
+    if (score >= 8.5) {
+      label = '최고에요';
+      colorClass = 'text-orange-600';
+    } else if (score >= 7.0) {
+      label = '추천해요';
+      colorClass = 'text-yellow-500';
+    } else if (score >= 5.0) {
+      label = '괜찮아요';
+      colorClass = 'text-blue-500';
+    } else {
+      label = '보통이에요';
+      colorClass = 'text-gray-500';
+    }
+
+    return { score: score.toFixed(1), reviewCount, label, colorClass };
   };
+
+  // 정렬 로직
+  const getSortedAccommodations = () => {
+    let sorted = [...accommodations];
+
+    switch (sortOption) {
+      case 'review': // 리뷰 많은 순
+        sorted.sort((a, b) => {
+          const reviewA = getRandomRating(a.contentid).reviewCount;
+          const reviewB = getRandomRating(b.contentid).reviewCount;
+          return reviewB - reviewA;
+        });
+        break;
+      case 'priceHigh': // 가격 높은 순
+        sorted.sort((a, b) => {
+          const priceA = a.minPrice || prices[a.contentid] || 0;
+          const priceB = b.minPrice || prices[b.contentid] || 0;
+          return priceB - priceA;
+        });
+        break;
+      case 'priceLow': // 가격 낮은 순
+        sorted.sort((a, b) => {
+          const priceA = a.minPrice || prices[a.contentid] || Infinity; // 가격 정보 없으면 뒤로
+          const priceB = b.minPrice || prices[b.contentid] || Infinity;
+          if (priceA === Infinity && priceB === Infinity) return 0;
+          if (priceA === Infinity) return 1;
+          if (priceB === Infinity) return -1;
+          return priceA - priceB;
+        });
+        break;
+      case 'recommend': // 추천순 (기본) - 점수 높은 순
+      default:
+        sorted.sort((a, b) => {
+          const scoreA = parseFloat(getRandomRating(a.contentid).score);
+          const scoreB = parseFloat(getRandomRating(b.contentid).score);
+          return scoreB - scoreA;
+        });
+        break;
+    }
+    return sorted;
+  };
+
+  const sortedAccommodations = getSortedAccommodations();
 
   return (
     <div className="min-h-[2930px] bg-gray-50 flex flex-col">
@@ -396,6 +452,8 @@ const ListPage = () => {
       `}</style>
       {/* Header */}
       <Header />
+
+      <div className="h-[15px]"></div>
 
       {/* Search Form */}
       <div className="w-full flex justify-center mt-8 mb-16">
@@ -425,11 +483,20 @@ const ListPage = () => {
 
             {/* Filter: Sold Out */}
             <div className="border-b border-solid border-gray-300 py-8">
-              <h3 className="font-bold text-gray-900 mb-5 text-lg">필터</h3><br />
-              <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors -ml-2">
-                <input type="checkbox" className="form-checkbox h-5 w-5 rounded border-gray-300 accent-[var(--brand_color)] focus:ring-[var(--brand_color)]" onChange={handleFilterClick} />
-                <span className="text-gray-700">매진 숙소 제외</span>
-              </label>
+              <h3 className="font-bold text-gray-900 mb-6 text-lg">필터</h3><br />
+              <Checkbox.Root
+                colorPalette="orange"
+                className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
+                onCheckedChange={handleFilterClick}
+              >
+                <Checkbox.HiddenInput />
+                <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Indicator className="text-white">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
+                  </Checkbox.Indicator>
+                </Checkbox.Control>
+                <Checkbox.Label className="text-gray-700">매진 숙소 제외</Checkbox.Label>
+              </Checkbox.Root>
             </div><br />
 
             {/* Filter: Region */}
@@ -570,12 +637,21 @@ const ListPage = () => {
 
             {/* Filter: Reservation Type */}
             <div className="border-b border-solid border-gray-300 py-8">
-              <h3 className="font-bold text-gray-900 mb-5 text-lg">예약유형</h3><br />
-              <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors -ml-2">
-                <input type="checkbox" className="form-checkbox h-5 w-5 text-red-500 rounded border-gray-300 focus:ring-red-500 accent-[var(--brand_color)]" onChange={handleFilterClick} />
-                <span className="text-gray-700">내실예약</span>
-              </label><br />
-            </div>
+              <h3 className="font-bold text-gray-900 mb-6 text-lg">예약유형</h3><br />
+              <Checkbox.Root
+                colorPalette="orange"
+                className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
+                onCheckedChange={handleFilterClick}
+              >
+                <Checkbox.HiddenInput />
+                <Checkbox.Control className="border-gray-300 data-[checked]:bg-[var(--brand_color)] data-[checked]:border-[var(--brand_color)] w-5 h-5 rounded border flex items-center justify-center transition-colors">
+                  <Checkbox.Indicator className="text-white">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3"><polyline points="20 6 9 17 4 12" /></svg>
+                  </Checkbox.Indicator>
+                </Checkbox.Control>
+                <Checkbox.Label className="text-gray-700">내실예약</Checkbox.Label>
+              </Checkbox.Root>
+            </div><br />
 
             {/* Filter: Grade */}
             <div className="border-b border-solid border-gray-300 py-8">
@@ -648,38 +724,47 @@ const ListPage = () => {
           <section className="flex-1" ref={listRef}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2><br />
-              <div className="relative">
-                <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium">
-                  <span>추천순</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </button>
+              <div className="relative w-40">
+                <NativeSelect.Root size="sm" variant="outline">
+                  <NativeSelect.Field
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="font-medium text-white border-none bg-[var(--brand_color)] hover:bg-[var(--brand_hover_color)] focus:ring-2 focus:ring-offset-1 focus:ring-[var(--brand_color)] rounded-md transition-colors"
+                  >
+                    <option value="recommend" className="text-gray-900 bg-white">추천순</option>
+                    <option value="review" className="text-gray-900 bg-white">리뷰 많은 순</option>
+                    <option value="priceHigh" className="text-gray-900 bg-white">가격 높은 순</option>
+                    <option value="priceLow" className="text-gray-900 bg-white">가격 낮은 순</option>
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator className="text-white" />
+                </NativeSelect.Root>
               </div>
             </div>
-
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <Text>Loading...</Text>
               </div>
             ) : (
               <div className="flex flex-col gap-6">
-                {accommodations.map((acc, index) => (
+                {sortedAccommodations.map((acc, index) => (
                   <React.Fragment key={acc.contentid}>
                     <div
-                      className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row gap-12 h-auto sm:h-[240px] py-6 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-50 hover:shadow-md border-b border-gray-100 last:border-0"
+                      className="group bg-white overflow-hidden cursor-pointer flex flex-col sm:flex-row gap-12 h-auto sm:h-[240px] py-6 px-4 -mx-4 rounded-lg transition-all duration-200 hover:bg-gray-50 border-b border-gray-100 last:border-0"
                       onClick={() => navigate(`/detail/${acc.contentid}`)}
                     >
                       {/* Image */}
-                      <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden">
+                      <div className="w-full sm:w-[320px] h-48 sm:h-full relative flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                         <img
                           src={acc.firstimage || getFallbackImage(acc.cat3)}
                           alt={acc.title}
-                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                          className="group-hover:scale-105 transition-transform duration-300"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
                           onError={(e) => { e.target.onerror = null; e.target.src = getFallbackImage(acc.cat3); }}
                         />
                       </div>
 
                       {/* Content */}
-                      <div className="flex flex-col flex-grow justify-between py-2 w-full">
+                      <div className="flex flex-col flex-grow justify-between py-2 w-full transition-all duration-200 group-hover:shadow-md group-hover:bg-white rounded-lg px-4 -ml-4">
                         <div>
                           <div className="flex justify-between items-start">
                             <div>
@@ -692,16 +777,22 @@ const ListPage = () => {
                             </button>
                           </div>
 
-                          <div className="flex items-center space-x-2 mb-3">
+                          <div className="flex items-center mb-3 gap-3">
                             {(() => {
-                              const { score, reviewCount, label } = getRandomRating(acc.contentid);
+                              const { score, reviewCount, label, colorClass } = getRandomRating(acc.contentid);
+                              const rating = parseFloat(score) / 2;
                               return (
                                 <>
-                                  <span className="bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5 rounded">
-                                    {score}
-                                  </span>
-                                  <span className="text-yellow-500 text-sm font-bold transition-colors">{label}</span>
-                                  <span className="text-sm text-gray-400 transition-colors">({reviewCount}개 리뷰)</span>
+                                  <div className="flex items-center gap-2">
+                                    {[1, 2, 3, 4, 5].map((star) => {
+                                      if (rating >= star) return <FaStar key={star} className="text-yellow-400 text-sm" />;
+                                      if (rating >= star - 0.5) return <FaStarHalfAlt key={star} className="text-yellow-400 text-sm" />;
+                                      return <FaRegStar key={star} className="text-gray-300 text-sm" />;
+                                    })}
+                                  </div>
+                                  <span className="text-sm font-bold text-gray-900">{score}</span>
+                                  <span className={`text-sm font-medium ${colorClass}`}>{label}</span>
+                                  <span className="text-sm text-gray-400">({reviewCount})</span>
                                 </>
                               );
                             })()}

@@ -26,6 +26,7 @@ Fronend workspace for planit project
 | 2025-12-29 | AI | **디테일 페이지 이미지 갤러리 개선**<br> - Flexbox 기반 모자이크 레이아웃 적용<br> - 음수 마진(-1px) 오버랩으로 빈틈 제거<br> - `SafeImage` 컴포넌트 도입 (로딩 실패 시 Fallback 처리)<br> - '사진 전체보기' 버튼 브랜드 컬러 적용 | [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 모자이크 갤러리 완료 |
 | 2025-12-29 | AI | **이미지 Fallback 유틸리티 추가**<br> - `getFallbackImage` 함수 구현 (카테고리별 기본 이미지 매핑)<br> - `ListPage`, `DetailPage`에 적용 | [`src/utils/imageUtils.js`](src/utils/imageUtils.js)<br>[`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | Fallback 이미지 시스템 완료 |
 | 2025-12-29 | 손종현 | **로고 생성 후 삽입**<br> - 플랜잇 로고(`planitLogo-transparent.png`) 구현: 헤더에 로고사진 삽입 | [`src/component/common/header.jsx`](src/pages/eventPage.jsx) |  |
+| 2025-12-30 | AI | **리스트/디테일 페이지 UI 및 기능 개선**<br> - **리스트 페이지**: 정렬 기능(추천/리뷰/가격) 구현 및 콤보박스 스타일링(브랜드 컬러), 별점 UI 아이콘 적용, 레이아웃 수정<br> - **디테일 페이지**: 별점 UI 리스트 페이지와 통일 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 정렬 및 평점 UI 개선 완료 |
 
 ### 새 항목 추가 템플릿
 
