@@ -98,6 +98,7 @@ export default function Header() {
               _hover={{ textDecoration: "none" }}
               display="inline-flex"
               alignItems="center"
+              focusRing="none"
             >
               <Logo size={60} style={{ marginTop: "-10px" }}/>
             </Link>
@@ -115,6 +116,7 @@ export default function Header() {
                 color="gray.700"
                 _hover={{ textDecoration: "none", color: "var(--brand_color)" }}
                 _activeLink={{ color: "var(--brand_color)" }}
+                focusRing="none"
               >
                 {item.label}
               </Link>
@@ -153,6 +155,7 @@ export default function Header() {
               fontWeight="medium"
               _hover={{ textDecoration: "none", color: "var(--brand_color)" }}
               // _hover={{ textDecoration: "none" }}
+              focusRing="none"
             >
               <FiLogIn size={22} />
             </Link>
