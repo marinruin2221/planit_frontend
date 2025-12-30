@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, SimpleGrid, Image, Text, Container, Input, Button, HStack, Accordion } from "@chakra-ui/react";
+import { Box, Text, Container, Button, HStack, Accordion } from "@chakra-ui/react";
 
 import { LuPhone, LuMail, LuBot } from "react-icons/lu";
 
@@ -135,7 +135,7 @@ export default function CustomerservicePage()
       
 	return <React.Fragment>
 		<Header/>
-		<Container maxW="55%" py={10}>
+		<Container maxW={{ base: "100%", md: "70%", lg: "55%" }} py={10} px={{ base: 4, md: 0 }}>
             <Text fontSize="3xl" fontWeight="bold" mb={1}>
                 고객센터
             </Text>
@@ -147,7 +147,7 @@ export default function CustomerservicePage()
                 borderRadius="md"
                 p={6}
             >
-                <HStack justify="space-between" align="center">
+                <HStack justify="space-between" align="center" flexDir={{ base: "column", md: "row" }}>
                     <Box>
                         <HStack spacing={3}>
                             <LuPhone size={20} color="#4A5568" />
