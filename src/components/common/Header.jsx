@@ -55,7 +55,7 @@ export default function Header() {
   const menuItems = useMemo(
     () => [
       // { label: "메인", to: "/main" },
-      { label: "숙소", to: "/list" },
+      { label: "국내숙소", to: "/list" },
       { label: "예약조회", to: "/signin" },
       { label: "이벤트", to: "/event" },
       { label: "고객센터", to: "/customerservice" },
