@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Text,
@@ -14,104 +14,60 @@ export default function SigninForm()
 	const [id, setId] = useState("");
 	const [pw, setPw] = useState("");
 
-	useEffect(() => {
+	const signin = () => {
 		fetch("http://localhost:5002/api/signin/signin",{
-			method:"GET",
+			method:"POST",
 			headers:
 			{
 				"Content-Type":"application/json"
 			},
 			body:JSON.stringify
 			({
-				id: id,
-				pw: pw,
+				userId:id,
+				userPw:pw,
 			}),
 		})
 		.then(res => res.json())
 		.then(data => {
-			console.log("로그인 성공");
+			if(data.result == "Y")
+			{
+				location.href = "/main";
+			}
+			else
+			{
+				alert("아이디나 비밀번호를 확인해 주세요.");
+			}
 		});
-	}, []);
+	}
 
-	const [errors, setErrors] = useState({ id: "", pw: "" });
-
-	const validate = () => {
-		let newErrors = { id: "", pw: "" };
-		if (!id) newErrors.id = "아이디를 입력해주세요.";
-		if (!pw) newErrors.pw = "비밀번호를 입력해주세요.";
-		setErrors(newErrors);
-
-		// 둘 다 빈 문자열이면 유효
-		return !newErrors.id && !newErrors.pw;
-	};
-
-	const handleLogin = () => {
-		if (!validate()) return;
-
-		console.log("아이디:", id);
-		console.log("비밀번호:", pw);
-	};
-
-	const handleNaverLogin = () => console.log("네이버 로그인 클릭");
-	const handleKakaoLogin = () => console.log("카카오 로그인 클릭");
-	const handleGoogleLogin = () => console.log("구글 로그인 클릭");
+	const naver = () => console.log("네이버 로그인 클릭");
+	const kakao = () => console.log("카카오 로그인 클릭");
+	const google = () => console.log("구글 로그인 클릭");
 
 	return <React.Fragment>
-		<Stack maxW={"400px"} m={"auto"} gap={5} p={5} bg="white" borderRadius="xl" boxShadow="lg">
+		<Stack maxW="400px" m="auto" gap="5" p="5" bg="white">
 			<Box>
-				<Text fontSize={"3xl"} fontWeight={"bold"} textAlign={"center"}>
-					로그인
-				</Text>
+				<Text fontSize="3xl" fontWeight="bold" textAlign="center">로그인</Text>
 			</Box>
 
 			<Field.Root required>
 				<Field.Label>아이디</Field.Label>
-				<Input
-					name="id"
-					placeholder="아이디를 입력하세요"
-					value={id}
-					onChange={(e) => setId(e.target.value)}
-					onBlur={validate}
-				/>
-				{errors.id && <Text color="red.500" fontSize="sm">{errors.id}</Text>}
+				<Input type="text" name="id" placeholder="아이디를 입력하세요" value={id} onChange={(e) => setId(e.target.value)}/>
 			</Field.Root>
 
 			<Field.Root required>
 				<Field.Label>비밀번호</Field.Label>
-				<Input
-					name="pw"
-					type="password"
-					placeholder="비밀번호를 입력하세요"
-					value={pw}
-					onChange={(e) => setPw(e.target.value)}
-					onBlur={validate}
-				/>
-				{errors.pw && <Text color="red.500" fontSize="sm">{errors.pw}</Text>}
+				<Input type="password" name="pw" placeholder="비밀번호를 입력하세요" value={pw} onChange={(e) => setPw(e.target.value)}/>
 			</Field.Root>
 
-			<Button
-				color={"var(--white_color)"}
-				bg={"var(--brand_color)"}
-				onClick={handleLogin}
-				_hover={{ bg: "var(--brand_hover_color)" }}
-			>
-				로그인
-			</Button>
+			<Button color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={signin}>로그인</Button>
 
-			<Text textAlign="center" fontSize="sm" color="gray.500">
-				또는 소셜 계정으로 로그인
-			</Text>
+			<Text textAlign="center" fontSize="sm" color="gray.500">또는 소셜 계정으로 로그인</Text>
 
-			<HStack spacing={4} justify="center">
-				<Button bg="#03C75A" color="white" flex={1} onClick={handleNaverLogin} _hover={{ bg: "#02A64E" }}>
-					네이버
-				</Button>
-				<Button bg="#FFCD00" color="white" flex={1} onClick={handleKakaoLogin} _hover={{ bg: "#E6B800" }}>
-					카카오
-				</Button>
-				<Button bg="#4285F4" color="white" flex={1} onClick={handleGoogleLogin} _hover={{ bg: "#357AE8" }}>
-					구글
-				</Button>
+			<HStack>
+				<Button bg="#03C75A" color="white" flex="1" _hover={{bg:"#02A64E"}} onClick={naver}>네이버</Button>
+				<Button bg="#FFCD00" color="white" flex="1" _hover={{bg:"#E6B800"}} onClick={kakao}>카카오</Button>
+				<Button bg="#4285F4" color="white" flex="1" _hover={{bg:"#357AE8"}} onClick={google}>구글</Button>
 			</HStack>
 		</Stack>
 	</React.Fragment>
