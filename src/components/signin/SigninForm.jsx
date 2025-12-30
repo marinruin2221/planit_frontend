@@ -31,6 +31,10 @@ export default function SigninForm()
 		.then(data => {
 			if(data.result == "Y")
 			{
+				localStorage.setItem("token", data.token);
+				localStorage.setItem("userId", data.userId);
+				localStorage.setItem("userPw", data.userPw);
+
 				location.href = "/main";
 			}
 			else
