@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	Text,
@@ -11,6 +11,15 @@ import {
 
 export default function SigninForm()
 {
+	useEffect(() => {
+		fetch("http://localhost:5002/api/signin/signin",{method:"GET"})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data)
+		})
+		.catch(err => console.error(err));
+	}, []);
+
 	const [id, setId] = useState("");
 	const [pw, setPw] = useState("");
 	const [errors, setErrors] = useState({ id: "", pw: "" });

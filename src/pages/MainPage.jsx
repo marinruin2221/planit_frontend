@@ -14,7 +14,7 @@ import EventForm from "@components/main/EventForm.jsx";
 import GuideForm from "@components/main/GuideForm.jsx";
 
 // Data
-import { AreaList } from "@data/mockData";
+import { AreaList, StayList } from "@data/mockData";
 
 export default function MainPage()
 {
@@ -35,10 +35,10 @@ export default function MainPage()
 			<AreaCard name={"국내 인기 지역"} data={AreaList} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<StayCard name={"국내 인기 숙소"} />
+			<StayCard name={"국내 인기 숙소"} data={StayList} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<EventForm name={"진행중인 이벤트"} />
+			<EventForm />
 		</Container>
 		<Container maxW="1300px" pt="60px">
 			<GuideForm />

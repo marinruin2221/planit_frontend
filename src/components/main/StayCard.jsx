@@ -13,23 +13,14 @@ import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 
-export default function StayCard({name})
+export default function StayCard({name,data})
 {
-	useEffect(() => {
-		fetch("http://localhost:5002/api/tours",{method:"GET"})
-		.then(res => res.json())
-		.then(data => {
-			console.log(data)
-		})
-		.catch(err => console.error(err));
-	}, []);
-
 	return <React.Fragment>
 		<Flex pb={"4"}>
 			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
 		</Flex>
 		<Swiper modules={[FreeMode]} freeMode={true} slidesPerView={"auto"} spaceBetween={"20"}>
-			{/* {data.map((e,i)=>(
+			{data.map((e,i)=>(
 			<SwiperSlide key={i} style={{width:"250px",height:"auto"}}>
 				<Box cursor={"pointer"}>
 					<Box rounded={"md"} overflow={"hidden"}>
@@ -54,7 +45,7 @@ export default function StayCard({name})
 					</Box>
 				</Box>
 			</SwiperSlide>
-			))} */}
+			))}
 		</Swiper>
 	</React.Fragment>
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { LuArrowRight } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { LuArrowRight } from "react-icons/lu";
 import {
 	Box,
 	Flex,
@@ -9,7 +9,7 @@ import {
 	Image
 } from "@chakra-ui/react";
 
-export default function EventForm({name})
+export default function EventForm()
 {
 	const [event,setEvent] = useState([]);
 	const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function EventForm({name})
 
 	return <React.Fragment>
 		<Flex justify={"space-between"} pb={"4"}>
-			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
+			<Text fontSize={"2xl"} fontWeight={"bold"}>진행중인 이벤트</Text>
 			<Button size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={() => navigate(`/event`)}>
 				More
 				<LuArrowRight/>
