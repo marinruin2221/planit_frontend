@@ -11,17 +11,28 @@ import {
 
 export default function SigninForm()
 {
-	useEffect(() => {
-		fetch("http://localhost:5002/api/signin/signin",{method:"GET"})
-		.then(res => res.json())
-		.then(data => {
-			console.log(data)
-		})
-		.catch(err => console.error(err));
-	}, []);
-
 	const [id, setId] = useState("");
 	const [pw, setPw] = useState("");
+
+	useEffect(() => {
+		fetch("http://localhost:5002/api/signin/signin",{
+			method:"GET",
+			headers:
+			{
+				"Content-Type":"application/json"
+			},
+			body:JSON.stringify
+			({
+				id: id,
+				pw: pw,
+			}),
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log("로그인 성공");
+		});
+	}, []);
+
 	const [errors, setErrors] = useState({ id: "", pw: "" });
 
 	const validate = () => {
