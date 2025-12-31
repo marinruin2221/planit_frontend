@@ -147,11 +147,10 @@ export default function Breakdown()
 														<Dialog.ActionTrigger asChild>
 															<Button variant="outline">취소</Button>
 														</Dialog.ActionTrigger>
-														<Button colorScheme="red" onClick={() => handleCancelReservation(item.id)}>확인</Button>
+														<Dialog.ActionTrigger asChild>
+															<Button>확인</Button>
+														</Dialog.ActionTrigger>
 													</Dialog.Footer>
-													<Dialog.CloseTrigger asChild>
-														<CloseButton size="sm"/>
-													</Dialog.CloseTrigger>
 												</Dialog.Content>
 											</Dialog.Positioner>
 										</Portal>
