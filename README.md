@@ -61,3 +61,4 @@ Fronend workspace for planit project
 | ì•„ì´ì½˜ | react-icons | ^5.5.0 |  |
 | AI | @google/generative-ai | ^0.24.1 |  |
 | ê²°ì œ | @tosspayments/payment-widget-sdk | - | Toss Payments |
+| 2025-12-31 | AI | **µğÅ×ÀÏ ÆäÀÌÁö ±â´É °íµµÈ­**`<br`> - **ÁÖ¼Ò º¹»ç ±â´É**: Å¬¸³º¸µå API ¹× Æú¹é ·ÎÁ÷ ±¸Çö`<br`> - **¸®ºä Á¤·Ä ±â´É**: ³¯Â¥¼ø/ÃßÃµ¼ø/ÆòÁ¡¼ø Á¤·Ä ¿É¼Ç`<br`> - **Áöµµ ¸¶Ä¿ ¶óº§**: ¼÷¼Ò ÀÌ¸§ Ä¿½ºÅÒ ¿À¹ö·¹ÀÌ`<br`> - **ÆòÁ¡/¸®ºä DB ¿¬µ¿**: API È£Ãâ·Î ´õ¹Ì µ¥ÀÌÅÍ ´ëÃ¼ | [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | ¿Ï·á |

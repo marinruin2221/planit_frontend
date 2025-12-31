@@ -1,4 +1,4 @@
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
 export default function KakaoMap({ className, x, y, width = "100%", height = "360px", level = 3, markers = [], children }) {
   // 중심 좌표 결정: markers가 있으면 첫 번째 마커를 중심, 아니면 x, y 사용
@@ -15,9 +15,14 @@ export default function KakaoMap({ className, x, y, width = "100%", height = "36
     >
       {/* 단일 마커 (기존 호환) */}
       {!markers.length && x && y && (
-        <MapMarker position={{ lat: y, lng: x }}>
-          {children}
-        </MapMarker>
+        <>
+          <MapMarker position={{ lat: y, lng: x }} />
+          {children && (
+            <CustomOverlayMap position={{ lat: y, lng: x }} yAnchor={2.2}>
+              {children}
+            </CustomOverlayMap>
+          )}
+        </>
       )}
 
       {/* 다중 마커 */}

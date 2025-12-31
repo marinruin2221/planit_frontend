@@ -729,14 +729,14 @@ const ListPage = () => {
                   <NativeSelect.Field
                     value={sortOption}
                     onChange={(e) => setSortOption(e.target.value)}
-                    className="font-medium text-white border-none bg-[var(--brand_color)] hover:bg-[var(--brand_hover_color)] focus:ring-2 focus:ring-offset-1 focus:ring-[var(--brand_color)] rounded-md transition-colors"
+                    className="font-medium !text-white !border-none !bg-[var(--brand_color)] hover:!bg-[var(--brand_hover_color)] focus:ring-2 focus:ring-offset-1 focus:ring-[var(--brand_color)] rounded-md transition-colors h-10 md:h-12 px-4"
                   >
                     <option value="recommend" className="text-gray-900 bg-white">추천순</option>
                     <option value="review" className="text-gray-900 bg-white">리뷰 많은 순</option>
                     <option value="priceHigh" className="text-gray-900 bg-white">가격 높은 순</option>
                     <option value="priceLow" className="text-gray-900 bg-white">가격 낮은 순</option>
                   </NativeSelect.Field>
-                  <NativeSelect.Indicator className="text-white" />
+                  <NativeSelect.Indicator className="!text-white" />
                 </NativeSelect.Root>
               </div>
             </div>
