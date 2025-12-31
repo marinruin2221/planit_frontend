@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-	Box,
+import
+{
 	Text,
 	Stack,
 	HStack,
@@ -33,38 +33,37 @@ export default function Information()
 	if(!information){ return <React.Fragment>로딩중...</React.Fragment> }
 
 	return <React.Fragment>
-		<Box maxW="400px" m="auto">
-			<Text fontSize="3xl" fontWeight="bold" mb="6">내정보</Text>
-			<Stack gap="5">
-				<Stack>
-					<Text color="gray.500">아이디</Text>
-					<Text>{information.userId}</Text>
-				</Stack>
-				<Stack>
-					<Text color="gray.500">닉네임</Text>
-					<Text>{information.name}</Text>
-				</Stack>
-				<Stack>
-					<Text color="gray.500">이메일</Text>
-					<Text>{information.email}</Text>
-				</Stack>
-				<Stack>
-					<Text color="gray.500">생년월일</Text>
-					<HStack>
-						<Text>{information.birthY}</Text>
-						<Text>{information.birthM}</Text>
-						<Text>{information.birthD}</Text>
-					</HStack>
-				</Stack>
-				<Stack>
-					<Text color="gray.500">성별</Text>
-					<Text>{information.gender == "M" ? "남자" : information.gender == "F" ? "여자" : "기타"}</Text>
-				</Stack>
+		
+		<Text fontSize="3xl" fontWeight="bold" mb="6">내정보</Text>
+		<Stack gap="5">
+			<Stack>
+				<Text color="gray.500">아이디</Text>
+				<Text>{information.userId}</Text>
+			</Stack>
+			<Stack>
+				<Text color="gray.500">닉네임</Text>
+				<Text>{information.name}</Text>
+			</Stack>
+			<Stack>
+				<Text color="gray.500">이메일</Text>
+				<Text>{information.email}</Text>
+			</Stack>
+			<Stack>
+				<Text color="gray.500">생년월일</Text>
 				<HStack>
-					<Button variant="plain" flex="auto" color="var(--white_color)" bg="var(--brand_color)" _hover={{bg:"var(--brand_hover_color)"}}>회원정보 수정</Button>
-					<Button variant="outline" flex="1">회원탈퇴</Button>
+					<Text>{information.birthY}년</Text>
+					<Text>{information.birthM}월</Text>
+					<Text>{information.birthD}일</Text>
 				</HStack>
 			</Stack>
-		</Box>
+			<Stack>
+				<Text color="gray.500">성별</Text>
+				<Text>{information.gender == "M" ? "남자" : information.gender == "F" ? "여자" : "기타"}</Text>
+			</Stack>
+			<HStack>
+				<Button variant="plain" flex="1" color="var(--white_color)" bg="var(--brand_color)" _hover={{bg:"var(--brand_hover_color)"}}>회원정보 수정</Button>
+				<Button variant="outline" flex="1">회원탈퇴</Button>
+			</HStack>
+		</Stack>
 	</React.Fragment>
 }
