@@ -21,7 +21,7 @@ export default function Information()
 				},
 				body:JSON.stringify
 				({
-					userId:localStorage.getItem("userId"),
+					id:localStorage.getItem("id"),
 				}),
 			});
 			const data = await response.json();

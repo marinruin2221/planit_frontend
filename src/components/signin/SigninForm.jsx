@@ -32,6 +32,7 @@ export default function SigninForm()
 			if(data.result == "Y")
 			{
 				localStorage.setItem("token", data.token);
+				localStorage.setItem("id", data.id);
 				localStorage.setItem("userId", data.userId);
 				localStorage.setItem("userPw", data.userPw);
 
