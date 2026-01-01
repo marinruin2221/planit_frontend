@@ -597,12 +597,11 @@ const DetailPage = () => {
     for (let i = 0; i < tagCount; i++) {
       selectedTags.add(tags[rand(tags.length)]);
     }
-
     return { roomName, capacity, tags: Array.from(selectedTags) };
   };
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
+    <div className="bg-white min-h-screen font-sans flex flex-col">
       {/* Header */}
       <Header />
 
@@ -808,8 +807,8 @@ const DetailPage = () => {
                               <div className="text-xs text-gray-400">1박, 세금 포함</div>
                               <button
                                 onClick={() => handlePaymentClick(room.roomtitle || `객실 ${index + 1}`, priceValue || 50000)}
-                                style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px' }}
-                                className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2"
+                                style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px', cursor: 'pointer' }}
+                                className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2 cursor-pointer"
                               >
                                 예약하기
                               </button>
@@ -848,8 +847,8 @@ const DetailPage = () => {
                               <div className="text-xs text-gray-400">1박, 세금 포함</div>
                               <button
                                 onClick={() => handlePaymentClick(dummyRoom.roomName, estimatedPrice)}
-                                style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px' }}
-                                className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2"
+                                style={{ backgroundColor: '#DD6B20', color: '#FCFCFC', minWidth: '120px', cursor: 'pointer' }}
+                                className="hover:brightness-90 font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-md mt-2 cursor-pointer"
                               >
                                 예약하기
                               </button>
@@ -873,7 +872,15 @@ const DetailPage = () => {
             {/* Location */}
             <div className="mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">위치</h2><br />
-              <KakaoMap x={destination.mapx} y={destination.mapy} className="rounded-xl overflow-hidden h-[300px] bg-gray-100 relative w-full">
+              <KakaoMap
+                x={destination.mapx}
+                y={destination.mapy}
+                className="rounded-xl overflow-hidden h-[300px] bg-gray-100 relative w-full"
+                markerImage={{
+                  src: "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8' fill='%23DD6B20' stroke='white' stroke-width='2'/%3E%3C/svg%3E",
+                  size: { width: 24, height: 24 }
+                }}
+              >
                 <div style={{ padding: '4px 8px', backgroundColor: '#DD6B20', borderRadius: '4px', boxShadow: '0 2px 6px rgba(0,0,0,0.15)', fontSize: '12px', fontWeight: 'bold', color: 'white', whiteSpace: 'nowrap', position: 'relative', zIndex: 10, fontFamily: 'SCoreDream, -apple-system, BlinkMacSystemFont, sans-serif' }}>
                   {destination.title}
                 </div>

@@ -176,28 +176,106 @@ const ListPage = () => {
 
 
 
+  // 현재 위치 검색 관련 상태
+  const [userLocation, setUserLocation] = useState(null); // { lat, lng }
+  const [isLocationSearch, setIsLocationSearch] = useState(false);
+
+  // 현재 위치 가져오기 및 검색 실행
+  const handleLocationSearch = () => {
+    if (!navigator.geolocation) {
+      alert("브라우저가 위치 정보를 지원하지 않습니다.");
+      return;
+    }
+
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        setIsLocationSearch(true);
+        setShowMap(true); // 지도 자동 열기
+
+        try {
+          // 백엔드 위치 기반 검색 API 호출
+          const response = await fetch(`/api/tours/location-based?mapX=${longitude}&mapY=${latitude}&radius=5000`); // 반경 5km
+          if (response.ok) {
+            const data = await response.json();
+            setAccommodations(data || []);
+            setTotalCount(data ? data.length : 0);
+            setTotalPages(1); // 위치 검색은 페이지네이션 없이 한 번에 표시 (또는 백엔드 페이징 필요)
+          } else {
+            // 검색 결과가 없는 경우 빈 배열 처리 (204 No Content 등)
+            setAccommodations([]);
+            setTotalCount(0);
+          }
+        } catch (error) {
+          console.error("Failed to fetch location-based tours:", error);
+          alert("주변 숙소를 불러오는 중 오류가 발생했습니다.");
+        } finally {
+          setLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLoading(false);
+        alert("위치 정보를 가져올 수 없습니다. 권한을 확인해주세요.");
+      }
+    );
+  };
+
   // 카카오맵 초기화 및 마커 표시
   useEffect(() => {
-    if (!showMap || accommodations.length === 0) return;
+    if (!showMap || accommodations.length === 0 && !userLocation) return;
 
     const initMap = () => {
       const container = document.getElementById('list-map');
       if (!container) return;
 
-      // 첫 번째 숙소 좌표를 중심으로 설정하거나, 서울 시청 등을 기본값으로
-      const firstAcc = accommodations.find(acc => acc.mapy && acc.mapx);
-      const center = firstAcc
-        ? new window.kakao.maps.LatLng(firstAcc.mapy, firstAcc.mapx)
-        : new window.kakao.maps.LatLng(37.566826, 126.9786567);
+      // 중심 좌표 설정 (사용자 위치 우선, 없으면 첫 번째 숙소, 기본값 서울)
+      let center;
+      if (userLocation && isLocationSearch) {
+        center = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+      } else {
+        const firstAcc = accommodations.find(acc => acc.mapy && acc.mapx);
+        center = firstAcc
+          ? new window.kakao.maps.LatLng(firstAcc.mapy, firstAcc.mapx)
+          : new window.kakao.maps.LatLng(37.566826, 126.9786567);
+      }
 
       const options = {
         center: center,
-        level: 7
+        level: isLocationSearch ? 6 : 7
       };
       const map = new window.kakao.maps.Map(container, options);
       mapRef.current = map;
 
-      // 마커 생성
+      // 사용자 위치 마커 (현재 위치 검색일 경우)
+      if (userLocation && isLocationSearch) {
+        const userPosition = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+
+        // 커스텀 마커 이미지 (파란색 도트 등)
+        const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+        const imageSize = new window.kakao.maps.Size(24, 35);
+        const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
+
+        const userMarker = new window.kakao.maps.Marker({
+          position: userPosition,
+          map: map,
+          title: "내 위치",
+          image: markerImage
+        });
+
+        // 내 위치 오버레이
+        const content = `<div style="padding:5px; background:blue; color:white; border-radius:4px; font-size:11px;">내 위치</div>`;
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position: userPosition,
+          content: content,
+          yAnchor: 2.5
+        });
+        customOverlay.setMap(map);
+      }
+
+      // 숙소 마커 생성
       accommodations.forEach(acc => {
         if (acc.mapy && acc.mapx) {
           const position = new window.kakao.maps.LatLng(acc.mapy, acc.mapx);
@@ -251,7 +329,7 @@ const ListPage = () => {
       }, 100);
     }
 
-  }, [showMap, accommodations]);
+  }, [showMap, accommodations, userLocation, isLocationSearch]);
 
   const handleSearch = () => {
     setSearchParams({
@@ -321,7 +399,7 @@ const ListPage = () => {
   };
 
   // Pagination Window Logic
-  const pageGroupSize = 10;
+  const pageGroupSize = 15; // 페이지네이션 목록 개수 증가
   const currentGroup = Math.ceil(currentPage / pageGroupSize);
   const startPage = (currentGroup - 1) * pageGroupSize + 1;
   const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
@@ -445,7 +523,7 @@ const ListPage = () => {
   const sortedAccommodations = getSortedAccommodations();
 
   return (
-    <div className="min-h-[2930px] bg-gray-50 flex flex-col">
+    <div className="min-h-[2930px] bg-gray-50 flex flex-col font-sans">
       <style>{`
         .heart-icon-btn { color: #FFB6C1 !important; }
         .heart-icon-btn:hover { color: #ef4444 !important; }
@@ -468,13 +546,24 @@ const ListPage = () => {
 
           {/* Left Sidebar - Filters */}
           <aside className="hidden lg:block w-[250px] flex-shrink-0">
+            {/* Current Location Search Button */}
+            <div
+              className="rounded-lg overflow-hidden h-16 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity mb-4 bg-gray-50 flex items-center justify-center shadow-sm"
+              onClick={handleLocationSearch}
+            >
+              <div className="flex items-center gap-2 text-gray-700 font-bold">
+                <svg className="w-5 h-5 text-[var(--brand_color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                내 주변 숙소 찾기
+              </div>
+            </div>
+
             {/* Map Button */}
             <div
-              className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity mb-12"
+              className="rounded-lg overflow-hidden h-32 relative border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity mb-12 shadow-sm"
               onClick={() => setShowMap(!showMap)}
             >
-              <img src="/images/city.png" alt="Map" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10">
+              <img src="/images/map_preview.png" alt="Map" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center">
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-blue-600 transition-colors">
                   {showMap ? '리스트 보기' : '지도 보기'}
                 </button>
@@ -722,8 +811,8 @@ const ListPage = () => {
 
           {/* Right Content - List */}
           <section className="flex-1" ref={listRef}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2><br />
+            <div className="flex justify-between items-center mb-12" style={{ marginBottom: '3rem' }}>
+              <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2>
               <div className="relative w-40">
                 <NativeSelect.Root size="sm" variant="outline">
                   <NativeSelect.Field

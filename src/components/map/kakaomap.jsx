@@ -1,6 +1,8 @@
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
-export default function KakaoMap({ className, x, y, width = "100%", height = "360px", level = 3, markers = [], children }) {
+// ... (imports)
+
+export default function KakaoMap({ className, x, y, width = "100%", height = "360px", level = 3, markers = [], children, markerImage }) {
   // 중심 좌표 결정: markers가 있으면 첫 번째 마커를 중심, 아니면 x, y 사용
   const center = markers.length > 0
     ? { lat: markers[0].lat, lng: markers[0].lng }
@@ -16,9 +18,12 @@ export default function KakaoMap({ className, x, y, width = "100%", height = "36
       {/* 단일 마커 (기존 호환) */}
       {!markers.length && x && y && (
         <>
-          <MapMarker position={{ lat: y, lng: x }} />
+          <MapMarker 
+            position={{ lat: y, lng: x }} 
+            image={markerImage}
+          />
           {children && (
-            <CustomOverlayMap position={{ lat: y, lng: x }} yAnchor={2.2}>
+            <CustomOverlayMap position={{ lat: y, lng: x }} yAnchor={2.6}>
               {children}
             </CustomOverlayMap>
           )}
@@ -31,6 +36,7 @@ export default function KakaoMap({ className, x, y, width = "100%", height = "36
           key={index}
           position={{ lat: marker.lat, lng: marker.lng }}
           title={marker.title}
+          image={markerImage}
         >
           {/* 마커에 커스텀 오버레이나 인포윈도우가 필요하면 여기에 추가 */}
           {marker.content && <div style={{ padding: "5px", color: "#000" }}>{marker.content}</div>}
