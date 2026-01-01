@@ -11,11 +11,9 @@ import {
 	Portal,
 	Dialog
 } from "@chakra-ui/react";
-
 import PageForm from "@components/mypage/PageForm.jsx";
 
-export default function Breakdown()
-{
+export default function Breakdown() {
 	const [list, setList] = useState([]);
 	const [page, setPage] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
@@ -34,7 +32,7 @@ export default function Breakdown()
 				usersId: localStorage.getItem("id"),
 				word: word ?? "",
 				page: targetPage,
-				size: 5,
+				size: 5
 			})
 		})
 		.then(res => res.json())
@@ -44,16 +42,22 @@ export default function Breakdown()
 		});
 	};
 
-	useEffect(() => {
-		fetchData();
-	}, [page]);
+	const cancelReservation = async (id) => {
+		await fetch("/api/mypage/breakdownCancel", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ id })
+		});
+		alert("예약이 취소되었습니다.");
+		fetchData(0);
+	};
 
+	useEffect(() => { fetchData(); }, [page]);
 	useEffect(() => {
 		if (!isSearchRef.current) return;
 		if (word === "") fetchData(0);
 		isSearchRef.current = false;
 	}, [word]);
-
 	useEffect(() => {
 		if (!isResetRef.current) return;
 		fetchData(0);
@@ -65,20 +69,8 @@ export default function Breakdown()
 		scrollTop();
 		setPage(p);
 	};
-
-	const handleSearch = () => {
-		scrollTop();
-		isSearchRef.current = true;
-		setPage(0);
-		fetchData(0);
-	};
-
-	const handleReset = () => {
-		scrollTop();
-		isResetRef.current = true;
-		setWord("");
-		setPage(0);
-	};
+	const handleSearch = () => { scrollTop(); isSearchRef.current = true; setPage(0); fetchData(0); };
+	const handleReset = () => { scrollTop(); isResetRef.current = true; setWord(""); setPage(0); };
 
 	return <React.Fragment>
 		<Text fontSize="3xl" fontWeight="bold" mb="6">예약 내역</Text>
@@ -90,28 +82,10 @@ export default function Breakdown()
 				placeholder="예약 내역 검색"
 				value={word}
 				onChange={e => setWord(e.target.value)}
-				onKeyDown={e => { if (e.key === "Enter") handleSearch(); }}
+				onKeyDown={e => e.key === "Enter" && handleSearch()}
 			/>
-
-			<Button
-				variant="subtle"
-				size="xl"
-				color="var(--white_color)"
-				bg="var(--brand_color)"
-				onClick={handleSearch}
-			>
-				<LuSearch />
-			</Button>
-
-			<Button
-				variant="outline"
-				size="xl"
-				color="var(--black_color)"
-				bg="var(--white_color)"
-				onClick={handleReset}
-			>
-				<LuRotateCcw />
-			</Button>
+			<Button variant="subtle" size="xl" color="var(--white_color)" bg="var(--brand_color)" onClick={handleSearch}><LuSearch /></Button>
+			<Button variant="outline" size="xl" color="var(--black_color)" bg="var(--white_color)" onClick={handleReset}><LuRotateCcw /></Button>
 		</HStack>
 
 		<Stack gap="5">
@@ -134,16 +108,14 @@ export default function Breakdown()
 										<Stack>
 											<Text fontSize="sm" fontWeight="bold">{e.dateF}</Text>
 											<Text fontSize="sm" fontWeight="bold">{e.dateT}</Text>
-											<Text fontSize="sm" fontWeight="bold">{e.price}</Text>
+											<Text fontSize="sm" fontWeight="bold">{Number(e.price).toLocaleString()}원</Text>
 										</Stack>
 									</HStack>
 								</Stack>
 							</HStack>
 
-							{/* 상태 버튼 */}
 							{(() => {
-								if(e.status === "1")
-								{
+								if(e.status === "1") {
 									return <React.Fragment>
 										<Dialog.Root placement="center">
 											<Dialog.Trigger asChild>
@@ -164,7 +136,7 @@ export default function Breakdown()
 																<Button variant="outline">취소</Button>
 															</Dialog.ActionTrigger>
 															<Dialog.ActionTrigger asChild>
-																<Button>확인</Button>
+																<Button onClick={() => cancelReservation(e.id)}>확인</Button>
 															</Dialog.ActionTrigger>
 														</Dialog.Footer>
 													</Dialog.Content>
@@ -173,8 +145,8 @@ export default function Breakdown()
 										</Dialog.Root>
 									</React.Fragment>
 								}
-								if(e.status === "2") { return <Button size="xs" color="red.700" bg="red.100">취소</Button> }
-								if(e.status === "3") { return <Button size="xs" color="gray.700" bg="gray.100">이용완료</Button> }
+								if(e.status === "2") { return <Button size="xs" color="red.700" bg="red.100">취소</Button>; }
+								if(e.status === "3") { return <Button size="xs" color="gray.700" bg="gray.100">이용완료</Button>; }
 							})()}
 						</HStack>
 					</Card.Body>
@@ -186,11 +158,7 @@ export default function Breakdown()
 
 		{totalPages > 1 && (
 			<Box mt="10">
-				<PageForm
-					currentPage={page}
-					totalPages={totalPages}
-					onPageChange={handlePageChange}
-				/>
+				<PageForm currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
 			</Box>
 		)}
 	</React.Fragment>
