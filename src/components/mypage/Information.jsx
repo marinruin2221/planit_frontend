@@ -5,7 +5,9 @@ import {
 	HStack,
 	Button,
 	Input,
-	NativeSelect
+	NativeSelect,
+	Dialog,
+	Portal
 } from "@chakra-ui/react";
 
 export default function Information() {
@@ -42,6 +44,21 @@ export default function Information() {
 
 		setInformation(form);
 		setEditMode(false);
+	};
+
+	const handleWithdraw = async () => {
+		await fetch("http://localhost:5002/api/mypage/withdraw", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ id: localStorage.getItem("id") }),
+		});
+
+		localStorage.removeItem("token");
+		localStorage.removeItem("id");
+		localStorage.removeItem("userId");
+		localStorage.removeItem("userPw");
+
+		location.href = "/main";
 	};
 
 	return <React.Fragment>
@@ -132,7 +149,32 @@ export default function Information() {
 						<Button flex="1" color="var(--white_color)" bg="var(--brand_color)" _hover={{ bg: "var(--brand_hover_color)" }} onClick={() => setEditMode(true)}>
 							회원정보 수정
 						</Button>
-						<Button flex="1" variant="outline">회원탈퇴</Button>
+						<Dialog.Root placement="center">
+							<Dialog.Trigger asChild>
+								<Button variant="outline" flex="1">회원탈퇴</Button>
+							</Dialog.Trigger>
+							<Portal>
+								<Dialog.Backdrop />
+								<Dialog.Positioner>
+									<Dialog.Content>
+										<Dialog.Header>
+											<Dialog.Title>회원탈퇴 확인</Dialog.Title>
+										</Dialog.Header>
+										<Dialog.Body>
+											<Text>정말 회원탈퇴를 하시겠습니까?</Text>
+										</Dialog.Body>
+										<Dialog.Footer>
+											<Dialog.ActionTrigger asChild>
+												<Button variant="outline">취소</Button>
+											</Dialog.ActionTrigger>
+											<Dialog.ActionTrigger asChild>
+												<Button onClick={handleWithdraw}>확인</Button>
+											</Dialog.ActionTrigger>
+										</Dialog.Footer>
+									</Dialog.Content>
+								</Dialog.Positioner>
+							</Portal>
+						</Dialog.Root>
 					</React.Fragment>
 				)}
 			</HStack>
