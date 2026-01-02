@@ -61,12 +61,12 @@ export default function SigninForm()
 
 			<Field.Root required>
 				<Field.Label>아이디</Field.Label>
-				<Input type="text" name="id" placeholder="아이디를 입력하세요" value={id} onChange={(e) => setId(e.target.value)}/>
+				<Input type="text" name="id" placeholder="아이디를 입력하세요" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") signin(); }} />
 			</Field.Root>
 
 			<Field.Root required>
 				<Field.Label>비밀번호</Field.Label>
-				<Input type="password" name="pw" placeholder="비밀번호를 입력하세요" value={pw} onChange={(e) => setPw(e.target.value)}/>
+				<Input type="password" name="pw" placeholder="비밀번호를 입력하세요" value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") signin(); }} />
 			</Field.Root>
 
 			<Button color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={signin}>로그인</Button>
