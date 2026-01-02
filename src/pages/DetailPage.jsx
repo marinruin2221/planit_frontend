@@ -13,6 +13,10 @@ import AIRecommendationWindow from "@components/ai/AIRecommendationWindow.jsx";
 import ImageGalleryModal from "@components/common/ImageGalleryModal.jsx";
 import PaymentModal from "@components/payment/PaymentModal.jsx";
 
+// 쿠폰 기능 import
+import { coupons, getUserCoupons, issueAllCoupons, issueCoupon, getApplicableCoupons, formatExpireDate } from '@data/couponData';
+
+
 const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -36,6 +40,36 @@ const DetailPage = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedRoomForPayment, setSelectedRoomForPayment] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState(0);
+
+  // 쿠폰 관련 상태
+  const [userCoupons, setUserCoupons] = useState([]);
+  const [showCouponList, setShowCouponList] = useState(false);
+  const [couponMessage, setCouponMessage] = useState(null);
+
+  // 쿠폰 초기 로드
+  useEffect(() => {
+    setUserCoupons(getUserCoupons());
+  }, []);
+
+  // 전체 받기 핸들러
+  const handleGetAllCoupons = () => {
+    const result = issueAllCoupons();
+    setCouponMessage(result.message);
+    setUserCoupons(getUserCoupons());
+
+    // 3초 후 메시지 제거
+    setTimeout(() => setCouponMessage(null), 3000);
+  };
+
+  // 개별 쿠폰 받기 핸들러
+  const handleGetCoupon = (couponId) => {
+    const result = issueCoupon(couponId);
+    setCouponMessage(result.message);
+    setUserCoupons(getUserCoupons());
+
+    setTimeout(() => setCouponMessage(null), 3000);
+  };
+
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -979,15 +1013,104 @@ const DetailPage = () => {
             <div className="sticky top-24 space-y-4">
 
               {/* Coupon Box */}
-              <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-gray-900">숙박 4,500원 쿠폰</span>
-                  <button className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">전체 받기</button>
+              <div style={{ padding: '24px', marginBottom: '16px' }} className="border border-gray-200 rounded-xl bg-white shadow-sm">
+                {/* 쿠폰 메시지 알림 */}
+                {couponMessage && (
+                  <div style={{ marginBottom: '16px', padding: '12px' }} className="bg-orange-100 text-orange-800 text-sm font-medium rounded-lg animate-pulse">
+                    {couponMessage}
+                  </div>
+                )}
+
+                {/* 헤더 */}
+                <div style={{ marginBottom: '20px' }} className="flex justify-between items-center">
+                  <span className="font-bold text-gray-900" style={{ fontSize: '16px' }}>
+                    🎫 쿠폰 혜택
+                  </span>
+                  <button
+                    onClick={handleGetAllCoupons}
+                    style={{ padding: '10px 18px', fontSize: '14px' }}
+                    className="bg-[#DD6B20] hover:bg-[#C05621] text-white font-medium rounded-full transition-colors shadow-sm"
+                  >
+                    전체 받기
+                  </button>
                 </div>
-                <div className="text-sm text-gray-500">대실 2,500원 쿠폰</div>
-                <div className="mt-3 text-xs text-gray-400 flex items-center cursor-pointer">
-                  적용 가능한 쿠폰 혜택 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+
+                {/* 대표 쿠폰 표시 */}
+                <div style={{ marginBottom: '20px' }}>
+                  <div style={{ marginBottom: '12px' }} className="flex items-center gap-2">
+                    <span style={{ padding: '6px 10px', fontSize: '12px' }} className="bg-orange-100 text-orange-700 font-semibold rounded">숙박</span>
+                    <span style={{ fontSize: '14px' }} className="text-gray-800 font-medium">{coupons[0]?.name || '숙박 할인 쿠폰'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ padding: '6px 10px', fontSize: '12px' }} className="bg-blue-100 text-blue-700 font-semibold rounded">대실</span>
+                    <span style={{ fontSize: '14px' }} className="text-gray-600">{coupons[1]?.name || '대실 할인 쿠폰'}</span>
+                  </div>
                 </div>
+
+                {/* 보유 쿠폰 수 표시 */}
+                {userCoupons.length > 0 && (
+                  <div style={{ marginBottom: '16px', padding: '14px' }} className="bg-green-50 border border-green-200 rounded-lg">
+                    <span style={{ fontSize: '14px' }} className="text-green-700 font-semibold">
+                      ✓ 보유 쿠폰: {userCoupons.length}장
+                    </span>
+                  </div>
+                )}
+
+                {/* 쿠폰 목록 토글 */}
+                <div
+                  style={{ padding: '14px 0', marginTop: '8px', borderTop: '1px solid #e5e7eb' }}
+                  className="flex items-center justify-between cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"
+                  onClick={() => setShowCouponList(!showCouponList)}
+                >
+                  <span style={{ fontSize: '14px' }} className="text-gray-600 font-medium">
+                    적용 가능한 쿠폰 혜택 ({coupons.length}개)
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-gray-500 transition-transform ${showCouponList ? 'rotate-180' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* 쿠폰 목록 */}
+                {showCouponList && (
+                  <div style={{ marginTop: '16px' }}>
+                    {coupons.map((coupon, index) => {
+                      const isOwned = userCoupons.some(c => c.id === coupon.id);
+                      return (
+                        <div
+                          key={coupon.id}
+                          style={{
+                            padding: '16px',
+                            marginBottom: index < coupons.length - 1 ? '12px' : '0',
+                            borderRadius: '12px'
+                          }}
+                          className={`flex justify-between items-start border ${isOwned ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}
+                        >
+                          <div style={{ flex: 1, paddingRight: '12px' }}>
+                            <div style={{ fontSize: '15px', marginBottom: '6px' }} className="font-semibold text-gray-900">{coupon.name}</div>
+                            <div style={{ fontSize: '13px', marginBottom: '8px' }} className="text-gray-600">{coupon.description}</div>
+                            <div style={{ fontSize: '12px' }} className="text-gray-500">
+                              최소 주문: {coupon.minOrderAmount?.toLocaleString()}원 이상
+                            </div>
+                          </div>
+                          {isOwned ? (
+                            <span style={{ fontSize: '13px', padding: '6px 12px' }} className="text-green-600 font-bold bg-green-100 rounded-full">보유중</span>
+                          ) : (
+                            <button
+                              onClick={() => handleGetCoupon(coupon.id)}
+                              style={{ fontSize: '13px', padding: '8px 16px' }}
+                              className="bg-[#DD6B20] hover:bg-[#C05621] text-white font-medium rounded-full transition-colors shadow-sm"
+                            >
+                              받기
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Payment Benefits */}

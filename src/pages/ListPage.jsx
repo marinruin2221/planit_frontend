@@ -197,7 +197,7 @@ const ListPage = () => {
 
         try {
           // 백엔드 위치 기반 검색 API 호출
-          const response = await fetch(`/api/tours/location-based?mapX=${longitude}&mapY=${latitude}&radius=5000`); // 반경 5km
+          const response = await fetch(`/api/tours/location-based?mapX=${longitude}&mapY=${latitude}&radius=20000`); // 반경 20km
           if (response.ok) {
             const data = await response.json();
             setAccommodations(data || []);

@@ -27,7 +27,9 @@ Fronend workspace for planit project
 | 2025-12-29 | AI | **이미지 Fallback 유틸리티 추가**<br> - `getFallbackImage` 함수 구현 (카테고리별 기본 이미지 매핑)<br> - `ListPage`, `DetailPage`에 적용 | [`src/utils/imageUtils.js`](src/utils/imageUtils.js)<br>[`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | Fallback 이미지 시스템 완료 |
 | 2025-12-29 | 손종현 | **로고 생성 후 삽입**<br> - 플랜잇 로고(`planitLogo-transparent.png`) 구현: 헤더에 로고사진 삽입 | [`src/component/common/header.jsx`](src/pages/eventPage.jsx) |  |
 | 2025-12-30 | AI | **리스트/디테일 페이지 UI 및 기능 개선**<br> - **리스트 페이지**: 정렬 기능(추천/리뷰/가격) 구현 및 콤보박스 스타일링(브랜드 컬러), 별점 UI 아이콘 적용, 레이아웃 수정<br> - **디테일 페이지**: 별점 UI 리스트 페이지와 통일 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 정렬 및 평점 UI 개선 완료 |
-
+| 2025-12-31 | 김관범 | **디테일 페이지 기능 고도화**<br> - **주소 복사 기능**: 클립보드 API 및 폴백 로직 구현<br> - **리뷰 정렬 기능**: 날짜순/추천순/평점순 정렬 옵션<br> - **지도 마커 라벨**: 숙소 이름 커스텀 오버레이<br> - **평점/리뷰 DB 연동**: API 호출로 더미 데이터 대체 | [[src/pages/DetailPage.jsx](cci:7://file:///d:/korea_IT/AI%20%ED%92%80%EC%8A%A4%ED%83%9D/Planit/frontend/src/pages/DetailPage.jsx:0:0-0:0)](src/pages/DetailPage.jsx) | 완료 |
+| 2026-01-01 | 김관범 | **위치 기반 숙소 검색 및 지도 기능 구현**<br> - 브라우저 Geolocation API 연동 (현재 위치 가져오기)<br> - '내 주변 숙소 찾기' 버튼 UI 구현<br> - 카카오맵 SDK 연동 (react-kakao-maps-sdk)<br> - 현재 위치 마커 및 주변 숙소 마커 표시 | [[src/pages/ListPage.jsx](cci:7://file:///d:/korea_IT/AI%20%ED%92%80%EC%8A%A4%ED%83%9D/Planit/frontend/src/pages/ListPage.jsx:0:0-0:0)](src/pages/ListPage.jsx) | 완료 |
+| 2026-01-02 | AI | **'내 주변 숙소 찾기' 오류 수정**<br> - JSON 파싱 오류 해결 (빈 응답 처리)<br> - 검색 반경 5km → 20km 확대<br>**쿠폰 시스템 구현**<br> - `couponData.js` 생성: 5종 쿠폰 데이터 및 LocalStorage 관리 유틸리티<br> - 상세 페이지 사이드바 쿠폰 UI 구현: 전체 받기, 개별 받기, 보유 쿠폰 표시<br> - 인라인 스타일 적용으로 CSS 우선순위 문제 해결 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/data/couponData.js`](src/data/couponData.js)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 완료 |
 ### 새 항목 추가 템플릿
 
 복사/붙여넣기용 1줄:
@@ -61,4 +63,4 @@ Fronend workspace for planit project
 | 아이콘 | react-icons | ^5.5.0 |  |
 | AI | @google/generative-ai | ^0.24.1 |  |
 | 결제 | @tosspayments/payment-widget-sdk | - | Toss Payments |
-| 2025-12-31 | AI | **������ ������ ��� ����ȭ**`<br`> - **�ּ� ���� ���**: Ŭ������ API �� ���� ���� ����`<br`> - **���� ���� ���**: ��¥��/��õ��/������ ���� �ɼ�`<br`> - **���� ��Ŀ ��**: ���� �̸� Ŀ���� ��������`<br`> - **����/���� DB ����**: API ȣ��� ���� ������ ��ü | [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | �Ϸ� |
+| 
