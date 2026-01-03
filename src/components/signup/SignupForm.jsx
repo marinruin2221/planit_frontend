@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Input, Stack, Text } from "@chakra-ui/react";
 import BirthInput from "@components/signup/BirthInput.jsx";
 import GenderSelect from "@components/signup/GenderSelect.jsx";
@@ -18,6 +19,11 @@ function isNonEmpty(value) {
 }
 
 export default function SignupForm() {
+  const navigate = useNavigate();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
   const [form, setForm] = useState({
     username: "",
     nickname: "",
@@ -92,15 +98,60 @@ export default function SignupForm() {
 
   const showMessage = (key, value) => touched[key] || isNonEmpty(value);
 
-  const onSubmit = (e) => {
+  const onSubmit = async(e) => {
     e.preventDefault();
     if (!canSubmit) return;
 
-    // 실제 요청/연동은 하지 않음(초안). 상태 확인용 로그만 남김.
-    // eslint-disable-next-line no-console
-    console.log("signup draft payload", form);
+    setIsSubmitting(true);
+    setSubmitError("");
 
-    alert("회원가입 폼 입력/약관 동의 상태가 준비되었습니다. (요청은 보내지 않음)");
+    const payload = {
+      username: form.username,
+      nickname: form.nickname,
+      password: form.password,
+      email: form.email,
+      birth: form.birth,   // {year, month, day}
+      gender: form.gender, // "male" | "female"
+      terms: form.terms,
+    };
+
+    try {
+      const API_BASE = "http://localhost:5002";
+  
+      const res = await fetch(`${API_BASE}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // 쿠키 기반 인증을 쓰게 되면 credentials가 필요할 수 있습니다.
+        // 지금은 회원가입만이라 필수는 아니지만, CORS 설정에 allowCredentials true라면 붙이는 게 깔끔합니다.
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+  
+      // 서버가 201을 주도록 만들었으니 보통 2xx면 성공 처리
+      if (!res.ok) {
+        // 응답이 JSON일 수도, 아닐 수도 있으니 안전하게 처리
+        const text = await res.text();
+        throw new Error(text || `회원가입 실패 (HTTP ${res.status})`);
+      }
+  
+      const data = await res.json(); // SignupResponseDTO 기대
+      // eslint-disable-next-line no-console
+      console.log("signup success", data);
+  
+      alert("회원가입이 완료되었습니다.");
+      // 완료 후 로그인 페이지로 이동
+      navigate("/signin");
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+  
+      // 서버가 지금 IllegalArgumentException을 던지면 응답 바디가 단순 텍스트일 수 있습니다.
+      setSubmitError(err?.message || "회원가입 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
