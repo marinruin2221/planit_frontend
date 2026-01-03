@@ -13,7 +13,8 @@ import {
 } from "@chakra-ui/react";
 import PageForm from "@components/mypage/PageForm.jsx";
 
-export default function Breakdown() {
+export default function Breakdown()
+{
 	const [list, setList] = useState([]);
 	const [page, setPage] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
@@ -113,13 +114,13 @@ export default function Breakdown() {
 									</HStack>
 								</Stack>
 							</HStack>
-
 							{(() => {
-								if(e.status === "1") {
+								if(e.status === "1")
+								{
 									return <React.Fragment>
 										<Dialog.Root placement="center">
 											<Dialog.Trigger asChild>
-												<Button size="xs" color="green.700" bg="green.100">예약취소</Button>
+												<Button variant="subtle" size="xs" colorPalette="green">예약취소</Button>
 											</Dialog.Trigger>
 											<Portal>
 												<Dialog.Backdrop />
@@ -145,8 +146,8 @@ export default function Breakdown() {
 										</Dialog.Root>
 									</React.Fragment>
 								}
-								if(e.status === "2") { return <Button size="xs" color="red.700" bg="red.100">취소</Button>; }
-								if(e.status === "3") { return <Button size="xs" color="gray.700" bg="gray.100">이용완료</Button>; }
+								if(e.status === "2") { return <Button variant="subtle" size="xs" colorPalette="red">취소</Button>; }
+								if(e.status === "3") { return <Button variant="subtle" size="xs" colorPalette="gray">이용완료</Button>; }
 							})()}
 						</HStack>
 					</Card.Body>

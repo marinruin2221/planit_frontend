@@ -10,7 +10,8 @@ import {
 	Portal
 } from "@chakra-ui/react";
 
-export default function Information() {
+export default function Information()
+{
 	const [information, setInformation] = useState(null);
 	const [editMode, setEditMode] = useState(false);
 	const [form, setForm] = useState({});
