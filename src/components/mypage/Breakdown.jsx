@@ -49,7 +49,6 @@ export default function Breakdown()
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ id })
 		});
-		alert("예약이 취소되었습니다.");
 		fetchData(0);
 	};
 

@@ -49,7 +49,6 @@ export default function Review()
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ id })
 		});
-		alert("리뷰가 삭제되었습니다.");
 		fetchData(0);
 	};
 
