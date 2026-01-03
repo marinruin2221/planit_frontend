@@ -19,7 +19,7 @@ import { AreaList, StayList } from "@data/mockData";
 export default function MainPage()
 {
 	return <React.Fragment>
-		<Header />
+		<Header mainYN />
 
 		<Box pos="relative">
 			<BannerCard />
