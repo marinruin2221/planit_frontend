@@ -18,7 +18,7 @@ export default function Information()
 
 	useEffect(() => {
 		(async () => {
-			const response = await fetch("http://localhost:5002/api/mypage/information", {
+			const response = await fetch("/api/mypage/information", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id: localStorage.getItem("id") }),

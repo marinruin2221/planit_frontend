@@ -15,7 +15,7 @@ export default function EventForm()
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		fetch("http://localhost:5002/api/main/eventSelect",{method:"GET"})
+		fetch("/api/main/eventSelect",{method:"GET"})
 		.then(res => res.json())
 		.then(data => {
 			setEvent(data);

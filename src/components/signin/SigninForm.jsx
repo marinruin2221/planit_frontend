@@ -23,7 +23,7 @@ export default function SigninForm()
 	const [find, setFind] = useState("");
 
 	const signin = () => {
-		fetch("http://localhost:5002/api/signin/signin",{
+		fetch("/api/signin/signin",{
 			method:"POST",
 			headers:
 			{
