@@ -62,7 +62,7 @@ export default function SigninForm()
 	}
 
 	const findid = () => {
-		fetch("http://localhost:5002/api/signin/findid",{
+		fetch("/api/signin/findid",{
 			method:"POST",
 			headers:
 			{

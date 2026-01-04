@@ -37,7 +37,7 @@ export default function Information()
 	};
 
 	const handleSave = async () => {
-		await fetch("http://localhost:5002/api/mypage/informationUpdate", {
+		await fetch("/api/mypage/informationUpdate", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),
@@ -48,7 +48,7 @@ export default function Information()
 	};
 
 	const handleWithdraw = async () => {
-		await fetch("http://localhost:5002/api/mypage/withdraw", {
+		await fetch("/api/mypage/withdraw", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ id: localStorage.getItem("id") }),
