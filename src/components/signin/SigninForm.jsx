@@ -22,75 +22,95 @@ export default function SigninForm()
 	const [findBirthD, setFindBirthD] = useState("");
 	const [find, setFind] = useState("");
 
-	const signin = () => {
-		fetch("/api/signin/signin",{
-			method:"POST",
-			headers:
-			{
-				"Content-Type":"application/json"
+	const signin = async () => {
+		try {
+		  const res = await fetch("/api/auth/login", {
+			method: "POST",
+			headers: {
+			  "Content-Type": "application/json",
 			},
-			body:JSON.stringify
-			({
-				userId:id,
-				userPw:pw,
+			// ✅ [핵심] 세션 쿠키(JSESSIONID) 주고받기 위해 반드시 필요
+			credentials: "include",
+			body: JSON.stringify({
+			  // ✅ 백엔드 LoginRequestDTO에 맞춤
+			  userId: id,
+			  password: pw,
 			}),
-		})
-		.then(res => res.json())
-		.then(data => {
-			if(data.result == "Y")
-			{
-				localStorage.setItem("token", data.token);
-				localStorage.setItem("id", data.id);
-				localStorage.setItem("userId", data.userId);
-				localStorage.setItem("userPw", data.userPw);
-
-				location.href = "/main";
+		  });
+	
+		  // ✅ [수정] 기존 코드의 data.result("Y/N/W") 방식이 아니라
+		  //         HTTP 상태코드 + message(JSON)를 기준으로 처리합니다.
+		  if (!res.ok) {
+			let msg = "아이디나 비밀번호를 확인해 주세요.";
+			try {
+			  const err = await res.json();
+			  if (err?.message) msg = err.message;
+			} catch {
+			  const text = await res.text();
+			  if (text) msg = text;
 			}
-			if(data.result == "N")
-			{
-				alert("아이디나 비밀번호를 확인해 주세요.");
-			}
-			if(data.result == "W")
-			{
-				alert("탈퇴된 아이디 입니다.");
-			}
-		});
-	}
-
-	const signup = () => {
+			alert(msg);
+			return;
+		  }
+	
+		  // 성공 응답: LoginResponseDTO (예: {id, userId, name, email})
+		  const data = await res.json();
+	
+		  // ✅ [선택] 세션 방식이라 토큰 저장은 불필요하지만,
+		  //         프론트에서 사용자 표시 등에 쓰려면 최소 정보만 저장해도 됩니다.
+		  //         (원치 않으면 이 블록 삭제해도 됩니다)
+		  localStorage.setItem("userId", data.userId);
+		  localStorage.setItem("name", data.name ?? "");
+		  localStorage.setItem("email", data.email ?? "");
+	
+		  // ✅ 로그인 성공 후 이동
+		  location.href = "/main";
+		} catch (e) {
+		  console.error(e);
+		  alert("로그인 중 오류가 발생했습니다.");
+		}
+	  };
+	
+	  const signup = () => {
 		location.href = "/signup";
-	}
-
-	const findid = () => {
-		fetch("/api/signin/findid",{
-			method:"POST",
-			headers:
-			{
-				"Content-Type":"application/json"
+	  };
+	
+	  // ✅ [주의] 아래 '아이디 찾기' API는 기존 백엔드(/api/signin/findid) 기준입니다.
+	  //          지금 당신 백엔드가 이 엔드포인트를 아직 제공하지 않으면,
+	  //          이 기능은 동작하지 않습니다.
+	  //          (백엔드에 /api/auth/find-id 같은 API를 추가하면 그에 맞춰 수정해야 함)
+	  const findid = async () => {
+		try {
+		  const res = await fetch("/api/signin/findid", {
+			method: "POST",
+			headers: {
+			  "Content-Type": "application/json",
 			},
-			body:JSON.stringify
-			({
-				email:findEmail,
-				birthY:findBirthY,
-				birthM:findBirthM,
-				birthD:findBirthD,
+			credentials: "include",
+			body: JSON.stringify({
+			  email: findEmail,
+			  birthY: findBirthY,
+			  birthM: findBirthM,
+			  birthD: findBirthD,
 			}),
-		})
-		.then(res => res.json())
-		.then(data => {
-			setFind(data.result);
-
-			if(data.result == "Y")
-			{
-				setFindId(data.userId);
-			}
-		});
-	}
-
-	const findReset = () => {
+		  });
+	
+		  const data = await res.json();
+		  setFind(data.result);
+	
+		  if (data.result === "Y") {
+			setFindId(data.userId);
+		  }
+		} catch (e) {
+		  console.error(e);
+		  alert("아이디 찾기 중 오류가 발생했습니다.");
+		}
+	  };
+	
+	  const findReset = () => {
 		setFind("");
 		setFindId("");
-	}
+	  };
 
 	const naver = () => console.log("네이버 로그인 클릭");
 	const kakao = () => console.log("카카오 로그인 클릭");

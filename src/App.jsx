@@ -17,6 +17,8 @@ import PaymentSuccessPage from "@pages/PaymentSuccessPage.jsx";
 import PaymentFailPage from "@pages/PaymentFailPage.jsx";
 import AIFloatingButton from "@components/ai/AIFloatingButton.jsx";
 
+import DebugPage from "@pages/UserDebugPage.jsx"
+
 import "@css/common/common.css";
 import "@css/tailwind/tailwind.css";
 
@@ -41,6 +43,7 @@ export default function App() {
 					<Route path="/signin" element={<SigninPage />}></Route>
 					<Route path="/payment/success" element={<PaymentSuccessPage />}></Route>
 					<Route path="/payment/fail" element={<PaymentFailPage />}></Route>
+					<Route path="/debug" element={<DebugPage />}></Route>
 				</Routes>
 				{/* Global AI Floating Button */}
 				<AIFloatingButton />
