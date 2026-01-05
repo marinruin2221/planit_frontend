@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { LuCalendarArrowUp, LuCalendarArrowDown, LuUser, LuPlus, LuMinus } from "react-icons/lu";
 import {
 	Box,
@@ -19,11 +19,26 @@ import "react-day-picker/style.css";
 export default function SearchForm()
 {
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
 
 	const [keyword, setKeyword] = useState("");
-	const [dateF, setDateF] = useState(new Date().toLocaleDateString("ko-KR"));
-	const [dateT, setDateT] = useState(new Date().toLocaleDateString("ko-KR"));
+	const [dateF, setDateF] = useState("");
+	const [dateT, setDateT] = useState("");
 	const [person, setPerson] = useState(2);
+
+	// ✅ URL → state 동기화
+	useEffect(() => {
+	setKeyword(searchParams.get("keyword") ?? "");
+	setDateF(
+		searchParams.get("dateF") ??
+		new Date().toLocaleDateString("ko-KR")
+	);
+	setDateT(
+		searchParams.get("dateT") ??
+		new Date().toLocaleDateString("ko-KR")
+	);
+	setPerson(Number(searchParams.get("personnel")) || 2);
+	}, [searchParams]);
 
 	const handleSearch = () => {
 		navigate(`/list?keyword=${encodeURIComponent(keyword)}&dateF=${dateF}&dateT=${dateT}&personnel=${person}`);
