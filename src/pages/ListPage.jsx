@@ -16,8 +16,11 @@ const ListPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  const [searchPersonnel, setSearchPersonnel] = useState('성인 2명');
+  // const [searchDate, setSearchDate] = useState('');
+  const [searchDateF, setSearchDateF] = useState('');
+  const [searchDateT, setSearchDateT] = useState('');
+  // const [searchPersonnel, setSearchPersonnel] = useState('성인 2');
+  const [searchPersonnel, setSearchPersonnel] = useState(2);
   const [selectedType, setSelectedType] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 500000]);
@@ -40,19 +43,24 @@ const ListPage = () => {
   // Initialize state from URL params
   useEffect(() => {
     const keywordParam = searchParams.get('keyword');
-    const dateParam = searchParams.get('date');
+    const dateFParam = searchParams.get('dateF');
+    const dateTParam = searchParams.get('dateT');
+    // const dateParam = searchParams.get('date');
     const personnelParam = searchParams.get('personnel');
 
     if (keywordParam) {
       setSearchTerm(keywordParam);
     }
-    if (dateParam) {
-      setSearchDate(dateParam);
+    if (dateFParam) {
+      setSearchDateF(dateFParam);
+    }
+    if (dateTParam) {
+      setSearchDateT(dateTParam);
     }
     if (personnelParam) {
       setSearchPersonnel(personnelParam);
     }
-  }, []);
+  }, [searchParams]);
 
   // Fetch Data from API
   useEffect(() => {
@@ -86,6 +94,22 @@ const ListPage = () => {
         const params = new URLSearchParams();
         params.append('page', currentPage);
         params.append('size', itemsPerPage);
+
+        if (searchTerm && searchTerm.trim() !== '') {
+          params.append('keyword', searchTerm.trim());
+        }
+
+        if (searchDateF) {
+          params.append('dateF', searchDateF);
+        }
+
+        if (searchDateT) {
+          params.append('dateT', searchDateT);
+        }
+
+        if (searchPersonnel) {
+          params.append('personnel', searchPersonnel);
+        }
 
         // 지역 필터
         if (selectedRegion.length > 0 && !selectedRegion.includes('전체')) {
@@ -137,7 +161,7 @@ const ListPage = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [currentPage, selectedRegion, selectedType, priceRange]);
+  }, [currentPage, selectedRegion, selectedType, priceRange, searchTerm]);
 
   // Fetch prices asynchronously after accommodations load
   // Fetch prices asynchronously after accommodations load

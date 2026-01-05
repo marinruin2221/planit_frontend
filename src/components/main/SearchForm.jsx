@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom";
 import { LuCalendarArrowUp, LuCalendarArrowDown, LuUser, LuPlus, LuMinus } from "react-icons/lu";
 import {
 	Box,
@@ -17,25 +18,21 @@ import "react-day-picker/style.css";
 
 export default function SearchForm()
 {
-	const date = new Date();
-	const [search,setSearch] = useState("");
-	const [dateF,setDateF] = useState(date.toLocaleDateString("ko-KR"));
-	const [dateT,setDateT] = useState(date.toLocaleDateString("ko-KR"));
-	const [person,setPerson] = useState(0);
+	const navigate = useNavigate();
+
+	const [keyword, setKeyword] = useState("");
+	const [dateF, setDateF] = useState(new Date().toLocaleDateString("ko-KR"));
+	const [dateT, setDateT] = useState(new Date().toLocaleDateString("ko-KR"));
+	const [person, setPerson] = useState(2);
 
 	const handleSearch = () => {
-		console.log({
-			검색어: search,
-			체크인: dateF,
-			체크아웃: dateT,
-			인원: person,
-		})
+		navigate(`/list?keyword=${encodeURIComponent(keyword)}&dateF=${dateF}&dateT=${dateT}&personnel=${person}`);
 	};
 
 	return <React.Fragment>
 		<Flex gap="4" direction={{ base: "column", md: "row" }}>
 			<Flex flex="1" gap="4" flexWrap="wrap">
-				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex="auto" placeholder="여행지나 숙소를 검색해보세요." onChange={(e) => setSearch(e.target.value)}/>
+				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex="auto" placeholder="여행지나 숙소를 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
 
 				<Popover.Root>
 					<Popover.Trigger asChild>
