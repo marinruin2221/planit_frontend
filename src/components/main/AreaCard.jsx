@@ -1,5 +1,6 @@
 // React
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 // Chakra UI
 import { Box , Flex , Text , Image } from "@chakra-ui/react";
@@ -12,13 +13,19 @@ import "swiper/css/free-mode";
 
 export default function AreaCard({name,data})
 {
+	const navigate = useNavigate();
+
+	const handleSearch = (sido) => {
+		navigate(`/list?keyword=${encodeURIComponent(sido)}`);
+	};
+
 	return <React.Fragment>
 		<Flex pb={"4"}>
 			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
 		</Flex>
 		<Swiper modules={[FreeMode]} freeMode={true} slidesPerView={"auto"} spaceBetween={"20"}>
 			{data.map((e,i)=>(
-			<SwiperSlide key={i} style={{width:"250px",height:"auto"}}>
+			<SwiperSlide key={i} style={{width:"250px",height:"auto"}} onClick={()=>{ handleSearch(e.subject) }}>
 				<Box cursor={"pointer"}>
 					<Box rounded={"md"} overflow={"hidden"}>
 						<Image w={"250px"} h={"350px"} filter={"brightness(0.5)"} transition={"0.5s"} _hover={{transform:"scale(1.1)"}} src={e.image}/>
