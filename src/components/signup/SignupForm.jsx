@@ -129,11 +129,28 @@ export default function SignupForm() {
         body: JSON.stringify(payload),
       });
   
-      // 서버가 201을 주도록 만들었으니 보통 2xx면 성공 처리
+      // // 서버가 201을 주도록 만들었으니 보통 2xx면 성공 처리
+      // if (!res.ok) {
+      //   // 응답이 JSON일 수도, 아닐 수도 있으니 안전하게 처리
+      //   const text = await res.text();
+      //   throw new Error(text || `회원가입 실패 (HTTP ${res.status})`);
+      // }
       if (!res.ok) {
-        // 응답이 JSON일 수도, 아닐 수도 있으니 안전하게 처리
-        const text = await res.text();
-        throw new Error(text || `회원가입 실패 (HTTP ${res.status})`);
+        let msg = "회원가입에 실패했습니다.";
+      
+        try {
+          // ✅ 서버가 JSON으로 주는 경우
+          const errorData = await res.json();
+          if (errorData?.message) {
+            msg = errorData.message;
+          }
+        } catch {
+          // JSON이 아니면 그냥 텍스트
+          const text = await res.text();
+          if (text) msg = text;
+        }
+      
+        throw new Error(msg);
       }
   
       const data = await res.json(); // SignupResponseDTO 기대
@@ -144,11 +161,9 @@ export default function SignupForm() {
       // 완료 후 로그인 페이지로 이동
       navigate("/signin");
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error(err);
-  
-      // 서버가 지금 IllegalArgumentException을 던지면 응답 바디가 단순 텍스트일 수 있습니다.
-      setSubmitError(err?.message || "회원가입 중 오류가 발생했습니다.");
+      alert(err.message);     // ✅ 메시지만 표시
+      setSubmitError(err.message);
     } finally {
       setIsSubmitting(false);
     }
