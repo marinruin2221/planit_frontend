@@ -301,7 +301,7 @@ export default function SignupForm() {
           가입하기
         </Button>
 
-        {!requiredTermsOk && (
+        {/* {!requiredTermsOk && (
           <Text fontSize="xs" color="gray.500" textAlign="center">
             필수 약관(3개)에 동의해야 가입하기 버튼이 활성화됩니다.
           </Text>
@@ -311,7 +311,7 @@ export default function SignupForm() {
           <Text fontSize="xs" color="gray.500" textAlign="center">
             성별(남/여)을 선택해야 가입하기 버튼이 활성화됩니다.
           </Text>
-        )}
+        )} */}
       </Stack>
     </Box>
   );
