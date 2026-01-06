@@ -48,8 +48,6 @@ export default function SearchForm() {
 	const handleSearch = () => {
 		console.log("Search button clicked", { keyword, dateF, dateT, person });
 		navigate(`/list?keyword=${encodeURIComponent(keyword)}&dateF=${dateF}&dateT=${dateT}&personnel=${person}`);
-
-		window.scrollTo({ top: 0 });
 	};
 
 	const handleDateFSelect = (date) => {
@@ -73,14 +71,19 @@ export default function SearchForm() {
 	};
 
 	return <React.Fragment>
-		<Flex gap="4" direction={{ base: "column", md: "row" }}>
-			<Flex flex="1" gap="4" flexWrap="wrap">
-				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex="auto" placeholder="여행지나 숙소를 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+		<Flex direction="column" gap="4">
+			{/* Top Row: Input + Search Button */}
+			<Flex gap="4" direction={{ base: "column", md: "row" }}>
+				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex="1" placeholder="여행지나 숙소를 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+				<Button variant="plain" size={{ base: "md", md: "xl" }} w={{ base: "full", md: "150px" }} color="var(--white_color)" bg="var(--brand_color)" _hover={{ bg: "var(--brand_hover_color)" }} onClick={handleSearch}>검색</Button>
+			</Flex>
 
+			{/* Bottom Row: DateF, DateT, Person */}
+			<Flex gap="4" direction={{ base: "column", md: "row" }}>
 				{/* Check-in Date Popover */}
 				<Popover.Root open={isDateFOpen} onOpenChange={(e) => setIsDateFOpen(e.open)}>
 					<Popover.Trigger asChild>
-						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex={{ base: "auto", md: "1" }} justifyContent="start" alignItems="center">
+						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex="1" justifyContent="start" alignItems="center">
 							<LuCalendarArrowUp size={20} />
 							<Text truncate ml={2}>{dateF}</Text>
 						</Button>
@@ -103,7 +106,7 @@ export default function SearchForm() {
 				{/* Check-out Date Popover */}
 				<Popover.Root open={isDateTOpen} onOpenChange={(e) => setIsDateTOpen(e.open)}>
 					<Popover.Trigger asChild>
-						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex={{ base: "auto", md: "1" }} justifyContent="start" alignItems="center">
+						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex="1" justifyContent="start" alignItems="center">
 							<LuCalendarArrowDown size={20} />
 							<Text truncate ml={2}>{dateT}</Text>
 						</Button>
@@ -149,9 +152,6 @@ export default function SearchForm() {
 						</Popover.Content>
 					</Popover.Positioner>
 				</Popover.Root>
-			</Flex>
-			<Flex>
-				<Button variant="plain" size={{ base: "md", md: "xl" }} w={{ base: "full", md: "150px" }} h={{ base: "", md: "full" }} color="var(--white_color)" bg="var(--brand_color)" _hover={{ bg: "var(--brand_hover_color)" }} onClick={handleSearch}>검색</Button>
 			</Flex>
 		</Flex>
 	</React.Fragment>

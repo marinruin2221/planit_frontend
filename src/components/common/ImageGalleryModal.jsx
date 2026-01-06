@@ -11,7 +11,10 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
+      onClick={onClose}
+    >
       {/* Close Button */}
       <button
         onClick={onClose}
@@ -23,7 +26,10 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
       </button>
 
       {/* Swiper Container */}
-      <div className="w-full max-w-5xl h-[80vh] px-4">
+      <div
+        className="w-full max-w-5xl h-[80vh] px-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={30}

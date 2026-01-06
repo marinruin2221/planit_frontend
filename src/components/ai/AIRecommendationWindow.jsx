@@ -64,7 +64,7 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
       if (mode === 'travel') {
         setMessages([{
           role: 'model',
-          text: '안녕하세요! AI 여행 비서입니다.\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?',
+          text: '안녕하세요! AI 여행 및 상담 도우미입니다.\n\n저는 다음과 같은 도움을 드릴 수 있어요:\n\n1. **지능형 여행 일정 플래너**: "제주도 3박 4일 가족 여행 일정 짜줘" 처럼 말씀해 보세요.\n2. **대화형 여행 검색**: "조용한 부산 오션뷰 호텔 추천해줘" 처럼 물어보세요.\n\n무엇을 도와드릴까요?',
           recommendations: []
         }]);
       } else {
@@ -250,7 +250,7 @@ const AIRecommendationWindow = ({ isOpen, onClose }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <h2 style={{ fontSize: '1.125rem', fontWeight: 'bold', margin: 0 }}>
-                {mode === 'travel' ? 'AI 여행 비서' : 'AI 상담'}
+                {mode === 'travel' ? 'AI 여행 및 상담 도우미' : 'AI 상담'}
               </h2>
             </div>
             <button onClick={onClose} style={{

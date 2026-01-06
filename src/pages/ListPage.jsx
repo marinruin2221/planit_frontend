@@ -557,16 +557,159 @@ const ListPage = () => {
 
       <div className="h-[15px]"></div>
 
-      {/* Search Form */}
-      <div className="w-full flex justify-center mt-8 mb-16">
-        <div className="w-[70%]">
-          <SearchForm /> <br />
+
+
+      {/* Mobile Horizontal Filter (lg 미만에서만 표시) */}
+      <div className="lg:hidden w-full flex justify-center mb-8">
+        <div className="w-[90%] px-4">
+          {/* 선택된 필터 태그 표시 */}
+          {(selectedRegion.length > 0 || selectedType.length > 0) && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {selectedRegion.map((region) => (
+                <span
+                  key={region}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-800 rounded-full text-sm font-medium"
+                >
+                  {region}
+                  <button
+                    onClick={() => setSelectedRegion(prev => prev.filter(r => r !== region))}
+                    className="ml-1 text-gray-500 hover:text-gray-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              ))}
+              {selectedType.map((type) => (
+                <span
+                  key={type}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-800 rounded-full text-sm font-medium"
+                >
+                  {type}
+                  <button
+                    onClick={() => setSelectedType(prev => prev.filter(t => t !== type))}
+                    className="ml-1 text-gray-500 hover:text-gray-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* 필터 드롭다운 버튼들 */}
+          <div className="overflow-x-auto pb-2">
+            <div className="flex gap-2 min-w-max">
+              {/* 매진 숙소 제외 */}
+              <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-colors flex items-center gap-1">
+                매진 숙소 제외
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* 지역 드롭다운 */}
+              <div className="relative group">
+                <button className={`px-4 py-2 border rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${selectedRegion.length > 0 ? 'bg-[var(--brand_color)] text-white border-[var(--brand_color)]' : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                  }`}>
+                  지역 {selectedRegion.length > 0 && `(${selectedRegion.length})`}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-2 hidden group-hover:block z-20 min-w-[120px]">
+                  {['서울', '경기', '인천', '강원', '제주', '부산', '경상', '전라', '충청'].map((region) => (
+                    <button
+                      key={region}
+                      onClick={() => {
+                        const isSelected = selectedRegion.includes(region);
+                        if (isSelected) {
+                          setSelectedRegion(prev => prev.filter(r => r !== region));
+                        } else {
+                          setSelectedRegion(prev => [...prev, region]);
+                        }
+                      }}
+                      className={`block w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${selectedRegion.includes(region) ? 'text-[var(--brand_color)] font-bold' : 'text-gray-700'
+                        }`}
+                    >
+                      {region}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 숙소유형 드롭다운 */}
+              <div className="relative group">
+                <button className={`px-4 py-2 border rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${selectedType.length > 0 ? 'bg-[var(--brand_color)] text-white border-[var(--brand_color)]' : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                  }`}>
+                  숙소유형 {selectedType.length > 0 && `(${selectedType.length})`}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-2 hidden group-hover:block z-20 min-w-[120px]">
+                  {['호텔', '펜션', '모텔', '게스트하우스', '캠핑장', '글램핑', '한옥'].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => {
+                        const isSelected = selectedType.includes(type);
+                        if (isSelected) {
+                          setSelectedType(prev => prev.filter(t => t !== type));
+                        } else {
+                          setSelectedType(prev => [...prev, type]);
+                        }
+                      }}
+                      className={`block w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${selectedType.includes(type) ? 'text-[var(--brand_color)] font-bold' : 'text-gray-700'
+                        }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 가격 */}
+              <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-colors flex items-center gap-1">
+                가격
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* #취향 */}
+              <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-colors flex items-center gap-1">
+                #취향
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* 할인혜택 */}
+              <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-colors flex items-center gap-1">
+                할인혜택
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* 등급 */}
+              <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-colors flex items-center gap-1">
+                등급
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Content Area (Sidebar + List) */}
       <div className="w-full flex justify-center py-8">
-        <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8">
+        <div className="w-[70%] flex gap-8">
 
           {/* Left Sidebar - Filters */}
           <aside className="hidden lg:block w-[250px] flex-shrink-0">
@@ -580,6 +723,7 @@ const ListPage = () => {
                 내 주변 숙소 찾기
               </div>
             </div>
+
 
             {/* Map Button */}
             <div
@@ -837,11 +981,16 @@ const ListPage = () => {
                 </Accordion.Root>
               </div><br />
             </div>
+
+
           </aside>
 
           {/* Right Content - List */}
           <section className="flex-1" ref={listRef}>
-            <div className="flex justify-between items-center mb-12" style={{ marginBottom: '3rem' }}>
+            <div className="mb-20" style={{ marginBottom: '1rem' }}>
+              <SearchForm />
+            </div>
+            <div className="flex justify-between items-center mb-12" style={{ marginBottom: '1rem' }}>
               <h2 className="text-xl font-bold text-gray-900">검색 결과 {totalCount.toLocaleString()}개</h2>
               <div className="relative w-40">
                 <NativeSelect.Root size="sm" variant="outline">
