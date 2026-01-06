@@ -9,7 +9,9 @@ import {
 	Input,
 	Button,
 	Portal,
-	Dialog
+	Dialog,
+	Textarea,
+	RatingGroup
 } from "@chakra-ui/react";
 import PageForm from "@components/mypage/PageForm.jsx";
 
@@ -19,6 +21,8 @@ export default function Breakdown()
 	const [page, setPage] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
 	const [word, setWord] = useState("");
+	const [reviewScore, setReviewScore] = useState(3);
+	const [reviewContent, setReviewContent] = useState("");
 
 	const isSearchRef = useRef(false);
 	const isResetRef = useRef(false);
@@ -49,6 +53,26 @@ export default function Breakdown()
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ id })
 		});
+		fetchData(0);
+	};
+
+	const submitReview = async (contentId,name) => {
+		await fetch("/api/mypage/reviewCreate", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				contentId: contentId,
+				userId: localStorage.getItem("userId"),
+				name: name,
+				level: "1",
+				stars: String(reviewScore),
+				content: reviewContent
+			})
+		});
+
+		setReviewScore(3);
+		setReviewContent("");
+
 		fetchData(0);
 	};
 
@@ -146,7 +170,54 @@ export default function Breakdown()
 									</React.Fragment>
 								}
 								if(e.status === "2") { return <Button variant="subtle" size="xs" colorPalette="red">취소</Button>; }
-								if(e.status === "3") { return <Button variant="subtle" size="xs" colorPalette="gray">이용완료</Button>; }
+								if(e.status === "3")
+								{
+									return <React.Fragment>
+										<HStack>
+											<Dialog.Root placement="center">
+												<Dialog.Trigger asChild>
+													<Button variant="outline" size="xs" colorPalette="gray">리뷰작성</Button>
+												</Dialog.Trigger>
+												<Portal>
+													<Dialog.Backdrop />
+													<Dialog.Positioner>
+														<Dialog.Content>
+															<Dialog.Header>
+																<Dialog.Title>
+																	<Text fontSize="md" fontWeight="bold">
+																		<Text as="span" fontSize="lg" color="var(--brand_color)">{e.name}</Text>의 여행은 어떠셨나요?
+																	</Text>
+																</Dialog.Title>
+															</Dialog.Header>
+															<Dialog.Body>
+																<HStack pb="4">
+																	<Text fontSize="md" fontWeight="bold">별점</Text>
+																	<RatingGroup.Root count="5" defaultValue="3" size="md" colorPalette="yellow" value={reviewScore} onValueChange={(e) => setReviewScore(e.value)}>
+																		<RatingGroup.HiddenInput />
+																		<RatingGroup.Control />
+																	</RatingGroup.Root>
+																</HStack>
+																<Stack>
+																	<Text fontSize="md" fontWeight="bold">리뷰</Text>
+																	<Textarea resize="none" placeholder="리뷰를 작성해주세요" value={reviewContent} onChange={(e) => setReviewContent(e.target.value)} />
+																</Stack>
+															</Dialog.Body>
+															<Dialog.Footer>
+																<Dialog.ActionTrigger asChild>
+																	<Button variant="outline">취소</Button>
+																</Dialog.ActionTrigger>
+																<Dialog.ActionTrigger asChild>
+																	<Button onClick={() => submitReview(e.contentId,e.name)}>확인</Button>
+																</Dialog.ActionTrigger>
+															</Dialog.Footer>
+														</Dialog.Content>
+													</Dialog.Positioner>
+												</Portal>
+											</Dialog.Root>
+											<Button variant="subtle" size="xs" colorPalette="gray">이용완료</Button>
+										</HStack>
+									</React.Fragment>
+								}
 							})()}
 						</HStack>
 					</Card.Body>
