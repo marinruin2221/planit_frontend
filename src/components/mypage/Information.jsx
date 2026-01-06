@@ -107,18 +107,21 @@ export default function Information()
 				<HStack>
 					<Input
 						variant={editMode ? "outline" : "subtle"}
+						maxLength="4"
 						value={form.birthY}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthY", e.target.value)}
 					/>
 					<Input
 						variant={editMode ? "outline" : "subtle"}
+						maxLength="2"
 						value={form.birthM}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthM", e.target.value)}
 					/>
 					<Input
 						variant={editMode ? "outline" : "subtle"}
+						maxLength="2"
 						value={form.birthD}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthD", e.target.value)}
