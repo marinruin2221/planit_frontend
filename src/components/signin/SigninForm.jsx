@@ -74,12 +74,11 @@ export default function SigninForm()
 	
 	  const findid = async () => {
 		try {
-		  const res = await fetch("/api/signin/findid", {
+		  const res = await fetch("/api/auth/findid", {
 			method: "POST",
 			headers: {
 			  "Content-Type": "application/json",
 			},
-			credentials: "include",
 			body: JSON.stringify({
 			  email: findEmail,
 			  birthY: findBirthY,
@@ -89,6 +88,7 @@ export default function SigninForm()
 		  });
 	
 		  const data = await res.json();
+
 		  setFind(data.result);
 	
 		  if (data.result === "Y") {
@@ -146,14 +146,14 @@ export default function SigninForm()
 									<Stack gap="5">
 										<Stack>
 											<Text color="gray.500">이메일</Text>
-											<Input variant="outline" onChange={(e) => setFindEmail(e.target.value)} />
+											<Input variant="outline" placeholder="email@example.com" onChange={(e) => setFindEmail(e.target.value)} />
 										</Stack>
 										<Stack>
 											<Text color="gray.500">생년월일</Text>
 											<HStack>
-												<Input variant="outline" onChange={(e) => setFindBirthY(e.target.value)} />
-												<Input variant="outline" onChange={(e) => setFindBirthM(e.target.value)} />
-												<Input variant="outline" onChange={(e) => setFindBirthD(e.target.value)} />
+												<Input variant="outline" placeholder="YYYY" onChange={(e) => setFindBirthY(e.target.value)} />
+												<Input variant="outline" placeholder="MM" onChange={(e) => setFindBirthM(e.target.value)} />
+												<Input variant="outline" placeholder="DD" onChange={(e) => setFindBirthD(e.target.value)} />
 											</HStack>
 										</Stack>
 										{(() => {
