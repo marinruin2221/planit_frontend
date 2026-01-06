@@ -16,6 +16,7 @@ import PaymentModal from "@components/payment/PaymentModal.jsx";
 // 쿠폰 기능 import
 import { coupons, getUserCoupons, issueAllCoupons, issueCoupon, getApplicableCoupons, formatExpireDate } from '@data/couponData';
 import { EventList } from '@data/mockData';
+import { fetchMe } from '@data/auth';
 
 // Swiper import
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -57,9 +58,23 @@ const DetailPage = () => {
   const [couponMessage, setCouponMessage] = useState(null);
   const [showMorePaymentBenefits, setShowMorePaymentBenefits] = useState(false);
 
-  // 쿠폰 초기 로드
+  // 로그인 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 쿠폰 초기 로드 및 로그인 상태 확인
   useEffect(() => {
     setUserCoupons(getUserCoupons());
+
+    // 로그인 상태 확인
+    const checkLoginStatus = async () => {
+      try {
+        const userData = await fetchMe();
+        setIsLoggedIn(userData.loggedIn === true);
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+    checkLoginStatus();
   }, []);
 
   // 전체 받기 핸들러
@@ -195,6 +210,13 @@ const DetailPage = () => {
   }, [id]);
 
   const handlePaymentClick = (roomName, price) => {
+    // 로그인 상태 확인
+    if (!isLoggedIn) {
+      alert('예약하기 위해서는 로그인이 필요합니다.');
+      navigate('/signin');
+      return;
+    }
+
     setSelectedRoomForPayment(roomName);
     setPaymentAmount(price);
     setIsPaymentModalOpen(true);
