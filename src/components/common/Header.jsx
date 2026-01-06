@@ -73,6 +73,11 @@ export default function Header({ mainYN = false }) {
   const handleLogout = async () => {
     await logout();                 // /api/auth/logout
     setMe({ loggedIn: false });     // 즉시 UI 반영
+
+		localStorage.removeItem("userId");
+		localStorage.removeItem("name");
+		localStorage.removeItem("email");
+
     navigate("/main");
   };
 

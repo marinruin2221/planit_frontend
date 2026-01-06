@@ -16,6 +16,7 @@ import SigninPage from "@pages/SigninPage.jsx";
 import PaymentSuccessPage from "@pages/PaymentSuccessPage.jsx";
 import PaymentFailPage from "@pages/PaymentFailPage.jsx";
 import AIFloatingButton from "@components/ai/AIFloatingButton.jsx";
+import ProtectedRoute from "@components/common/ProtectedRoute.jsx"
 
 import DebugPage from "@pages/UserDebugPage.jsx"
 
@@ -31,7 +32,11 @@ export default function App() {
 				<Routes>
 					<Route path="/" element={<MainPage />}></Route>
 					<Route path="/main" element={<MainPage />}></Route>
-					<Route path="/mypage" element={<MyPage />}></Route>
+					<Route path="/mypage" element={
+						<ProtectedRoute>
+						<MyPage />
+						</ProtectedRoute>
+					}/>
 					<Route path="/event" element={<EventPage />}></Route>
 					<Route path="/event/:eventId" element={<EventDetailPage />} />
 					<Route path="/list" element={<ListPage />}></Route>
