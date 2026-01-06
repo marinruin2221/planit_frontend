@@ -105,3 +105,19 @@ body {
 .text-title-md {
 	font-size: 22px;
 }
+
+/******************** Filter Section Styles ********************/
+.filter-section {
+	padding-top: 36px !important;
+	padding-bottom: 32px !important;
+}
+
+.filter-section-top {
+	padding-top: 36px !important;
+}
+
+.filter-hr {
+	border: none !important;
+	border-top: 0.3px solid #DD6B20 !important;
+	margin: 16px 0 !important;
+}

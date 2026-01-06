@@ -2,7 +2,7 @@ import { getFallbackImage } from '@utils/imageUtils'; // Import utility
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag, NativeSelect } from '@chakra-ui/react';
+import { Button, HStack, Stack, Box, Text, Accordion, Checkbox, Tag, NativeSelect, Separator } from '@chakra-ui/react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -595,8 +595,8 @@ const ListPage = () => {
             </div><br />
 
             {/* Filter: Sold Out */}
-            <div className="border-b border-solid border-gray-300 py-8">
-              <h3 className="font-bold text-gray-900 mb-6 text-lg">필터</h3><br />
+            <div className="py-8 pb-10 border-b border-gray-200">
+              <h3 className="font-bold text-gray-900 mb-6 text-lg">필  터</h3><br />
               <Checkbox.Root
                 colorPalette="orange"
                 className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded -ml-1 transition-colors"
@@ -610,10 +610,10 @@ const ListPage = () => {
                 </Checkbox.Control>
                 <Checkbox.Label className="text-gray-700">매진 숙소 제외</Checkbox.Label>
               </Checkbox.Root>
-            </div><br />
+            </div>
 
             {/* Filter: Region */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="border-b border-gray-200 filter-section">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">지  역</h3><br />
               <Stack direction="column" gap={3}>
                 <Checkbox.Root
@@ -648,10 +648,10 @@ const ListPage = () => {
                   </Checkbox.Root>
                 ))}
               </Stack>
-            </div><br />
+            </div>
 
             {/* Filter: Check Box Type */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="border-b border-gray-200 filter-section">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">숙소 유형</h3><br />
               <Stack direction="column" gap={3}>
                 <Checkbox.Root
@@ -686,10 +686,10 @@ const ListPage = () => {
                   </Checkbox.Root>
                 ))}
               </Stack>
-            </div><br />
+            </div>
 
             {/* Filter: Price */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="border-b border-gray-200 filter-section">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">가격 <span className="text-sm font-normal text-gray-500 ml-1">&nbsp;1박 기준</span></h3>
               <div className="px-2 py-2">
                 <input
@@ -706,10 +706,10 @@ const ListPage = () => {
                 <span>0원</span>
                 <span>{priceRange[1] === 500000 ? '50만원 이상' : `${priceRange[1].toLocaleString()}원`}</span>
               </div>
-            </div><br />
+            </div>
 
             {/* Filter: #Preference */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="filter-section-top">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">#취향</h3><br />
               <div className="flex flex-wrap gap-2 mb-2">
                 {['#숙박페스타', '#가족여행숙소', '#스파', '#파티룸', '#OTT', '#연인추천', '#감성숙소', '#뷰맛집', '#연박특가'].map((tag, idx) => (
@@ -734,10 +734,11 @@ const ListPage = () => {
                   </Accordion.ItemTrigger>
                 </Accordion.Item>
               </Accordion.Root>
-            </div><br />
+            </div>
+            <hr className="filter-hr" /><br />
 
             {/* Filter: Discount Benefits */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="py-8">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">할인혜택</h3><br />
               <div className="flex flex-wrap gap-2">
                 {['쿠폰할인', '무한대실', '할인특가'].map((benefit, idx) => (
@@ -747,9 +748,10 @@ const ListPage = () => {
                 ))}
               </div><br />
             </div>
+            <hr className="filter-hr" />
 
             {/* Filter: Reservation Type */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="py-8">
               <h3 className="font-bold text-gray-900 mb-6 text-lg">예약유형</h3><br />
               <Checkbox.Root
                 colorPalette="orange"
@@ -764,10 +766,11 @@ const ListPage = () => {
                 </Checkbox.Control>
                 <Checkbox.Label className="text-gray-700">내실예약</Checkbox.Label>
               </Checkbox.Root>
-            </div><br />
+            </div>
+            <hr className="filter-hr" /><br />
 
             {/* Filter: Grade */}
-            <div className="border-b border-solid border-gray-300 py-8">
+            <div className="py-8">
               <h3 className="font-bold text-gray-900 mb-5 text-lg">등급</h3><br />
               <div className="flex flex-wrap gap-2">
                 {['5성급', '4성급', '블랙', '풀빌라'].map((grade, idx) => (
@@ -777,6 +780,7 @@ const ListPage = () => {
                 ))}
               </div><br />
             </div>
+            <hr className="filter-hr" />
 
             {/* Filter: Facilities */}
             <div className="py-8">
@@ -791,7 +795,8 @@ const ListPage = () => {
                     </Tag.Root>
                   ))}
                 </div>
-              </div><br />
+              </div>
+              <hr className="filter-hr" /><br />
 
               <div className="mb-6">
                 <h4 className="text-sm font-bold text-gray-500 mb-3">객실 내 시설</h4><br />
@@ -802,7 +807,8 @@ const ListPage = () => {
                     </Tag.Root>
                   ))}
                 </div>
-              </div><br />
+              </div>
+              <hr className="filter-hr" /><br />
 
               <div>
                 <h4 className="text-sm font-bold text-gray-500 mb-3">기타시설</h4><br />

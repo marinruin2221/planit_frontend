@@ -3,7 +3,7 @@ import { getFallbackImage } from '@utils/imageUtils'; // Import utility
 import React, { useState, useEffect } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { Accordion } from "@chakra-ui/react";
+import { Accordion, Button, HStack } from "@chakra-ui/react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 import Header from "@components/common/Header.jsx";
@@ -15,6 +15,14 @@ import PaymentModal from "@components/payment/PaymentModal.jsx";
 
 // 쿠폰 기능 import
 import { coupons, getUserCoupons, issueAllCoupons, issueCoupon, getApplicableCoupons, formatExpireDate } from '@data/couponData';
+import { EventList } from '@data/mockData';
+
+// Swiper import
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 
 
 const DetailPage = () => {
@@ -29,12 +37,14 @@ const DetailPage = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [estimatedPrice, setEstimatedPrice] = useState(null);
-  const [reviewSortOption, setReviewSortOption] = useState('date'); // date, recommend, score
+  const [reviewSortOption, setReviewSortOption] = useState('date');
 
   // 평점 및 리뷰 상태 (DB 연동)
   const [rating, setRating] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewCurrentPage, setReviewCurrentPage] = useState(1);
+  const reviewsPerPage = 5;
 
   // 결제 관련 상태
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -45,6 +55,7 @@ const DetailPage = () => {
   const [userCoupons, setUserCoupons] = useState([]);
   const [showCouponList, setShowCouponList] = useState(false);
   const [couponMessage, setCouponMessage] = useState(null);
+  const [showMorePaymentBenefits, setShowMorePaymentBenefits] = useState(false);
 
   // 쿠폰 초기 로드
   useEffect(() => {
@@ -639,8 +650,10 @@ const DetailPage = () => {
       {/* Header */}
       <Header />
 
+      <div className="h-[15px]"></div>
+
       {/* Main Content & Sidebar Wrapper */}
-      <div className="w-full flex justify-center py-8">
+      <div className="w-full flex justify-center py-8 mt-8">
         <div className="w-[70%] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8">
 
           {/* Left Content (70%) */}
@@ -980,27 +993,122 @@ const DetailPage = () => {
                       sortedReviews.sort((a, b) => b.stars - a.stars);
                     }
 
-                    return sortedReviews.map((review, index) => (
-                      <div key={review.id} className="border-b border-gray-100 !pb-10 last:border-0">
-                        <div className="flex items-start mb-4">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 mr-3 flex items-center justify-center text-white font-bold text-sm">
-                            {review.reviewerName?.charAt(0) || '★'}
-                          </div>
-                          <div>
-                            <div className="flex items-center mb-1">
-                              <span className="font-bold text-gray-900 text-sm mr-2">Lv. {review.reviewerLevel}</span>
-                              <span className="font-bold text-gray-900 text-sm">{review.reviewerName}</span>
+                    // 페이지네이션 적용
+                    const totalReviews = sortedReviews.length;
+                    const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+                    const startIndex = (reviewCurrentPage - 1) * reviewsPerPage;
+                    const paginatedReviews = sortedReviews.slice(startIndex, startIndex + reviewsPerPage);
+
+                    return (
+                      <>
+                        {paginatedReviews.map((review, index) => (
+                          <div key={review.id} className="border-b border-gray-100 !pb-10 last:border-0">
+                            <div className="flex items-start mb-4">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 mr-3 flex items-center justify-center text-white font-bold text-sm">
+                                {review.reviewerName?.charAt(0) || '★'}
+                              </div>
+                              <div>
+                                <div className="flex items-center mb-1">
+                                  <span className="font-bold text-gray-900 text-sm mr-2">Lv. {review.reviewerLevel}</span>
+                                  <span className="font-bold text-gray-900 text-sm">{review.reviewerName}</span>
+                                </div>
+                                <div className="text-xs text-gray-400">리뷰 {startIndex + index + 1}</div>
+                              </div>
                             </div>
-                            <div className="text-xs text-gray-400">리뷰 {reviews.length - index}</div>
+                            <div className="flex items-center mb-3">
+                              <div className="flex text-yellow-400 text-sm mr-2">{'★'.repeat(review.stars)}{'☆'.repeat(5 - review.stars)}</div>
+                              <span className="text-xs text-gray-400">{review.reviewDate}</span>
+                            </div>
+                            <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{review.content}</p>
                           </div>
-                        </div>
-                        <div className="flex items-center mb-3">
-                          <div className="flex text-yellow-400 text-sm mr-2">{'★'.repeat(review.stars)}{'☆'.repeat(5 - review.stars)}</div>
-                          <span className="text-xs text-gray-400">{review.reviewDate}</span>
-                        </div>
-                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{review.content}</p>
-                      </div>
-                    ));
+                        ))}
+
+                        {/* 페이지네이션 UI - ListPage 스타일 */}
+                        {totalPages > 1 && (
+                          <HStack mt={8} spacing={2} justify="center">
+                            {/* 맨 앞으로 버튼 */}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setReviewCurrentPage(1)}
+                              isDisabled={reviewCurrentPage === 1}
+                              borderRadius="full"
+                              borderColor="gray.300"
+                              color="gray.700"
+                              _hover={{ bg: "gray.100" }}
+                            >
+                              &lt;&lt;
+                            </Button>
+
+                            {/* 이전 버튼 */}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setReviewCurrentPage(prev => Math.max(prev - 1, 1))}
+                              isDisabled={reviewCurrentPage === 1}
+                              borderRadius="full"
+                              borderColor="gray.300"
+                              color="gray.700"
+                              _hover={{ bg: "gray.100" }}
+                            >
+                              &lt;
+                            </Button>
+
+                            {/* 페이지 번호 버튼들 */}
+                            {Array.from({ length: totalPages }, (_, i) => i + 1)
+                              .filter(page => Math.abs(page - reviewCurrentPage) <= 2)
+                              .map(page => {
+                                const isActive = page === reviewCurrentPage;
+                                return (
+                                  <Button
+                                    key={page}
+                                    size="sm"
+                                    borderRadius="full"
+                                    variant={isActive ? "solid" : "outline"}
+                                    bg={isActive ? "var(--brand_color)" : "transparent"}
+                                    color={isActive ? "white" : "gray.700"}
+                                    borderColor={isActive ? "var(--brand_color)" : "gray.300"}
+                                    _hover={{
+                                      bg: isActive ? "var(--brand_color)" : "gray.100",
+                                    }}
+                                    onClick={() => setReviewCurrentPage(page)}
+                                  >
+                                    {page}
+                                  </Button>
+                                );
+                              })}
+
+                            {/* 다음 버튼 */}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setReviewCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              isDisabled={reviewCurrentPage === totalPages}
+                              borderRadius="full"
+                              borderColor="gray.300"
+                              color="gray.700"
+                              _hover={{ bg: "gray.100" }}
+                            >
+                              &gt;
+                            </Button>
+
+                            {/* 맨 뒤로 버튼 */}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setReviewCurrentPage(totalPages)}
+                              isDisabled={reviewCurrentPage === totalPages}
+                              borderRadius="full"
+                              borderColor="gray.300"
+                              color="gray.700"
+                              _hover={{ bg: "gray.100" }}
+                            >
+                              &gt;&gt;
+                            </Button>
+                          </HStack>
+                        )}
+                      </>
+                    );
                   })()
                 )}
               </div>
@@ -1117,23 +1225,81 @@ const DetailPage = () => {
               <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-bold text-gray-900">결제 혜택</span>
-                  <span className="text-xs text-gray-500 cursor-pointer">더보기 &gt;</span>
+                  <span
+                    className="text-xs text-[#DD6B20] cursor-pointer hover:underline font-medium"
+                    onClick={() => setShowMorePaymentBenefits(!showMorePaymentBenefits)}
+                  >
+                    {showMorePaymentBenefits ? '접기' : '더보기'} {showMorePaymentBenefits ? '▲' : '▼'}
+                  </span>
                 </div>
-                <div className="space-y-2 text-sm text-gray-600">
+                <div className="space-y-3 text-base text-gray-600">
+                  {/* 기본 혜택 */}
                   <div className="flex items-start">
-                    <span className="text-blue-500 font-bold mr-2">토스페이</span>
+                    <span className="text-blue-500 font-bold mr-2 min-w-[70px]">토스페이</span>
                     <span>3만원 이상, 10% 최대 1만원 할인</span>
                   </div>
                   <div className="flex items-start">
-                    <span className="text-gray-500 font-bold mr-2">카카오페이</span>
+                    <span className="text-yellow-500 font-bold mr-2 min-w-[70px]">카카오페이</span>
                     <span>2만원 이상, 2천원 할인</span>
                   </div>
+
+                  {/* 추가 혜택 (더보기 클릭 시 표시) */}
+                  {showMorePaymentBenefits && (
+                    <>
+                      <div className="border-t border-gray-100 pt-2 mt-2"></div>
+                      <div className="flex items-start">
+                        <span className="text-green-600 font-bold mr-2 min-w-[70px]">네이버페이</span>
+                        <span>5만원 이상, 5% 최대 5천원 할인</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-blue-700 font-bold mr-2 min-w-[70px]">삼성페이</span>
+                        <span>4만원 이상, 3천원 즉시 할인</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-blue-900 font-bold mr-2 min-w-[70px]">신한카드</span>
+                        <span>3만원 이상, 2천원 할인 (결제일 기준)</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-red-500 font-bold mr-2 min-w-[70px]">현대카드</span>
+                        <span>5만원 이상, M포인트 2배 적립</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-orange-600 font-bold mr-2 min-w-[70px]">롯데카드</span>
+                        <span>6만원 이상, L.POINT 3배 적립</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-purple-600 font-bold mr-2 min-w-[70px]">KB국민</span>
+                        <span>4만원 이상, KB포인트 3천점 적립</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-gray-700 font-bold mr-2 min-w-[70px]">무이자할부</span>
+                        <span>10만원 이상, 2~6개월 무이자</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* Ad Banner */}
-              <div className="rounded-xl overflow-hidden bg-gray-100 h-32 flex items-center justify-center text-gray-400">
-                광고 배너 영역
+              {/* Event Banner - Swiper */}
+              <div className="rounded-xl overflow-hidden" style={{ marginTop: '16px' }}>
+                <Swiper
+                  modules={[Autoplay, Pagination]}
+                  autoplay={{ delay: 3000, disableOnInteraction: false }}
+                  pagination={{ clickable: true }}
+                  loop={true}
+                  className="w-full h-32"
+                >
+                  {EventList.map((event) => (
+                    <SwiperSlide key={event.id}>
+                      <img
+                        src={event.image}
+                        alt={`이벤트 ${event.id}`}
+                        className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => navigate('/event')}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           </div>
