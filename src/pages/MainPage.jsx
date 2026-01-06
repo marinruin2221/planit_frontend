@@ -35,7 +35,7 @@ export default function MainPage()
 			<AreaCard name={"국내 인기 지역"} data={AreaList} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
-			<StayCard name={"국내 인기 숙소"} data={StayList} />
+			<StayCard name={"국내 인기 숙소"} />
 		</Container>
 		<Container maxW="1300px" pt="60px">
 			<EventForm />

@@ -17,7 +17,7 @@ export default function BannerCard()
 			<SwiperSlide>
 				<Image
 					w="vw"
-					h={{ base: "70vh", md: "80vh" }}
+					h="vh"
 					src="https://static.yeogi.com/_next/static/media/03_Kv_PC_Light_B.fcfed8ce.webp"
 				/>
 				<Flex
@@ -27,8 +27,8 @@ export default function BannerCard()
 					align="start"
 					position="absolute"
 					inset="0"
-					px={{ base: "6", md: "36" }}
-					py={{ base: "14", md: "36" }}
+					px={{ base: "8", md: "36" }}
+					py={{ base: "48", md: "36" }}
 					bg={{
 						base: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
 						md: "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0))",
@@ -56,7 +56,7 @@ export default function BannerCard()
 			<SwiperSlide>
 				<Image
 					w="vw"
-					h={{ base: "60vh", md: "80vh" }}
+					h="vh"
 					src="https://pages.trip.com/Hotels/images/V8HomePageBackGround.webp"
 				/>
 				<Flex
@@ -66,8 +66,8 @@ export default function BannerCard()
 					align="start"
 					position="absolute"
 					inset="0"
-					px={{ base: "6", md: "36" }}
-					py={{ base: "14", md: "36" }}
+					px={{ base: "8", md: "36" }}
+					py={{ base: "48", md: "36" }}
 					bg={{
 						base: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
 						md: "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0))",
