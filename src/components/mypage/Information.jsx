@@ -40,14 +40,22 @@ export default function Information()
 	};
 
 	const handleSave = async () => {
-		await fetch("/api/mypage/informationUpdate", {
+		const response = await fetch("/api/mypage/informationUpdate", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),
 		});
+		const data = await response.json();
 
-		setInformation(form);
-		setEditMode(false);
+		if(data.emailOverlapYN == "Y")
+		{
+			alert("중복된 이메일입니다.");
+		}
+		else
+		{
+			setInformation(form);
+			setEditMode(false);
+		}
 	};
 
 	const handleWithdraw = async () => {
