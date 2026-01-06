@@ -48,6 +48,8 @@ export default function SearchForm() {
 	const handleSearch = () => {
 		console.log("Search button clicked", { keyword, dateF, dateT, person });
 		navigate(`/list?keyword=${encodeURIComponent(keyword)}&dateF=${dateF}&dateT=${dateT}&personnel=${person}`);
+
+		window.scrollTo({ top: 0 });
 	};
 
 	const handleDateFSelect = (date) => {
