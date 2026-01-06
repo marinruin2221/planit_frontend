@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import PageForm from "@components/mypage/PageForm.jsx";
 
-export default function Breakdown()
+export default function Breakdown({ onReviewCreated })
 {
 	const [list, setList] = useState([]);
 	const [page, setPage] = useState(0);
@@ -73,7 +73,8 @@ export default function Breakdown()
 		setReviewScore(3);
 		setReviewContent("");
 
-		fetchData(0);
+		fetchData(0);              // 예약 목록 갱신
+		onReviewCreated?.();       // ⭐ 리뷰 탭 갱신 트리거
 	};
 
 	useEffect(() => { fetchData(); }, [page]);

@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import PageForm from "@components/mypage/PageForm.jsx";
 
-export default function Review()
+export default function Review({ refreshKey })
 {
 	const [list, setList] = useState([]);
 	const [page, setPage] = useState(0);
@@ -63,6 +63,9 @@ export default function Review()
 		fetchData(0);
 		isResetRef.current = false;
 	}, [word, page]);
+	useEffect(() => {
+		fetchData(0);
+	}, [refreshKey]);
 
 	const handlePageChange = (p) => {
 		if (p < 0 || p >= totalPages) return;

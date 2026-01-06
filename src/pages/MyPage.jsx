@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useState } from "react";
 import
 {
 	LuUser,
@@ -19,6 +19,8 @@ import Review from "@components/mypage/Review.jsx";
 
 export default function MyPage()
 {
+	const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
+
 	return <React.Fragment>
 		<Header/>
 		
@@ -42,10 +44,10 @@ export default function MyPage()
 					<Information/>
 				</Tabs.Content>
 				<Tabs.Content pt="50px" value="2">
-					<Breakdown/>
+					<Breakdown onReviewCreated={() => setReviewRefreshKey(v => v + 1)} />
 				</Tabs.Content>
 				<Tabs.Content pt="50px" value="3">
-					<Review/>
+					<Review refreshKey={reviewRefreshKey} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</Container>
