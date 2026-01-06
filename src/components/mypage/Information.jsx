@@ -10,6 +10,9 @@ import {
 	Portal
 } from "@chakra-ui/react";
 
+// ✅ 세션 로그인 상태 확인용 API
+import { logout } from "@src/data/auth.js";
+
 export default function Information()
 {
 	const [information, setInformation] = useState(null);
@@ -21,12 +24,12 @@ export default function Information()
 			const response = await fetch("/api/mypage/information", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ id: localStorage.getItem("id") }),
+				body: JSON.stringify({ userId: localStorage.getItem("userId") }),
 			});
 			const data = await response.json();
 
 			setInformation(data);
-			setForm({ ...data, id: localStorage.getItem("id") });
+			setForm({ ...data, userId: localStorage.getItem("userId") });
 		})();
 	}, []);
 
@@ -51,13 +54,14 @@ export default function Information()
 		await fetch("/api/mypage/withdraw", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ id: localStorage.getItem("id") }),
+			body: JSON.stringify({ userId: localStorage.getItem("userId") }),
 		});
 
-		localStorage.removeItem("token");
-		localStorage.removeItem("id");
 		localStorage.removeItem("userId");
-		localStorage.removeItem("userPw");
+		localStorage.removeItem("name");
+		localStorage.removeItem("email");
+
+		await logout();
 
 		location.href = "/main";
 	};

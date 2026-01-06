@@ -30,7 +30,7 @@ export default function Breakdown()
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				usersId: localStorage.getItem("id"),
+				userId: localStorage.getItem("userId"),
 				word: word ?? "",
 				page: targetPage,
 				size: 5
