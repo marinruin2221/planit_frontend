@@ -28,16 +28,16 @@ export default function Footer() {
               바로가기
             </Text>
             <Box fontSize="xs" color="gray.500">
-				<Link href="/event" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
+				<Link href="/event" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2} focusRing="none">
 					이벤트
 				</Link>
-				<Link href="/customerservice" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
+				<Link href="/customerservice" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2} focusRing="none">
 					고객센터
 				</Link>
-				<Link href="/agreement" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2}>
+				<Link href="/agreement" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" mb={2} focusRing="none">
 					이용약관
 				</Link>
-				<Link href="/privacy" color="gray.500" _hover={{ color: "#dd6b20" }} display="block">
+				<Link href="/privacy" color="gray.500" _hover={{ color: "#dd6b20" }} display="block" focusRing="none">
 					개인정보처리방침
 				</Link>
             </Box>
@@ -65,13 +65,13 @@ export default function Footer() {
             </HStack>
 
             <HStack spacing={4} mt={5} color="gray.300">
-              <Link href="#" aria-label="Instagram" _hover={{ color: "#dd6b20" }}>
+              <Link href="#" aria-label="Instagram" _hover={{ color: "#dd6b20" }} focusRing="none">
                 <LuInstagram size={20} />
               </Link>
-              <Link href="#" aria-label="GitHub" _hover={{ color: "#dd6b20" }}>
+              <Link href="#" aria-label="GitHub" _hover={{ color: "#dd6b20" }} focusRing="none">
                 <LuGithub size={20} />
               </Link>
-              <Link href="#" aria-label="YouTube" _hover={{ color: "#dd6b20" }}>
+              <Link href="#" aria-label="YouTube" _hover={{ color: "#dd6b20" }} focusRing="none">
                 <LuYoutube size={20} />
               </Link>
             </HStack>
