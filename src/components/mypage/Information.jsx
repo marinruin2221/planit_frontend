@@ -89,6 +89,7 @@ export default function Information()
 				<Input
 					variant={editMode ? "outline" : "subtle"}
 					value={form.name}
+					placeholder="닉네임을 입력하세요"
 					readOnly={!editMode}
 					onChange={e => handleChange("name", e.target.value)}
 				/>
@@ -98,6 +99,7 @@ export default function Information()
 				<Input
 					variant={editMode ? "outline" : "subtle"}
 					value={form.email}
+					placeholder="email@example.com"
 					readOnly={!editMode}
 					onChange={e => handleChange("email", e.target.value)}
 				/>
@@ -108,6 +110,7 @@ export default function Information()
 					<Input
 						variant={editMode ? "outline" : "subtle"}
 						maxLength="4"
+						placeholder="YYYY"
 						value={form.birthY}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthY", e.target.value)}
@@ -115,6 +118,7 @@ export default function Information()
 					<Input
 						variant={editMode ? "outline" : "subtle"}
 						maxLength="2"
+						placeholder="MM"
 						value={form.birthM}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthM", e.target.value)}
@@ -122,6 +126,7 @@ export default function Information()
 					<Input
 						variant={editMode ? "outline" : "subtle"}
 						maxLength="2"
+						placeholder="DD"
 						value={form.birthD}
 						readOnly={!editMode}
 						onChange={e => handleChange("birthD", e.target.value)}
