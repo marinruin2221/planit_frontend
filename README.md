@@ -30,8 +30,8 @@ Fronend workspace for planit project
 | 2025-12-31 | 김관범 | **디테일 페이지 기능 고도화**<br> - **주소 복사 기능**: 클립보드 API 및 폴백 로직 구현<br> - **리뷰 정렬 기능**: 날짜순/추천순/평점순 정렬 옵션<br> - **지도 마커 라벨**: 숙소 이름 커스텀 오버레이<br> - **평점/리뷰 DB 연동**: API 호출로 더미 데이터 대체 | [[src/pages/DetailPage.jsx](cci:7://file:///d:/korea_IT/AI%20%ED%92%80%EC%8A%A4%ED%83%9D/Planit/frontend/src/pages/DetailPage.jsx:0:0-0:0)](src/pages/DetailPage.jsx) | 완료 |
 | 2026-01-01 | 김관범 | **위치 기반 숙소 검색 및 지도 기능 구현**<br> - 브라우저 Geolocation API 연동 (현재 위치 가져오기)<br> - '내 주변 숙소 찾기' 버튼 UI 구현<br> - 카카오맵 SDK 연동 (react-kakao-maps-sdk)<br> - 현재 위치 마커 및 주변 숙소 마커 표시 | [[src/pages/ListPage.jsx](cci:7://file:///d:/korea_IT/AI%20%ED%92%80%EC%8A%A4%ED%83%9D/Planit/frontend/src/pages/ListPage.jsx:0:0-0:0)](src/pages/ListPage.jsx) | 완료 |
 | 2026-01-02 | AI | **'내 주변 숙소 찾기' 오류 수정**<br> - JSON 파싱 오류 해결 (빈 응답 처리)<br> - 검색 반경 5km → 20km 확대<br>**쿠폰 시스템 구현**<br> - `couponData.js` 생성: 5종 쿠폰 데이터 및 LocalStorage 관리 유틸리티<br> - 상세 페이지 사이드바 쿠폰 UI 구현: 전체 받기, 개별 받기, 보유 쿠폰 표시<br> - 인라인 스타일 적용으로 CSS 우선순위 문제 해결 | [`src/pages/ListPage.jsx`](src/pages/ListPage.jsx)<br>[`src/data/couponData.js`](src/data/couponData.js)<br>[`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 완료 |
-| 2026-01-06 | 김관범 | **인증 시스템 연동 준비**<br>- 백엔드 인증 API 구현 (`/api/auth/login`, `/api/auth/me`, `/api/auth/logout`)<br>- 세션 기반 로그인 상태 관리 지원 | [`src/data/auth.js`](src/data/auth.js)<br>[`src/components/common/Header.jsx`](src/components/common/Header.jsx) | 백엔드 인증 API 연동 완료 |
-### 새 항목 추가 템플릿
+| 2026-01-07 | AI | **Instruction.md 기반 디자인 시스템 최적화**<br> - **규칙 설정**: `.cursorrules` 및 워크플로우를 통한 한국어 응답 및 프로젝트 규칙 영구 적용<br> - **계획 수립**: `implementation_plan.md` 및 `task.md` 작성<br> - **스타일 개선**: `DetailPage.jsx` 인라인 스타일(주소복사 버튼)을 브랜드 변수 및 테일윈드 클래스로 교체 | [`src/pages/DetailPage.jsx`](src/pages/DetailPage.jsx) | 한국어 응답 규칙 영구 저장 완료 |
+| ### 새 항목 추가 템플릿 |
 
 복사/붙여넣기용 1줄:
 

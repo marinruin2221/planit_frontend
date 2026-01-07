@@ -742,9 +742,7 @@ const DetailPage = () => {
                 <button
                   type="button"
                   onClick={() => handleCopyAddress()}
-                  style={{ backgroundColor: '#DD6B20', color: 'white', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginLeft: '8px' }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#C05621'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#DD6B20'}
+                  className="bg-brand hover:bg-brand-hover text-white px-2 py-1 rounded text-xs ml-2 cursor-pointer transition-colors"
                 >
                   주소복사
                 </button>
