@@ -2,24 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
 import { nanoid } from 'nanoid';
+import { DayPicker } from 'react-day-picker';
+import { ko } from 'date-fns/locale';
+import { format } from 'date-fns';
+import 'react-day-picker/style.css';
 
 // Toss Payments 클라이언트 키 (사용자 요청으로 하드코딩)
 // API 개별 연동 키는 'test_ck_'로 시작하며, 결제 위젯이 아닌 일반 결제창(tosspayments-sdk)을 사용해야 합니다.
 const clientKey = 'test_ck_PBal2vxj81zazxgQz7ek35RQgOAN'.trim();
 const customerKey = ANONYMOUS;
 
-const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail, contentId, dateF, dateT }) => {
+const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail, contentId, dateF, dateT, nights: initialNights, pricePerNight }) => {
   const [isProductSelected, setIsProductSelected] = useState(true);
   const [totalPrice, setTotalPrice] = useState(amount);
+
+  // 날짜 선택 상태
+  const [checkIn, setCheckIn] = useState(dateF || format(new Date(), 'yyyy-MM-dd'));
+  const [checkOut, setCheckOut] = useState(dateT || format(new Date(Date.now() + 86400000), 'yyyy-MM-dd'));
+  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+  const [isCheckOutOpen, setIsCheckOutOpen] = useState(false);
+
+  // 숙박 일수 계산
+  const calculateNights = (checkInDate, checkOutDate) => {
+    const diffTime = new Date(checkOutDate) - new Date(checkInDate);
+    const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return nights > 0 ? nights : 1;
+  };
+  const nights = calculateNights(checkIn, checkOut);
+  const calculatedAmount = pricePerNight ? pricePerNight * nights : amount;
 
   // 상품 선택 상태에 따라 총 금액 업데이트
   useEffect(() => {
     if (isProductSelected) {
-      setTotalPrice(amount);
+      setTotalPrice(calculatedAmount);
     } else {
       setTotalPrice(0);
     }
-  }, [isProductSelected, amount]);
+  }, [isProductSelected, calculatedAmount]);
+
+  // props 변경 시 날짜 동기화
+  useEffect(() => {
+    if (dateF) setCheckIn(dateF);
+    if (dateT) setCheckOut(dateT);
+  }, [dateF, dateT]);
 
   const handleProductToggle = () => {
     setIsProductSelected(!isProductSelected);
@@ -42,8 +67,8 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
           contentId: contentId,
           userId: localStorage.getItem("userId"),
           name: orderName,
-          dateF: dateF,
-          dateT: dateT,
+          dateF: checkIn,
+          dateT: checkOut,
           price: totalPrice,
           status: "1"
         })
@@ -193,6 +218,127 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
                 {amount?.toLocaleString() || 0}원
               </span>
             </div>
+          </div>
+
+          {/* 날짜 선택 카드 */}
+          <div style={{
+            backgroundColor: 'white',
+            padding: '1.25rem',
+            borderRadius: '0.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            {/* 체크인 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', position: 'relative' }}>
+              <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>체크인</span>
+              <button
+                onClick={() => { setIsCheckInOpen(!isCheckInOpen); setIsCheckOutOpen(false); }}
+                style={{
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: 'var(--brand_color)',
+                  background: 'none',
+                  border: '1px solid var(--brand_color)',
+                  borderRadius: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer'
+                }}
+              >
+                {checkIn} ▼
+              </button>
+              {isCheckInOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  zIndex: 100,
+                  backgroundColor: 'white',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem'
+                }}>
+                  <DayPicker
+                    mode="single"
+                    locale={ko}
+                    selected={checkIn ? new Date(checkIn) : undefined}
+                    onSelect={(date) => {
+                      if (date) {
+                        const formatted = format(date, 'yyyy-MM-dd');
+                        setCheckIn(formatted);
+                        setIsCheckInOpen(false);
+                        if (new Date(formatted) >= new Date(checkOut)) {
+                          const nextDay = new Date(date);
+                          nextDay.setDate(nextDay.getDate() + 1);
+                          setCheckOut(format(nextDay, 'yyyy-MM-dd'));
+                        }
+                      }
+                    }}
+                    disabled={{ before: new Date() }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* 체크아웃 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', position: 'relative' }}>
+              <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>체크아웃</span>
+              <button
+                onClick={() => { setIsCheckOutOpen(!isCheckOutOpen); setIsCheckInOpen(false); }}
+                style={{
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: 'var(--brand_color)',
+                  background: 'none',
+                  border: '1px solid var(--brand_color)',
+                  borderRadius: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer'
+                }}
+              >
+                {checkOut} ▼
+              </button>
+              {isCheckOutOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  zIndex: 100,
+                  backgroundColor: 'white',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem'
+                }}>
+                  <DayPicker
+                    mode="single"
+                    locale={ko}
+                    selected={checkOut ? new Date(checkOut) : undefined}
+                    onSelect={(date) => {
+                      if (date) {
+                        setCheckOut(format(date, 'yyyy-MM-dd'));
+                        setIsCheckOutOpen(false);
+                      }
+                    }}
+                    disabled={{ before: checkIn ? new Date(checkIn) : new Date() }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* 숙박 기간 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.75rem', borderTop: '1px solid #e5e7eb' }}>
+              <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>숙박 기간</span>
+              <span style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--brand_color)' }}>
+                {nights}박 {nights + 1}일
+              </span>
+            </div>
+            {pricePerNight && nights > 1 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>1박 기준 가격</span>
+                <span style={{ fontSize: '0.875rem', color: '#9ca3af' }}>
+                  {pricePerNight?.toLocaleString()}원 × {nights}박
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Total Price Card */}

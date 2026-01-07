@@ -2,7 +2,7 @@ import { getFallbackImage } from '@utils/imageUtils'; // Import utility
 
 import React, { useState, useEffect } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Accordion, Button, HStack } from "@chakra-ui/react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
@@ -29,6 +29,24 @@ import 'swiper/css/pagination';
 const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // 날짜 상태 (URL 파라미터에서 읽기)
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const formatDate = (d) => d.toISOString().split('T')[0];
+
+  const checkInDate = searchParams.get('dateF') || formatDate(today);
+  const checkOutDate = searchParams.get('dateT') || formatDate(tomorrow);
+
+  // 숙박 일수 계산
+  const calculateNights = (checkIn, checkOut) => {
+    const diffTime = new Date(checkOut) - new Date(checkIn);
+    const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return nights > 0 ? nights : 1;
+  };
+  const nights = calculateNights(checkInDate, checkOutDate);
   const [destination, setDestination] = useState(null);
   const [images, setImages] = useState([]);
   const [intro, setIntro] = useState(null);
@@ -51,6 +69,7 @@ const DetailPage = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedRoomForPayment, setSelectedRoomForPayment] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState(0);
+  const [pricePerNight, setPricePerNight] = useState(0); // 1박 가격 저장
 
   // 쿠폰 관련 상태
   const [userCoupons, setUserCoupons] = useState([]);
@@ -233,8 +252,9 @@ const DetailPage = () => {
       return;
     }
 
+    setPricePerNight(price);
     setSelectedRoomForPayment(roomName);
-    setPaymentAmount(price);
+    setPaymentAmount(price * nights); // 총 금액 = 1박 가격 × 숙박 일수
     setIsPaymentModalOpen(true);
   };
 
@@ -1371,8 +1391,10 @@ const DetailPage = () => {
         orderName={selectedRoomForPayment}
         customerName="테스트유저"
         contentId={id}
-        dateF={intro?.checkintime ?? ""}
-        dateT={intro?.checkouttime ?? ""}
+        dateF={checkInDate}
+        dateT={checkOutDate}
+        nights={nights}
+        pricePerNight={pricePerNight}
       />
     </div>
   );
