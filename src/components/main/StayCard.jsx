@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { LuArrowRight } from "react-icons/lu";
 import {
@@ -19,6 +20,7 @@ import { getFallbackImage } from "@utils/imageUtils";
 
 export default function StayCard({ name }) {
   const [stay, setStay] = useState([]);
+  const navigate = useNavigate();
 
   const view = (code) => {
     location.href = "/detail/" + code;
@@ -73,7 +75,7 @@ export default function StayCard({ name }) {
     <>
 		<Flex justify={"space-between"} pb={"4"}>
 			<Text fontSize={"2xl"} fontWeight={"bold"}>{name}</Text>
-			<Button size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={() => navigate(`/event`)}>
+			<Button size={"xs"} color={"var(--white_color)"} bg={"var(--brand_color)"} _hover={{bg:"var(--brand_hover_color)"}} onClick={() => navigate(`/list`)}>
 				More
 				<LuArrowRight/>
 			</Button>
