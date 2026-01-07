@@ -142,35 +142,124 @@ export default function Breakdown({ onReviewCreated })
 								if(e.status === "1")
 								{
 									return <React.Fragment>
-										<Dialog.Root placement="center">
-											<Dialog.Trigger asChild>
-												<Button variant="subtle" size="xs" colorPalette="green">예약취소</Button>
-											</Dialog.Trigger>
-											<Portal>
-												<Dialog.Backdrop />
-												<Dialog.Positioner>
-													<Dialog.Content>
-														<Dialog.Header>
-															<Dialog.Title>예약 취소 확인</Dialog.Title>
-														</Dialog.Header>
-														<Dialog.Body>
-															<Text>정말 예약을 취소하시겠습니까?</Text>
-														</Dialog.Body>
-														<Dialog.Footer>
-															<Dialog.ActionTrigger asChild>
-																<Button variant="outline">취소</Button>
-															</Dialog.ActionTrigger>
-															<Dialog.ActionTrigger asChild>
-																<Button onClick={() => cancelReservation(e.id)}>확인</Button>
-															</Dialog.ActionTrigger>
-														</Dialog.Footer>
-													</Dialog.Content>
-												</Dialog.Positioner>
-											</Portal>
-										</Dialog.Root>
+										<HStack>
+											<Dialog.Root placement="center">
+												<Dialog.Trigger asChild>
+													<Button variant="outline" size="xs" colorPalette="gray">리뷰작성</Button>
+												</Dialog.Trigger>
+												<Portal>
+													<Dialog.Backdrop />
+													<Dialog.Positioner>
+														<Dialog.Content>
+															<Dialog.Header>
+																<Dialog.Title>
+																	<Text fontSize="md" fontWeight="bold">
+																		<Text as="span" fontSize="lg" color="var(--brand_color)">{e.name}</Text>의 여행은 어떠셨나요?
+																	</Text>
+																</Dialog.Title>
+															</Dialog.Header>
+															<Dialog.Body>
+																<HStack pb="4">
+																	<Text fontSize="md" fontWeight="bold">별점</Text>
+																	<RatingGroup.Root count="5" defaultValue="3" size="md" colorPalette="yellow" value={reviewScore} onValueChange={(e) => setReviewScore(e.value)}>
+																		<RatingGroup.HiddenInput />
+																		<RatingGroup.Control />
+																	</RatingGroup.Root>
+																</HStack>
+																<Stack>
+																	<Text fontSize="md" fontWeight="bold">리뷰</Text>
+																	<Textarea resize="none" placeholder="리뷰를 작성해주세요" value={reviewContent} onChange={(e) => setReviewContent(e.target.value)} />
+																</Stack>
+															</Dialog.Body>
+															<Dialog.Footer>
+																<Dialog.ActionTrigger asChild>
+																	<Button variant="outline">취소</Button>
+																</Dialog.ActionTrigger>
+																<Dialog.ActionTrigger asChild>
+																	<Button onClick={() => submitReview(e.contentId,e.name)}>확인</Button>
+																</Dialog.ActionTrigger>
+															</Dialog.Footer>
+														</Dialog.Content>
+													</Dialog.Positioner>
+												</Portal>
+											</Dialog.Root>
+											<Dialog.Root placement="center">
+												<Dialog.Trigger asChild>
+													<Button variant="subtle" size="xs" colorPalette="green">예약취소</Button>
+												</Dialog.Trigger>
+												<Portal>
+													<Dialog.Backdrop />
+													<Dialog.Positioner>
+														<Dialog.Content>
+															<Dialog.Header>
+																<Dialog.Title>예약 취소 확인</Dialog.Title>
+															</Dialog.Header>
+															<Dialog.Body>
+																<Text>정말 예약을 취소하시겠습니까?</Text>
+															</Dialog.Body>
+															<Dialog.Footer>
+																<Dialog.ActionTrigger asChild>
+																	<Button variant="outline">취소</Button>
+																</Dialog.ActionTrigger>
+																<Dialog.ActionTrigger asChild>
+																	<Button onClick={() => cancelReservation(e.id)}>확인</Button>
+																</Dialog.ActionTrigger>
+															</Dialog.Footer>
+														</Dialog.Content>
+													</Dialog.Positioner>
+												</Portal>
+											</Dialog.Root>
+										</HStack>
 									</React.Fragment>
 								}
-								if(e.status === "2") { return <Button variant="subtle" size="xs" colorPalette="red">취소</Button>; }
+								if(e.status === "2")
+								{
+									return <React.Fragment>
+										<HStack>
+											<Dialog.Root placement="center">
+												<Dialog.Trigger asChild>
+													<Button variant="outline" size="xs" colorPalette="gray">리뷰작성</Button>
+												</Dialog.Trigger>
+												<Portal>
+													<Dialog.Backdrop />
+													<Dialog.Positioner>
+														<Dialog.Content>
+															<Dialog.Header>
+																<Dialog.Title>
+																	<Text fontSize="md" fontWeight="bold">
+																		<Text as="span" fontSize="lg" color="var(--brand_color)">{e.name}</Text>의 여행은 어떠셨나요?
+																	</Text>
+																</Dialog.Title>
+															</Dialog.Header>
+															<Dialog.Body>
+																<HStack pb="4">
+																	<Text fontSize="md" fontWeight="bold">별점</Text>
+																	<RatingGroup.Root count="5" defaultValue="3" size="md" colorPalette="yellow" value={reviewScore} onValueChange={(e) => setReviewScore(e.value)}>
+																		<RatingGroup.HiddenInput />
+																		<RatingGroup.Control />
+																	</RatingGroup.Root>
+																</HStack>
+																<Stack>
+																	<Text fontSize="md" fontWeight="bold">리뷰</Text>
+																	<Textarea resize="none" placeholder="리뷰를 작성해주세요" value={reviewContent} onChange={(e) => setReviewContent(e.target.value)} />
+																</Stack>
+															</Dialog.Body>
+															<Dialog.Footer>
+																<Dialog.ActionTrigger asChild>
+																	<Button variant="outline">취소</Button>
+																</Dialog.ActionTrigger>
+																<Dialog.ActionTrigger asChild>
+																	<Button onClick={() => submitReview(e.contentId,e.name)}>확인</Button>
+																</Dialog.ActionTrigger>
+															</Dialog.Footer>
+														</Dialog.Content>
+													</Dialog.Positioner>
+												</Portal>
+											</Dialog.Root>
+											<Button variant="subtle" size="xs" colorPalette="red">취소</Button>
+										</HStack>
+									</React.Fragment>
+								}
 								if(e.status === "3")
 								{
 									return <React.Fragment>
