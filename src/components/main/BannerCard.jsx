@@ -40,7 +40,7 @@ export default function BannerCard()
 						fontSize={{ base: "5xl", md: "7xl" }}
 						color="white"
 					>
-						여행의 시작은 여기서
+						여행의 시작은 이곳에서.
 					</Text>
 					<Text
 						lineHeight="1.2"
