@@ -52,7 +52,7 @@ export default function Header({ mainYN = false }) {
   const menuItems = useMemo(
     () => [
       { label: "국내숙소", to: "/list" },
-      { label: "예약조회", to: "/signin" },
+      { label: "예약조회", to: "/signin", isReservation: true },
       { label: "이벤트", to: "/event" },
       { label: "고객센터", to: "/customerservice" },
     ],
@@ -156,6 +156,13 @@ export default function Header({ mainYN = false }) {
                   _hover={{ color: "var(--brand_color)" }}
                   _activeLink={{ color: "var(--brand_color)" }}
                   focusRing="none"
+                  onClick={(e) => {
+                    if (item.isReservation) {
+                      e.preventDefault(); // 기본 NavLink 이동 막기
+                      const userId = localStorage.getItem("userId");
+                      navigate(userId ? "/mypage" : "/signin");
+                    }
+                  }}
                 >
                   {item.label}
                 </Link>
