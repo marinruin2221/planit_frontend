@@ -79,6 +79,14 @@ const DetailPage = () => {
 
   // 전체 받기 핸들러
   const handleGetAllCoupons = () => {
+    // 로그인 체크
+    if (!isLoggedIn) {
+      if (window.confirm('쿠폰을 받으시려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?')) {
+        navigate('/signin');
+      }
+      return;
+    }
+
     const result = issueAllCoupons();
     setCouponMessage(result.message);
     setUserCoupons(getUserCoupons());
@@ -89,6 +97,14 @@ const DetailPage = () => {
 
   // 개별 쿠폰 받기 핸들러
   const handleGetCoupon = (couponId) => {
+    // 로그인 체크
+    if (!isLoggedIn) {
+      if (window.confirm('쿠폰을 받으시려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?')) {
+        navigate('/signin');
+      }
+      return;
+    }
+
     const result = issueCoupon(couponId);
     setCouponMessage(result.message);
     setUserCoupons(getUserCoupons());
@@ -742,7 +758,9 @@ const DetailPage = () => {
                 <button
                   type="button"
                   onClick={() => handleCopyAddress()}
-                  className="bg-brand hover:bg-brand-hover text-white px-2 py-1 rounded text-xs ml-2 cursor-pointer transition-colors"
+                  style={{ backgroundColor: '#DD6B20', color: 'white', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginLeft: '8px' }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#C05621'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#DD6B20'}
                 >
                   주소복사
                 </button>
@@ -1243,7 +1261,7 @@ const DetailPage = () => {
 
               {/* Payment Benefits */}
               <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   <span className="font-bold text-gray-900">결제 혜택</span>
                   <span
                     className="text-xs text-[#DD6B20] cursor-pointer hover:underline font-medium"
@@ -1254,12 +1272,12 @@ const DetailPage = () => {
                 </div>
                 <div className="space-y-3 text-base text-gray-600">
                   {/* 기본 혜택 */}
-                  <div className="flex items-start">
-                    <span className="text-blue-500 font-bold mr-2 min-w-[70px]">토스페이</span>
+                  <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                    <span className="text-blue-500 font-bold mr-4 w-[90px] inline-block">토스페이</span>
                     <span>3만원 이상, 10% 최대 1만원 할인</span>
                   </div>
-                  <div className="flex items-start">
-                    <span className="text-yellow-500 font-bold mr-2 min-w-[70px]">카카오페이</span>
+                  <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                    <span className="text-yellow-500 font-bold mr-4 w-[90px] inline-block">카카오페이</span>
                     <span>2만원 이상, 2천원 할인</span>
                   </div>
 
@@ -1267,32 +1285,32 @@ const DetailPage = () => {
                   {showMorePaymentBenefits && (
                     <>
                       <div className="border-t border-gray-100 pt-2 mt-2"></div>
-                      <div className="flex items-start">
-                        <span className="text-green-600 font-bold mr-2 min-w-[70px]">네이버페이</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-green-600 font-bold mr-4 w-[90px] inline-block">네이버페이</span>
                         <span>5만원 이상, 5% 최대 5천원 할인</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-blue-700 font-bold mr-2 min-w-[70px]">삼성페이</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-blue-700 font-bold mr-4 w-[90px] inline-block">삼성페이</span>
                         <span>4만원 이상, 3천원 즉시 할인</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-blue-900 font-bold mr-2 min-w-[70px]">신한카드</span>
-                        <span>3만원 이상, 2천원 할인 (결제일 기준)</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-blue-900 font-bold mr-4 w-[90px] inline-block">신한카드</span>
+                        <span className="tracking-tighter">3만원 이상, 2천원 할인 (결제일 기준)</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-red-500 font-bold mr-2 min-w-[70px]">현대카드</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-red-500 font-bold mr-4 w-[90px] inline-block">현대카드</span>
                         <span>5만원 이상, M포인트 2배 적립</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-orange-600 font-bold mr-2 min-w-[70px]">롯데카드</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-orange-600 font-bold mr-4 w-[90px] inline-block">롯데카드</span>
                         <span>6만원 이상, L.POINT 3배 적립</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-purple-600 font-bold mr-2 min-w-[70px]">KB국민</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-purple-600 font-bold mr-4 w-[90px] inline-block">KB국민</span>
                         <span>4만원 이상, KB포인트 3천점 적립</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="text-gray-700 font-bold mr-2 min-w-[70px]">무이자할부</span>
+                      <div className="flex items-start" style={{ paddingLeft: '10px' }}>
+                        <span className="text-gray-700 font-bold mr-4 w-[90px] inline-block">무이자할부</span>
                         <span>10만원 이상, 2~6개월 무이자</span>
                       </div>
                     </>
