@@ -63,6 +63,7 @@ export default function Breakdown({ onReviewCreated })
 			body: JSON.stringify({
 				contentId: contentId,
 				userId: localStorage.getItem("userId"),
+				nickname:localStorage.getItem("name"),
 				name: name,
 				level: "1",
 				stars: String(reviewScore),
