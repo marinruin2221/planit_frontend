@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid';
 const clientKey = 'test_ck_PBal2vxj81zazxgQz7ek35RQgOAN'.trim();
 const customerKey = ANONYMOUS;
 
-const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail }) => {
+const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail, contentId, dateF, dateT }) => {
   const [isProductSelected, setIsProductSelected] = useState(true);
   const [totalPrice, setTotalPrice] = useState(amount);
 
@@ -34,6 +34,20 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
     try {
       const tossPayments = await loadTossPayments(clientKey);
       const payment = tossPayments.payment({ customerKey });
+
+      fetch("/api/mypage/breakdownCreate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contentId: contentId,
+          userId: localStorage.getItem("userId"),
+          name: orderName,
+          dateF: dateF,
+          dateT: dateT,
+          price: totalPrice,
+          status: "1"
+        })
+      })
 
       await payment.requestPayment({
         method: "CARD", // 카드/간편결제 통합 결제창

@@ -1370,6 +1370,9 @@ const DetailPage = () => {
         amount={paymentAmount}
         orderName={selectedRoomForPayment}
         customerName="테스트유저"
+        contentId={id}
+        dateF={intro?.checkintime ?? ""}
+        dateT={intro?.checkouttime ?? ""}
       />
     </div>
   );
