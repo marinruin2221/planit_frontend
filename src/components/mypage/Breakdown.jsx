@@ -131,8 +131,8 @@ export default function Breakdown({ onReviewCreated })
 											<Text fontSize="sm" color="gray.700">결제금액</Text>
 										</Stack>
 										<Stack>
-											<Text fontSize="sm" fontWeight="bold">{e.dateF}</Text>
-											<Text fontSize="sm" fontWeight="bold">{e.dateT}</Text>
+											<Text fontSize="sm" fontWeight="bold">{e.dateF ?? "-"}</Text>
+											<Text fontSize="sm" fontWeight="bold">{e.dateT ?? "-"}</Text>
 											<Text fontSize="sm" fontWeight="bold">{Number(e.price).toLocaleString()}원</Text>
 										</Stack>
 									</HStack>
