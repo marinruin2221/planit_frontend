@@ -1391,6 +1391,7 @@ const DetailPage = () => {
         orderName={selectedRoomForPayment}
         customerName="테스트유저"
         contentId={id}
+        name={destination.title}
         dateF={checkInDate}
         dateT={checkOutDate}
         nights={nights}

@@ -12,7 +12,7 @@ import 'react-day-picker/style.css';
 const clientKey = 'test_ck_PBal2vxj81zazxgQz7ek35RQgOAN'.trim();
 const customerKey = ANONYMOUS;
 
-const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail, contentId, dateF, dateT, nights: initialNights, pricePerNight }) => {
+const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, customerEmail, contentId, name, dateF, dateT, nights: initialNights, pricePerNight }) => {
   const [isProductSelected, setIsProductSelected] = useState(true);
   const [totalPrice, setTotalPrice] = useState(amount);
 
@@ -66,7 +66,7 @@ const PaymentModal = ({ isOpen, onClose, amount, orderName, customerName, custom
         body: JSON.stringify({
           contentId: contentId,
           userId: localStorage.getItem("userId"),
-          name: orderName,
+          name: name,
           dateF: checkIn,
           dateT: checkOut,
           price: totalPrice,
