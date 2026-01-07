@@ -160,7 +160,11 @@ export default function Header({ mainYN = false }) {
                     if (item.isReservation) {
                       e.preventDefault(); // 기본 NavLink 이동 막기
                       const userId = localStorage.getItem("userId");
-                      navigate(userId ? "/mypage" : "/signin");
+
+                      navigate(
+                        userId ? "/mypage" : "/signin",
+                        userId ? { state: { tab: "2" } } : undefined
+                      );
                     }
                   }}
                 >

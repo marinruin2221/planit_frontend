@@ -1,4 +1,5 @@
 import React , { useState } from "react";
+import { useLocation } from "react-router-dom";
 import
 {
 	LuUser,
@@ -19,13 +20,16 @@ import Review from "@components/mypage/Review.jsx";
 
 export default function MyPage()
 {
+	const location = useLocation(); // ✅ 추가
+	const defaultTab = location.state?.tab || "1"; // ✅ 추가
+
 	const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
 
 	return <React.Fragment>
 		<Header/>
 		
 		<Container maxW="1300px" pt="50px">
-			<Tabs.Root defaultValue="1">
+			<Tabs.Root defaultValue={defaultTab}>
 				<Tabs.List>
 					<Tabs.Trigger flex="1" justifyContent="center" alignItems="normal" h="auto" p={{base:"3",md:"5"}} fontSize="md" _hover={{color:"var(--brand_color)"}} _selected={{color:"var(--brand_color)"}} _before={{bg:"var(--brand_color)"}} value="1">
 						<LuUser/>
