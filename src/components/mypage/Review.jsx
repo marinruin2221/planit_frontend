@@ -9,7 +9,9 @@ import {
 	Input,
 	Button,
 	Portal,
-	Dialog
+	Dialog,
+	RatingGroup,
+	Textarea
 } from "@chakra-ui/react";
 import PageForm from "@components/mypage/PageForm.jsx";
 
@@ -19,6 +21,11 @@ export default function Review({ refreshKey })
 	const [page, setPage] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
 	const [word, setWord] = useState("");
+
+	// ⭐ 수정용 state 추가
+	const [editId, setEditId] = useState(null);
+	const [editScore, setEditScore] = useState(3);
+	const [editContent, setEditContent] = useState("");
 
 	const isSearchRef = useRef(false);
 	const isResetRef = useRef(false);
@@ -50,6 +57,19 @@ export default function Review({ refreshKey })
 			body: JSON.stringify({ id })
 		});
 		fetchData(0);
+	};
+
+	const updateReview = async () => {
+		await fetch("/api/mypage/reviewUpdate", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				id: editId,
+				stars: editScore,
+				content: editContent
+			})
+		});
+		fetchData(page);
 	};
 
 	useEffect(() => { fetchData(); }, [page]);
@@ -101,11 +121,11 @@ export default function Review({ refreshKey })
 									<LuMessageSquare />
 								</Box>
 								<Stack gap="3">
-									<Text fontSize="xl" fontWeight="bold" color="gray.800">{e.name}</Text>
+									<Text fontSize="xl" fontWeight="bold">{e.name}</Text>
 									<HStack>
 										<Stack>
-											<Text fontSize="sm" color="gray.700">작성일</Text>
-											<Text fontSize="sm" color="gray.700">리뷰</Text>
+											<Text fontSize="sm">작성일</Text>
+											<Text fontSize="sm">리뷰</Text>
 										</Stack>
 										<Stack>
 											<Text fontSize="sm" fontWeight="bold">{e.reviewDate}</Text>
@@ -114,32 +134,94 @@ export default function Review({ refreshKey })
 									</HStack>
 								</Stack>
 							</HStack>
-							<Dialog.Root placement="center">
-								<Dialog.Trigger asChild>
-									<Button variant="subtle" size="xs" colorPalette="red">삭제</Button>
-								</Dialog.Trigger>
-								<Portal>
-									<Dialog.Backdrop />
-									<Dialog.Positioner>
-										<Dialog.Content>
-											<Dialog.Header>
-												<Dialog.Title>리뷰 삭제 확인</Dialog.Title>
-											</Dialog.Header>
-											<Dialog.Body>
-												<Text>리뷰를 삭제하시겠습니까?</Text>
-											</Dialog.Body>
-											<Dialog.Footer>
-												<Dialog.ActionTrigger asChild>
-													<Button variant="outline">취소</Button>
-												</Dialog.ActionTrigger>
-												<Dialog.ActionTrigger asChild>
-													<Button onClick={() => deleteReservation(e.id)}>확인</Button>
-												</Dialog.ActionTrigger>
-											</Dialog.Footer>
-										</Dialog.Content>
-									</Dialog.Positioner>
-								</Portal>
-							</Dialog.Root>
+
+							<HStack>
+								{/* ⭐ 리뷰 수정 */}
+								<Dialog.Root placement="center">
+									<Dialog.Trigger asChild>
+										<Button
+											variant="outline"
+											size="xs"
+											onClick={() => {
+												setEditId(e.id);
+												setEditScore(e.stars);
+												setEditContent(e.content ?? "");
+											}}
+										>
+											수정
+										</Button>
+									</Dialog.Trigger>
+
+									<Portal>
+										<Dialog.Backdrop />
+										<Dialog.Positioner>
+											<Dialog.Content>
+												<Dialog.Header>
+													<Dialog.Title>리뷰 수정</Dialog.Title>
+												</Dialog.Header>
+
+												<Dialog.Body>
+													<HStack pb="4">
+														<Text fontWeight="bold">별점</Text>
+														<RatingGroup.Root
+															count={5}
+															value={editScore}
+															onValueChange={(v) => setEditScore(v.value)}
+															colorPalette="yellow"
+														>
+															<RatingGroup.HiddenInput />
+															<RatingGroup.Control />
+														</RatingGroup.Root>
+													</HStack>
+
+													<Textarea
+														resize="none"
+														value={editContent}
+														onChange={(e) => setEditContent(e.target.value)}
+													/>
+												</Dialog.Body>
+
+												<Dialog.Footer>
+													<Dialog.ActionTrigger asChild>
+														<Button variant="outline">취소</Button>
+													</Dialog.ActionTrigger>
+													<Dialog.ActionTrigger asChild>
+														<Button onClick={updateReview}>확인</Button>
+													</Dialog.ActionTrigger>
+												</Dialog.Footer>
+											</Dialog.Content>
+										</Dialog.Positioner>
+									</Portal>
+								</Dialog.Root>
+
+								{/* 삭제 */}
+								<Dialog.Root placement="center">
+									<Dialog.Trigger asChild>
+										<Button variant="subtle" size="xs" colorPalette="red">삭제</Button>
+									</Dialog.Trigger>
+									<Portal>
+										<Dialog.Backdrop />
+										<Dialog.Positioner>
+											<Dialog.Content>
+												<Dialog.Header>
+													<Dialog.Title>리뷰 삭제 확인</Dialog.Title>
+												</Dialog.Header>
+												<Dialog.Body>
+													<Text>리뷰를 삭제하시겠습니까?</Text>
+												</Dialog.Body>
+												<Dialog.Footer>
+													<Dialog.ActionTrigger asChild>
+														<Button variant="outline">취소</Button>
+													</Dialog.ActionTrigger>
+													<Dialog.ActionTrigger asChild>
+														<Button onClick={() => deleteReservation(e.id)}>확인</Button>
+													</Dialog.ActionTrigger>
+												</Dialog.Footer>
+											</Dialog.Content>
+										</Dialog.Positioner>
+									</Portal>
+								</Dialog.Root>
+							</HStack>
 						</HStack>
 					</Card.Body>
 				</Card.Root>
