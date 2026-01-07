@@ -109,7 +109,7 @@ export default function Review({ refreshKey })
 										</Stack>
 										<Stack>
 											<Text fontSize="sm" fontWeight="bold">{e.reviewDate}</Text>
-											<Text fontSize="sm" fontWeight="bold">{e.content}</Text>
+											<Text fontSize="sm" fontWeight="bold">{e.content ?? "-"}</Text>
 										</Stack>
 									</HStack>
 								</Stack>
