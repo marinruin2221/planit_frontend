@@ -23,7 +23,7 @@ export default function MainPage()
 
 		<Box pos="relative">
 			<BannerCard />
-			<Box pos="absolute" inset={{ base: "auto 0 3% 0", md: "auto 0 15% 0" }} zIndex="1">
+			<Box pos="absolute" inset={{ base: "auto 0 10% 0", md: "auto 0 20% 0" }} zIndex="1">
 				<Container maxW="1300px">
 					<Box p="6" rounded="md" bg="var(--white_color)" boxShadow="0 10px 30px black">
 						<SearchForm />

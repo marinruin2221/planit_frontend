@@ -28,7 +28,7 @@ export default function BannerCard()
 					position="absolute"
 					inset="0"
 					px={{ base: "8", md: "36" }}
-					py={{ base: "48", md: "36" }}
+					py={{ base: "52", md: "48" }}
 					bg={{
 						base: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
 						md: "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0))",
@@ -67,7 +67,7 @@ export default function BannerCard()
 					position="absolute"
 					inset="0"
 					px={{ base: "8", md: "36" }}
-					py={{ base: "48", md: "36" }}
+					py={{ base: "52", md: "48" }}
 					bg={{
 						base: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
 						md: "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0))",

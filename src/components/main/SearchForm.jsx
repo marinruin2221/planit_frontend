@@ -74,8 +74,7 @@ export default function SearchForm() {
 		<Flex direction="column" gap="4">
 			{/* Top Row: Input + Search Button */}
 			<Flex gap="4" direction={{ base: "column", md: "row" }}>
-				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex="1" placeholder="여행지나 숙소를 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-				<Button variant="plain" size={{ base: "md", md: "xl" }} w={{ base: "full", md: "150px" }} color="var(--white_color)" bg="var(--brand_color)" _hover={{ bg: "var(--brand_hover_color)" }} onClick={handleSearch}>검색</Button>
+				<Input variant="subtle" size={{ base: "md", md: "xl" }} flex={{base:"auto",md:"1"}} placeholder="여행지나 숙소를 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)} />
 			</Flex>
 
 			{/* Bottom Row: DateF, DateT, Person */}
@@ -83,7 +82,7 @@ export default function SearchForm() {
 				{/* Check-in Date Popover */}
 				<Popover.Root open={isDateFOpen} onOpenChange={(e) => setIsDateFOpen(e.open)}>
 					<Popover.Trigger asChild>
-						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex="1" justifyContent="start" alignItems="center">
+						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex={{base:"auto",md:"1"}} justifyContent="start" alignItems="center">
 							<LuCalendarArrowUp size={20} />
 							<Text truncate ml={2}>{dateF}</Text>
 						</Button>
@@ -106,7 +105,7 @@ export default function SearchForm() {
 				{/* Check-out Date Popover */}
 				<Popover.Root open={isDateTOpen} onOpenChange={(e) => setIsDateTOpen(e.open)}>
 					<Popover.Trigger asChild>
-						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex="1" justifyContent="start" alignItems="center">
+						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex={{base:"auto",md:"1"}} justifyContent="start" alignItems="center">
 							<LuCalendarArrowDown size={20} />
 							<Text truncate ml={2}>{dateT}</Text>
 						</Button>
@@ -129,7 +128,7 @@ export default function SearchForm() {
 				{/* Personnel Popover */}
 				<Popover.Root open={isPersonOpen} onOpenChange={(e) => setIsPersonOpen(e.open)}>
 					<Popover.Trigger asChild>
-						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex="1" justifyContent="start" alignItems="center">
+						<Button variant="subtle" size={{ base: "md", md: "xl" }} flex={{base:"auto",md:"1"}} justifyContent="start" alignItems="center">
 							<LuUser size={20} />
 							<Text truncate ml={2}>인원 {person}명</Text>
 						</Button>
@@ -152,6 +151,9 @@ export default function SearchForm() {
 						</Popover.Content>
 					</Popover.Positioner>
 				</Popover.Root>
+			</Flex>
+			<Flex>
+				<Button variant="plain" size={{ base: "md", md: "xl" }} w="full" color="var(--white_color)" bg="var(--brand_color)" _hover={{ bg: "var(--brand_hover_color)" }} onClick={handleSearch}>검색</Button>
 			</Flex>
 		</Flex>
 	</React.Fragment>
