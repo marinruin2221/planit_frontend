@@ -12,13 +12,13 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
+      className="fixed inset-0 z-[100] bg-white/95 flex items-center justify-center"
       onClick={onClose}
     >
       {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-6 right-6 text-white hover:text-gray-300 z-50 p-2"
+        className="absolute top-6 right-6 text-gray-900 hover:text-gray-600 z-50 p-2"
       >
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -38,16 +38,16 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
           pagination={{ clickable: true }}
           className="w-full h-full rounded-lg"
           style={{
-            '--swiper-navigation-color': '#fff',
-            '--swiper-pagination-color': '#fff',
+            '--swiper-navigation-color': '#1a202c',
+            '--swiper-pagination-color': '#1a202c',
           }}
         >
           {images.map((img, idx) => (
-            <SwiperSlide key={idx} className="flex items-center justify-center bg-black">
+            <SwiperSlide key={idx} className="flex items-center justify-center bg-transparent">
               <img
                 src={img}
                 alt={`Gallery ${idx + 1}`}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-contain rounded-lg"
               />
             </SwiperSlide>
           ))}
@@ -55,7 +55,7 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
       </div>
 
       {/* Counter */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white font-medium">
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-gray-900 font-medium">
         {images.length}장의 사진
       </div>
     </div>

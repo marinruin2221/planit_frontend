@@ -20,9 +20,8 @@ import { fetchMe } from '@data/auth';
 
 // Swiper import
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/pagination';
 
 
 
@@ -1341,11 +1340,11 @@ const DetailPage = () => {
               {/* Event Banner - Swiper */}
               <div className="rounded-xl overflow-hidden" style={{ marginTop: '16px' }}>
                 <Swiper
-                  modules={[Autoplay, Pagination]}
+                  modules={[Autoplay]}
                   autoplay={{ delay: 3000, disableOnInteraction: false }}
-                  pagination={{ clickable: true }}
                   loop={true}
-                  className="w-full h-32"
+                  className="w-full"
+                  style={{ aspectRatio: '3 / 1' }}
                 >
                   {EventList.map((event) => (
                     <SwiperSlide key={event.id}>
