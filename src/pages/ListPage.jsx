@@ -242,7 +242,23 @@ const ListPage = () => {
       (error) => {
         console.error("Geolocation error:", error);
         setLoading(false);
-        alert("위치 정보를 가져올 수 없습니다. 권한을 확인해주세요.");
+
+        let errorMessage = "위치 정보를 가져올 수 없습니다.";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "위치 정보 접근 권한이 거부되었습니다. 브라우저 설정에서 권한을 허용해주세요.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "현재 위치 정보를 사용할 수 없습니다.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "위치 정보 요청 시간이 초과되었습니다.";
+            break;
+          default:
+            errorMessage = `알 수 없는 오류가 발생했습니다. (${error.message})`;
+            break;
+        }
+        alert(errorMessage);
       }
     );
   };
