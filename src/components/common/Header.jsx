@@ -179,15 +179,15 @@ export default function Header({ mainYN = false }) {
             {!loading && me.loggedIn ? (
               <>
                 {/* ✅ 닉네임 표시 */}
-                <Text fontSize="sm" color="gray.700">
+                <Text fontSize="sm" color="gray.700" mr={3}>
                   <b>{me.nickname}</b>님 반갑습니다
                 </Text>
 
-                <Link as={RouterLink} to="/mypage">
+                <Link fontSize="sm" as={RouterLink} to="/mypage" _hover={{ color: "var(--brand_color)" }} focusRing="none">
                   마이페이지
                 </Link>
 
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <Button variant="transparent" size="sm" onClick={handleLogout}>
                   로그아웃
                 </Button>
               </>
