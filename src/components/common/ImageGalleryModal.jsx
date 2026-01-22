@@ -47,7 +47,7 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
               <img
                 src={img}
                 alt={`Gallery ${idx + 1}`}
-                className="w-full h-full object-contain rounded-lg"
+                className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
               />
             </SwiperSlide>
           ))}
