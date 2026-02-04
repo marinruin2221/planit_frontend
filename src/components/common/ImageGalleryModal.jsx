@@ -38,16 +38,16 @@ const ImageGalleryModal = ({ isOpen, onClose, images }) => {
           pagination={{ clickable: true }}
           className="w-full h-full rounded-lg"
           style={{
-            '--swiper-navigation-color': '#1a202c',
-            '--swiper-pagination-color': '#1a202c',
+            '--swiper-navigation-color': '#DD6B20',
+            '--swiper-pagination-color': '#DD6B20',
           }}
         >
           {images.map((img, idx) => (
-            <SwiperSlide key={idx} className="flex items-center justify-center bg-transparent">
+            <SwiperSlide key={idx} className="flex items-center justify-center bg-transparent w-full!">
               <img
                 src={img}
                 alt={`Gallery ${idx + 1}`}
-                className="ww-full h-full object-cover rounded-lg"
+                className="w-[calc(100%-var(--spacing)*12*2)] h-[calc(100%-var(--spacing)*12)]! object-cover rounded-lg mx-12! mb-12!"
               />
             </SwiperSlide>
           ))}
